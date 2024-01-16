@@ -4,7 +4,7 @@ import Image
  from 'next/image'
 import './globals.css'
 import NavMenu from './_component/NavMenu'
-import backgroundImg from '../../public/backgroundImage.svg'
+import backgroundImg from '../../public/background.png'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -13,16 +13,16 @@ export const metadata: Metadata = {
   description: 'mangotail',
 }
 
-export default function RootLayout({
-  children,
-}: {
+type Props = {
   children: React.ReactNode
-}) {
+}
+
+export default function RootLayout({ children } : Props) {
   return (
     <html lang="en">
       <body className={inter.className}>
-         <div className="container">
-         <Image 
+        <div className="container">
+          <Image 
             className='background-image' 
             src={backgroundImg}
             fill
@@ -31,8 +31,8 @@ export default function RootLayout({
           {/* //TODO : isLogin property를 nextAuth 적용시 AuthSession 컴포넌트로 교체 */}
             <NavMenu isLogin/>
             {children}
-          </div> 
-        </body>
+        </div> 
+      </body>
     </html>
   )
 }
