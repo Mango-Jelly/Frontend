@@ -1,0 +1,27 @@
+@import './normalized.css';
+
+html, 
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  position: fixed;
+  margin: 0;
+  font-size: 62.5%;
+
+  width: 100dvw;
+  height: 100dvh;
+}
+
+.container {
+  width: 144rem;
+  height: 90rem;
+
+  position: relative;
+}
+
+.background-image {
+  z-index: -100;
+} 

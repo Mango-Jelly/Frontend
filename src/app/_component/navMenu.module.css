@@ -1,0 +1,38 @@
+.container{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 144rem;
+    height: 8.4rem;
+
+    background-color: white;
+}
+
+.imageWrapper {
+    width : 24.6rem;
+    height: 4rem;
+
+    margin-left:8.5rem;
+}
+
+.logoutButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 12rem;
+    height: 4.1rem;
+    margin-right: 8.5rem;
+
+    background-color: #FFC300;
+    border-radius: 3rem;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+
+    color:white;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
