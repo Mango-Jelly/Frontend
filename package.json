@@ -9,10 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/core": "^0.21.0",
     "axios": "^1.6.5",
     "framer-motion": "^10.18.0",
     "next": "14.0.4",
-    "next-auth": "^4.24.5",
+    "next-auth": "^5.0.0-beta.5",
     "openvidu-browser": "^2.29.1",
     "react": "^18",
     "react-dom": "^18"
