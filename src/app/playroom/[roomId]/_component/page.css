@@ -1,0 +1,18 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.top-container{
+    
+    @apply mx-auto flex justify-center;
+}
+
+.carousel-image{
+    @apply absolute block w-full h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+
+}
+
+.bottomcontainer{
+    @apply mx-10;
+}
