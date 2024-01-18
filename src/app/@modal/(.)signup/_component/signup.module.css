@@ -1,0 +1,98 @@
+.modalBackground {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.4);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    background: #ffffff;
+    position: relative;
+
+    width : 50.5rem;
+    height: 59.1rem;
+ 
+    border-radius: 1.6rem;
+
+}
+
+.modalHeader {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.closeButton {
+    width: 3.4rem;
+    height: 3.4rem;
+    border-radius: 1.7rem;
+    border: none;
+    cursor: pointer;
+    background-color: #fff;
+    margin-left: 45rem;
+}
+.closeButton:hover {
+    background-color: rgba(15,20,25, 0.1);
+}
+
+.modalBody {
+    width: 100%;
+
+    margin: 3rem 0;
+}
+
+.inputDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    margin-bottom: 1.5rem;
+}
+
+.inputLabel {
+    margin: 0 0 1rem 1.5rem;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: rgb(83, 100, 113);
+}
+
+.inputLabel:focus-within {
+    color: red;
+}
+
+.input {
+    width: 36.2rem;
+    height: 3.5rem;
+
+    font-size: 1.6rem;
+
+    border: 0.1rem solid #D6D6D6;
+    border-radius: 2.4rem;
+    padding-left: 2rem; 
+}
+
+.modalFooter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+}

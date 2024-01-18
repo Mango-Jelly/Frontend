@@ -2,20 +2,20 @@ import React from 'react'
 import style from './navMenu.module.css'
 import Image from 'next/image'
 import appLogo from '../../../public/AppMainLogo.png'
-import LogoutButton from './LogoutButton'
+import LoginButton from './LoginButton'
 
 type Props = {
   isLogin: boolean;
 }
 
 //TODO : isLogin property를 nextAuth 적용시 삭제
-export default function NavMenu({ isLogin } : Props) {
+export default function NavMenu({ isLogin }: Props) {
   return (
     <div className={style.container}>
       <div className={style.imageWrapper}>
-        <Image src={appLogo} width={246} height={40} alt=''/>
+        <Image src={appLogo} width={246} height={40} alt='' />
       </div>
-      {isLogin && <LogoutButton />}
+      {isLogin && <LoginButton name={'로그아웃'} />}
     </div>
   )
 }
