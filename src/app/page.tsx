@@ -57,7 +57,7 @@ export default function Page() {
                   src={planetIcon}
                   width={90}
                   height={90}
-                  alt=''
+                  alt='방생성 버튼'
                   className='hover:animate-bounce'
                 />
               </div>
@@ -71,7 +71,7 @@ export default function Page() {
                   src={pinIcon}
                   width={24}
                   height={28}
-                  alt=''
+                  alt="내가 나온 연극 목록"
                   className='-scale-x-100 -rotate-12 mr-2'
                 />
                 <p className='text-2xl text-highlight font-semibold pt-1'>
@@ -97,7 +97,7 @@ export default function Page() {
                     src={pinIcon}
                     width={24}
                     height={28}
-                    alt=''
+                    alt='다른 사람들의 연극 구경하기'
                     className='-scale-x-100 -rotate-12 mr-2'
                   />
                   <p className='text-2xl text-highlight font-semibold pt-1'>
@@ -123,7 +123,7 @@ export default function Page() {
                     src={pinIcon}
                     width={24}
                     height={28}
-                    alt=''
+                    alt='동화 대본 구경하기'
                     className='-scale-x-100 -rotate-12 mr-2'
                   />
                   <p className='text-2xl text-highlight font-semibold pt-1'>
@@ -146,33 +146,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-      {/* <Link href="/login">
-        로그인하기
-      </Link>
-      <Link href="/signup">
-        회원가입
-      </Link>
-      <Link href="/newroom">
-        방생성
-      </Link>
-      <div>
-        {videos.map((item, index) => {
-          return (
-            <div key={index}>
-              <Link href={`/video/${item}`}>open {item} video modal</Link>
-            </div>
-          );
-        })}
-      </div>
-      <div>
-        {scenarios.map((item, index) => {
-          return (
-            <div key={index}>
-              <Link href={`/scenario/${item}`}>open {item} scenario modal</Link>
-            </div>
-          );
-        })}
-      </div> */}
     </main>
   )
 }
