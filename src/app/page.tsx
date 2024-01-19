@@ -7,8 +7,7 @@ import pinIcon from '../../public/YellowPinIcon.png'
 
 import { PlayIcon } from '@heroicons/react/24/solid'
 
-// const videos = [1, 2, 3]
-// const scenarios = [1, 2, 3]
+// TODO : 데이터 삭제후 서버 데이터로 교체
 
 const myVideos = [
   '신데렐라',
@@ -44,7 +43,7 @@ export default function Page() {
           <Link href='/newroom'>
             <button
               type='button'
-              className='relative bg-white hover:bg-gray-100 rounded-[3rem] w-96 h-32 ml-20 my-10 shadow'
+              className='relative z-0 bg-white hover:bg-gray-100 rounded-[3rem] w-96 h-32 ml-20 my-10 shadow'
             >
               <div className='flex items-center ml-[4.5rem]'>
                 <p className='text-3xl text-highlight font-extrabold'>
