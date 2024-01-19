@@ -13,21 +13,15 @@ export const metadata: Metadata = {
 }
 
 type Props = {
-  children: React.ReactNode,
+  children: React.ReactNode
   modal: React.ReactNode
 }
 
 export default function RootLayout({ children, modal }: Props) {
   return (
-    <html lang="en">
+    <html lang='en'>
       <body className={inter.className}>
-        <div className="container">
-          <Image
-            className='background-image'
-            src={backgroundImg}
-            fill
-            alt='배경 이미지'
-          />
+        <div className='bg-cover bg-background'>
           {/* //TODO : isLogin property를 nextAuth 적용시 AuthSession 컴포넌트로 교체 */}
           <NavMenu isLogin />
           {modal}
