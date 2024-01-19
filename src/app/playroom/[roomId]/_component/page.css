@@ -15,6 +15,7 @@
 
 .bottomcontainer{
     @apply w-[135rem] mx-[2rem] h-[60rem];
+    /* @apply mx-[2rem] h-[60rem]; */
 }
 
 .default-component-color{

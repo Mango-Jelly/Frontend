@@ -21,7 +21,9 @@ export default function Page({ params : { roomId } } : Props ) {
   // const rour = useRouter();
   return (
     // TODO : 화상 채팅방 구현
-    <div className='w-[144rem]'>
+    // <div className='w-[144rem]'>
+    <div className='flex flex-col items-center'>
+    <div className=''>
       <Top 
       depart = '꿈나무 유치원'
       title = '망고 연극반'
@@ -48,5 +50,7 @@ export default function Page({ params : { roomId } } : Props ) {
       <Link href={`/scenario/1`}>링크</Link>
       </div>
     </div>
+    </div>
+
   )
 }
