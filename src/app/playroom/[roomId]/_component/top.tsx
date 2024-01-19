@@ -16,7 +16,7 @@ export default function top(props : Props) {
 
 
   return (
-    <div className = "topContainer">
+    <div className = "topcontainer">
         {/* <Image src = {VideoImage} /> */}
         <div className='top-1/2 left-1/2 mx-auto text-center'>
             <p className='my-10 text-3xl'>{props.depart}의 {props.title}</p>

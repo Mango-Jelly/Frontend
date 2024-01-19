@@ -1,8 +1,9 @@
 import React from 'react'
-import './page.css'
-import Hostleftbox from './hostleftbox.tsx'
-import Hostmiddlebox from './hostmiddlebox.tsx'
-import Hostrightbox from './hostrightbox.tsx'
+import '../page.css'
+import Hostleftbox from './leftbox/hostleftbox.tsx'
+
+import Hostmiddlebox from './middlebox/hostmiddlebox.tsx'
+import Hostrightbox from './rightbox/hostrightbox.tsx'
 import Image
  from 'next/image'
 export default function bottomhost() {

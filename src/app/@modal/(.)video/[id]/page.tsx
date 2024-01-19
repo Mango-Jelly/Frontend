@@ -1,4 +1,4 @@
-'use client';
+    'use client';
 
 import style from '@/app/_component/modal.module.css'
 
@@ -9,7 +9,7 @@ type Props = {
 }
 
 export default function Page({ params: { id } }: Props) {
-    return (
+   return (
         <div className={style.modalBackground}>
             <div className={style.modal}>
                 `${id}`번 비디오 입니다.

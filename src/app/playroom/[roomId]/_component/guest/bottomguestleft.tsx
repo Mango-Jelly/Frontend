@@ -6,10 +6,11 @@ import Image
 
 export default function bottomguestleft() {
   return (
-    <div className='p-3'>
-        <h1 className='text-8xl text-center'> 우리 선생님 화면 </h1>
+    <div className='ml-[7rem] mt-[2rem] w-[68rem]'>
+        <h1 className='text-6xl text-center my-[1rem]'> 우리 선생님 화면 </h1>
         <Image 
-        src={VideoImage}/>
+        src={VideoImage}
+        className='h-[42rem]'/>
 
     </div>
   )

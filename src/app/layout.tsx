@@ -24,7 +24,7 @@ export default function RootLayout({ children, modal } : Props) {
       <body className={inter.className}>
         <div className="container">
           <Image 
-            className='background-image' 
+            className=' background-image ' 
             src={backgroundImg}
             fill
             alt='배경 이미지'

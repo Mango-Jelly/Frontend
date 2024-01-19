@@ -4,10 +4,9 @@ import HostleftTopcomponent from './hostleftTopcomponent'
 
 export default function hostleftbox() {
   return (
-    <div className='mb-5'>
+    <div className='h-[55rem] my-auto'>
         <HostleftTopcomponent />
         <HostleftBottomcomponent />
-
     </div>
   )
 }
