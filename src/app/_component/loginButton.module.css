@@ -1,13 +1,12 @@
 
-.logoutButton {
+.button {
     display: flex;
     justify-content: center;
     align-items: center;
 
     width: 12rem;
     height: 4.1rem;
-    margin-right: 8.5rem;
-
+ 
     background-color: #FFC300;
     border-radius: 3rem;
     border: none;
@@ -18,4 +17,9 @@
     font-weight: bold;
     text-align: center;
     cursor: pointer;
+}
+
+
+.button:hover {
+    background-color: #FFD700;
 }
