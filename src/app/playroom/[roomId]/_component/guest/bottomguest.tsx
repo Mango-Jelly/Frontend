@@ -2,8 +2,8 @@ import React from 'react'
 import '../page.css'
 import Image
  from 'next/image'
-import Bottomguestright from './bottomguestright'
-import Bottomguestleft from './bottomguestleft'
+import Bottomguestright from './Bottomguestright'
+import Bottomguestleft from './Bottomguestleft'
 
 
 export default function bottomguest() {
