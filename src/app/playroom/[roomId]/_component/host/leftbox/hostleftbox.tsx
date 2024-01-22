@@ -1,6 +1,6 @@
 import React from 'react'
-import HostleftBottomcomponent from './hostleftBottomcomponent'
-import HostleftTopcomponent from './hostleftTopcomponent'
+import HostleftBottomcomponent from './HostleftBottomcomponent'
+import HostleftTopcomponent from './HostleftTopcomponent'
 
 export default function hostleftbox() {
   return (

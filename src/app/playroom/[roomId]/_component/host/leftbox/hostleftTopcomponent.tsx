@@ -2,6 +2,7 @@ import React from 'react'
 import Image
  from 'next/image'
 import piggie from '@/../public/piggie.svg'
+import Actors from './Actors'
 
 
 
@@ -21,6 +22,7 @@ function actors(role : Role) {
     </div>
   )
 }
+
 export default function hostleftBottomcomponent() {
 
 
@@ -51,7 +53,14 @@ export default function hostleftBottomcomponent() {
     </div>
       <div className=' overflow-auto scroll-auto p-5 h-4/5 '>
         {
-          given_actors.map((role) => actors(role))
+          given_actors.map((role) => (
+
+            <Actors 
+              key={role.name}
+              name = {role.name}
+            />
+            ))
+          
         }
       </div>  
     </div>

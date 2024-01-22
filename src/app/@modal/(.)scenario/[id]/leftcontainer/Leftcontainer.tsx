@@ -12,6 +12,7 @@ export default function Leftcontainer() {
         <div className='flex justify-center'  >
         <Image 
           src = {piggie}
+          alt = "썸네일"
           className='w-[20rem] h-[20rem]'
           />
         </div>
@@ -31,22 +32,31 @@ export default function Leftcontainer() {
               <div className='flex flex-wrap mt-[2rem]'>
               <Image 
                 src = {piggie}
+                alt = "등장인물 사진"
                 className='w-[5rem] h-[5rem] m-[1rem]'
                 />
               <Image 
                 src = {piggie}
+                alt = "등장인물 사진"
+
                 className='w-[5rem] h-[5rem] m-[1rem]'
                 />
               <Image 
                 src = {piggie}
+                alt = "등장인물 사진"
+
                 className='w-[5rem] h-[5rem] m-[1rem]'
                 />
               <Image 
                 src = {piggie}
+                alt = "등장인물 사진"
+
                 className='w-[5rem] h-[5rem] m-[1rem]'
                 />
               <Image 
                 src = {piggie}
+                alt = "등장인물 사진"
+
                 className='w-[5rem] h-[5rem] m-[1rem]'
                 />
                 </div>

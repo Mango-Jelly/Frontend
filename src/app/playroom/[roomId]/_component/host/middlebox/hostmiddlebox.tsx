@@ -12,7 +12,7 @@ export default function hostmiddlebox() {
 
 
 
-            <Image src = {VideoImage} className='w-full mb-5'/>
+            <Image alt = "메인 비디오" src = {VideoImage} className='w-full mb-5'/>
 
             <div className='flex justify-between'>
                 <div id = "leftbox" className='flex flex-row'>

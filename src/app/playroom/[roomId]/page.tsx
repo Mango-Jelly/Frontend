@@ -1,10 +1,10 @@
 'use client';
 import style from '@/app/_component/modal.module.css'
 import Link from "next/link"
-import Top from './_component/top'
+import Top from './_component/Top'
 // import { useRouter } from 'next/router'
 
-import BottomHost from './_component/host/bottomhost';
+import BottomHost from './_component/host/Bottomhost';
 import BottomGuest from './_component/guest/bottomGuest';
 import { useState } from 'react';
 
