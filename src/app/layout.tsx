@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Noto_Sans } from 'next/font/google'
+import { Noto_Sans_KR } from 'next/font/google'
 import Image from 'next/image'
 import './globals.css'
 import NavMenu from './_component/NavMenu'
 import backgroundImg from '../../public/background.png'
 
-const inter = Noto_Sans({ subsets: ['latin'] })
+const inter = Noto_Sans_KR({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'mangotail',
