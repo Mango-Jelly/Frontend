@@ -1,0 +1,23 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.topcontainer{
+    
+    @apply w-[135rem] mx-auto flex justify-center;
+}
+
+.carousel-image{
+    @apply absolute block w-full h-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+
+}
+
+.bottomcontainer{
+    @apply w-[135rem] mx-[2rem] h-[60rem];
+    /* @apply mx-[2rem] h-[60rem]; */
+}
+
+.default-component-color{
+    background-color: #D9D9D9;
+}
