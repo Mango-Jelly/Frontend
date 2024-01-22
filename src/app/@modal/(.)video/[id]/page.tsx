@@ -1,19 +1,20 @@
-    'use client';
+'use client'
 
-import style from '@/app/_component/modal.module.css'
+import Video from '../_component/Video'
 
 type Props = {
-    params: {
-        id: string
-    }
+  params: {
+    id: string
+  }
 }
 
 export default function Page({ params: { id } }: Props) {
-   return (
-        <div className={style.modalBackground}>
-            <div className={style.modal}>
-                `${id}`번 비디오 입니다.
-            </div>
-        </div>
-    )
+  return (
+    <div className='absolute top-0 flex justify-center bg-black/40 size-full z-10'>
+      <div className='relative top-28 bg-background background rounded-2xl w-[110rem] h-[64rem] z-10'>
+        <Video id={id}/>
+      </div>
+    </div>
+  )
 }
+
