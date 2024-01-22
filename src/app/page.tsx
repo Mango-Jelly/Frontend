@@ -4,42 +4,17 @@ import Link from 'next/link'
 import Image from 'next/image'
 import planetIcon from '../../public/YellowPlanetIcon.png'
 import pinIcon from '../../public/YellowPinIcon.png'
+import { myVideos, publicVideos, scripts } from '../app/_component/DummyData'
 
 import { PlayIcon } from '@heroicons/react/24/solid'
 
 // TODO : 데이터 삭제후 서버 데이터로 교체
 
-const myVideos = [
-  '신데렐라',
-  '아기돼지 삼형제',
-  '백설공주',
-  '헨젤과 그레텔',
-  '공주와 개구리',
-]
-
-const videos = [
-  { title: '신데렐라', department: '싸피 유치원' },
-  { title: '아기돼지 삼형제', department: '싸피 어린이집' },
-  { title: '백설공주', department: '싸피 초등학교' },
-  { title: '대본 제목', department: '소속 기관' },
-  { title: '대본 제목', department: '소속 기관' },
-  { title: '대본 제목', department: '소속 기관' },
-]
-
-const scripts = [
-  '신데렐라',
-  '아기돼지 삼형제',
-  '백설공주',
-  '헨젤과 그레텔',
-  '공주와 개구리',
-  '대본 이름',
-]
-
 export default function Page() {
   return (
     <main>
       <div className='flex justify-center px-12 md:px-24 lg:px-52'>
-        <div className='grow flex flex-col items-center max-w-screen-xl h-screen'>
+        <div className='grow flex flex-col items-center max-w-screen-xl'>
           <Link href='/newroom'>
             <button
               type='button'
@@ -80,9 +55,11 @@ export default function Page() {
               <div className='flex justify-around'>
                 {myVideos.map((value, key) => {
                   return (
-                    <div key={key}>
-                      <div className='bg-gray-200 rounded-full w-52 h-52 mb-2'></div>
-                      <div className='text-center'>{value}</div>
+                    <div key={key} className='rounded-xl p-2 hover:bg-gray-100'>
+                      <Link href={`/video/${value.videoId}`}>
+                        <div className='bg-gray-200 rounded-full w-52 h-52 mb-2'></div>
+                        <div className='text-center'>{value.title}</div>
+                      </Link>
                     </div>
                   )
                 })}
@@ -90,7 +67,7 @@ export default function Page() {
             </div>
 
             <div className='flex justify-center h-[32rem] mb-4'>
-              <div className='bg-white rounded-[2rem] w-1/2 p-4 mr-2'>
+              <div className='bg-white rounded-[2rem] w-1/2 h-auto p-4 mr-2'>
                 <div className='flex px-8 py-4 mb-1'>
                   <Image
                     src={pinIcon}
@@ -105,7 +82,7 @@ export default function Page() {
                 </div>
 
                 <div className='flex flex-wrap justify-center'>
-                  {videos.map((value, key) => {
+                  {publicVideos.map((value, key) => {
                     return (
                       <div key={key} className='w-64 mx-3 mb-4'>
                         <div className=' bg-gray-200 rounded-2xl h-40 mb-2'></div>
@@ -135,7 +112,9 @@ export default function Page() {
                     return (
                       <div key={key} className='w-64 mx-3 mb-4'>
                         <div className=' bg-gray-200 rounded-2xl h-40 mb-2'></div>
-                        <div className='truncate text-center'>{value}</div>
+                        <div className='truncate text-center'>
+                          {value.title}
+                        </div>
                       </div>
                     )
                   })}
