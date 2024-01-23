@@ -6,7 +6,7 @@ import errorImg from '../../public/errorImg.svg'
 const NotFound: NextPage = () => {
   return (
     <div className='absolute top-0 size-full bg-[#AFAFAF]'>
-      <div className='mt-48 ml-96'>
+      <div className='mt-48 ml-52'>
         <div className='text-9xl font-black mb-12'>Oops!</div>
         <div className='text-6xl mb-12'>404 Not Found</div>
         <div className='text-3xl mb-2'>
