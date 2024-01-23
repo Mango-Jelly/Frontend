@@ -2,7 +2,11 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import style from './video.module.css'
 import { myVideos } from '../_component/DummyData'
+import { Suspense } from 'react'
+import VideoViewer from './VideoViewer'
+import video from '../../../../../public/dummyData/video.mp4'
 import {
   ArrowDownTrayIcon,
   LockClosedIcon,
@@ -58,8 +62,10 @@ export default function Video({ id }: Props) {
             <LockClosedIcon className='size-8 mx-2' />
           )}
         </div>
-        <div className='bg-gray-200 w-full h-[70%]'>
-          비디오 플레이어 공간입니다 ^ㅇ^
+        <div className='bg-gray-200 w-full h-[70%] rounded-3xl'>
+          <Suspense fallback={<p>Loading video...</p>}>
+            <VideoViewer />
+          </Suspense>
         </div>
       </div>
     </div>
