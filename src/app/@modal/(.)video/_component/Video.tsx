@@ -6,7 +6,6 @@ import style from './video.module.css'
 import { myVideos } from '../_component/DummyData'
 import { Suspense } from 'react'
 import VideoViewer from './VideoViewer'
-import video from '../../../../../public/dummyData/video.mp4'
 import {
   ArrowDownTrayIcon,
   LockClosedIcon,
@@ -17,6 +16,8 @@ import {
 type Props = {
   id: string
 }
+
+//TODO : 비디오 불러오기 API 연결
 
 export default function Video({ id }: Props) {
   const router = useRouter()
