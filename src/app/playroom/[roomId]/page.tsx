@@ -22,16 +22,26 @@ export default function Page({ params : { roomId } } : Props ) {
   }
   const client = useRef<any>({});
 
-  function onMessageReceived (message : StompJs.Message) {
-    const messageBody = JSON.parse(message.body);
-    console.log(messageBody)
+  // function onMessageReceived (message : StompJs.Message) {
+  //   const messageBody = JSON.parse(message.body);
+  //   // console.log(message)
+  //   console.log(messageBody)
+  // }
+  function onMessageReceived(message : StompJs.Message) {
+    try {
+      const messageBody = JSON.parse(message.body);
+      console.log('Received message:', messageBody);
+    } catch (error) {
+      console.error('Error parsing received message:', error);
+    }
+  }
 
-}
+
   useEffect(() => {
       
       const subscribe = () => {
           client.current.subscribe(`/sub/channel/${roomId}`, onMessageReceived)
-          }
+        }
 
           
       function publishOnWait() {
@@ -44,16 +54,31 @@ export default function Page({ params : { roomId } } : Props ) {
           })
       }   
 
+      function sendMessage() {
+        const message = {
+          message: 'Hello world',
+        };
+        // console.log(JSON.stringify(message))
+        client.current.publish({
+          destination: `/sub/channel/${roomId}`,
+          body: JSON.stringify(message),
+        });
+      }
       
           // 커넥트 함수 /*
       const connect = () => {
 
           client.current = new StompJs.Client({
               brokerURL: "ws://localhost:8080/ws",
+              // connectHeaders: {
+              //   user : `people`
+              // }
               onConnect : () => {
                   console.log("connected");
                   subscribe();
-                  publishOnWait();
+                  sendMessage();
+                  // publishOnWait();
+                  
               },
               onDisconnect : () => {
                   console.log("failed to connect");
@@ -84,7 +109,10 @@ export default function Page({ params : { roomId } } : Props ) {
       : null}
 
       {!isHost?
-        <BottomGuest />
+        <BottomGuest 
+          client = {client.current}  
+          roomId = {roomId}
+        />
       : null
 
       }

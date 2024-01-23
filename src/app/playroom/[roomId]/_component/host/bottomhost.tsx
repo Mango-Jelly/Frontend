@@ -14,7 +14,6 @@ export default function bottomhost() {
             <Hostleftbox />
             <Hostmiddlebox />
             <Hostrightbox />
-
         </div>
     </div>
 

@@ -4,11 +4,16 @@ import Image
 import piggie from '@/../public/piggie.svg'
 import '../page.css'
 
+import * as StompJs  from "@stomp/stompjs"
+
+
+
 export default function bottomguestright() {
   return (
     <div className=' ml-[7rem] mr-[2rem] mt-[2rem] w-[60rem]' >
         <div className='flex flex-row h-[8rem]  my-[2rem] ml-[2rem] '> 
             <Image src={piggie}
+                alt = '배역사진'
                 className='h-[8rem] w-[8rem] object-cover mr-[6rem]'
             />
             <div className='inline-block my-auto mr-[6rem]' >
@@ -73,19 +78,19 @@ export default function bottomguestright() {
 
         <div className='grid grid-cols-2 gap-[1rem] mu-[2rem] h-[35rem] w-[55rem]'>
 
-        <div className='flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
+        <div className=' hover:bg-gray-300  flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
             <p className='text-5xl w-[20rem] wrap text-center'>선생님</p>
             <p className='text-5xl w-[20rem] wrap text-center'>할 말 있어요</p>
         </div>
-        <div className='flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
+        <div className='  hover:bg-gray-300 flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
             <p className='text-5xl w-[20rem] wrap text-center'>화장실에 </p>
             <p className='text-5xl w-[20rem] wrap text-center'>가고 싶어요</p>
         </div>
-        <div className='flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
+        <div className='  hover:bg-gray-300 flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
             <p className='text-5xl w-[20rem] wrap text-center'>저는</p>
             <p className='text-5xl w-[20rem] wrap text-center'>준비됐어요</p>
         </div>
-        <div className='flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
+        <div className='  hover:bg-gray-300 flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
             <p className='text-5xl w-[20rem] wrap text-center'>응급 상황! </p>
             <p className='text-5xl w-[20rem] wrap text-center'>확인해 주세요</p>
         </div>
