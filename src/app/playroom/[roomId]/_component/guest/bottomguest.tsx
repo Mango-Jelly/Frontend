@@ -25,6 +25,7 @@ export default function bottomguest(Props : Props) {
   //   }
   //   )
   // }
+  
   return (
     <div className='bottomcontainer bg-white '>
         <div className='grid grid-cols-2 gap-[1rem]'>
