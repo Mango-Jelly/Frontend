@@ -16,25 +16,35 @@ type Props = {
  
 export default function Page({ params : { roomId } } : Props ) {
   const [isHost, setIsHost] = useState(false)
+  const [ENTRY, setENTRY] = useState<string[]>([])
+
+  const USERID = `user${Math.random()}`
 
   const changeHost = () => {
     setIsHost(a => !a)
   }
+
   const client = useRef<any>({});
 
-  // function onMessageReceived (message : StompJs.Message) {
-  //   const messageBody = JSON.parse(message.body);
-  //   // console.log(message)
-  //   console.log(messageBody)
-  // }
+
   function onMessageReceived(message : StompJs.Message) {
     try {
       const messageBody = JSON.parse(message.body);
-      console.log('Received message:', messageBody);
+      console.log((messageBody.code == 100) , isHost)
+
+      console.log(isHost)
+      if ((messageBody.code == 100)) {
+        console.log(messageBody.id)
+        setENTRY(ENTRY => [...ENTRY, messageBody.id])
+
+      } else if (messageBody.code == 101 && isHost){
+        console.log(messageBody.id)
+      }
     } catch (error) {
       console.error('Error parsing received message:', error);
     }
   }
+
 
 
   useEffect(() => {
@@ -44,19 +54,11 @@ export default function Page({ params : { roomId } } : Props ) {
         }
 
           
-      function publishOnWait() {
-          client.current.publish({
-              destination : `/pub/room/${roomId}`,
-              body : JSON.stringify({
-                  id : 1,
-                  roleId : 1  
-              })
-          })
-      }   
 
-      function sendMessage() {
+      function Join() {
         const message = {
-          message: 'Hello world',
+          code: 100,
+          id : USERID
         };
         // console.log(JSON.stringify(message))
         client.current.publish({
@@ -65,27 +67,35 @@ export default function Page({ params : { roomId } } : Props ) {
         });
       }
       
+      
+      function Disconnect() {
+        const message = {
+          code: 101,
+          id : USERID
+        };
+        client.current.publish({
+          destination: `/sub/channel/${roomId}`,
+          body: JSON.stringify(message),
+        })
+      }
+
+
           // 커넥트 함수 /*
       const connect = () => {
 
           client.current = new StompJs.Client({
               brokerURL: "ws://localhost:8080/ws",
-              // connectHeaders: {
-              //   user : `people`
-              // }
               onConnect : () => {
-                  console.log("connected");
+                  console.log("connected"); 
                   subscribe();
-                  sendMessage();
-                  // publishOnWait();
-                  
+                  Join();
               },
               onDisconnect : () => {
                   console.log("failed to connect");
+                  Disconnect();
               }
           })
           client.current.activate()
-      
       }
       connect();
   }, [roomId])
@@ -105,7 +115,9 @@ export default function Page({ params : { roomId } } : Props ) {
 
       <div className='bottomcontainer'>
       {isHost? 
-        <BottomHost />
+        <BottomHost 
+          ENTRY = {ENTRY}
+        />
       : null}
 
       {!isHost?
