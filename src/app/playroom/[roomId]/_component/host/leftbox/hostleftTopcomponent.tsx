@@ -53,10 +53,10 @@ export default function hostleftBottomcomponent() {
     </div>
       <div className=' overflow-auto scroll-auto p-5 h-4/5 '>
         {
-          given_actors.map((role) => (
+          given_actors.map((role, id) => (
 
             <Actors 
-              key={role.name}
+              key={id}
               name = {role.name}
             />
             ))

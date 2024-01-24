@@ -9,6 +9,7 @@ import * as StompJs  from "@stomp/stompjs"
 type Props = {
   client : StompJs.Client
   roomId : string
+  userId : string
   role : string
 }
 
@@ -34,6 +35,7 @@ export default function bottomguest(Props : Props) {
               <Bottomguestright 
                 client = {Props.client}
                 roomId = {Props.roomId}
+                userId = {Props.userId}
                 role = {Props.role}
                />
         </div>

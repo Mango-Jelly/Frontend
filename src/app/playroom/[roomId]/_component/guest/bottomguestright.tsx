@@ -8,6 +8,7 @@ import * as StompJs  from "@stomp/stompjs"
 
 type Props = {
     client : StompJs.Client
+    userId : string
     roomId : string
     role : string
 
@@ -28,7 +29,7 @@ export default function bottomguestright(Props : Props) {
     function Alert(alarm : number) {
         const message = {
                 code: alarm,
-                id : 1
+                id : Props.userId
               };
         Props.client.publish({
             destination: `/sub/channel/${Props.roomId}`,

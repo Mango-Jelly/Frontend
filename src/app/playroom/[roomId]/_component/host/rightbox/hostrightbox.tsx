@@ -21,8 +21,8 @@ export default function hostrightbox(Props : Props) {
       </div>
       <div className=' overflow-auto scroll-auto p-5 h-4/5 '>
         {
-          Props.ENTRY.map((entry) => (
-            <div className='h-[6rem]  flex '>
+          Props.ENTRY.map((entry, id) => (
+            <div className='h-[6rem]  flex ' key = {id}>
               <div className='h-[6rem] mr-[2rem]'>
                 <Image
                 src = {BasicUser}

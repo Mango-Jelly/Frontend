@@ -9,11 +9,17 @@ import BottomGuest from './_component/guest/Bottomguest';
 import { useState } from 'react';
 import { useRef, useEffect } from "react";
 import * as StompJs  from "@stomp/stompjs"
+import { disconnect } from 'process';
 
 type Props = {
   params : { roomId : string } 
 }
  
+
+type StateCode = {
+  
+}
+
 export default function Page({ params : { roomId } } : Props ) {
   const [isHost, setIsHost] = useState(false)
   const [ENTRY, setENTRY] = useState<string[]>([])
@@ -26,20 +32,23 @@ export default function Page({ params : { roomId } } : Props ) {
 
   const client = useRef<any>({});
 
-
   function onMessageReceived(message : StompJs.Message) {
     try {
       const messageBody = JSON.parse(message.body);
-      console.log((messageBody.code == 100) , isHost)
-
-      console.log(isHost)
+      // console.log((messageBody.code == 100) , isHost)
       if ((messageBody.code == 100)) {
-        console.log(messageBody.id)
+        // console.log(messageBody.id)
         setENTRY(ENTRY => [...ENTRY, messageBody.id])
+        
+      } else if (messageBody.code == 101){
+        // console.log(messageBody.id)
+        setENTRY(ENTRY => ENTRY.filter(item => item != messageBody.id))
+        console.log(ENTRY)
+      } else if (Math.floor(messageBody.code / 200) == 1){
 
-      } else if (messageBody.code == 101 && isHost){
-        console.log(messageBody.id)
       }
+
+
     } catch (error) {
       console.error('Error parsing received message:', error);
     }
@@ -52,8 +61,6 @@ export default function Page({ params : { roomId } } : Props ) {
       const subscribe = () => {
           client.current.subscribe(`/sub/channel/${roomId}`, onMessageReceived)
         }
-
-          
 
       function Join() {
         const message = {
@@ -98,6 +105,14 @@ export default function Page({ params : { roomId } } : Props ) {
           client.current.activate()
       }
       connect();
+
+      window.addEventListener('beforeunload', Disconnect);
+
+    // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
+    return () => {
+      window.removeEventListener('beforeunload', Disconnect);
+    };
+
   }, [roomId])
   
 
@@ -124,6 +139,8 @@ export default function Page({ params : { roomId } } : Props ) {
         <BottomGuest 
           client = {client.current}  
           roomId = {roomId}
+          role = '1'
+          userId = {USERID}
         />
       : null
 
