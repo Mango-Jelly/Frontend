@@ -2,7 +2,10 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import style from './video.module.css'
 import { myVideos } from '../_component/DummyData'
+import { Suspense } from 'react'
+import VideoViewer from './VideoViewer'
 import {
   ArrowDownTrayIcon,
   LockClosedIcon,
@@ -13,6 +16,8 @@ import {
 type Props = {
   id: string
 }
+
+//TODO : 비디오 불러오기 API 연결
 
 export default function Video({ id }: Props) {
   const router = useRouter()
@@ -58,8 +63,10 @@ export default function Video({ id }: Props) {
             <LockClosedIcon className='size-8 mx-2' />
           )}
         </div>
-        <div className='bg-gray-200 w-full h-[70%]'>
-          비디오 플레이어 공간입니다 ^ㅇ^
+        <div className='bg-gray-200 w-full h-[70%] rounded-3xl'>
+          <Suspense fallback={<p>Loading video...</p>}>
+            <VideoViewer />
+          </Suspense>
         </div>
       </div>
     </div>
