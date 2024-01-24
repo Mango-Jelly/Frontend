@@ -1,45 +1,45 @@
 import React from 'react'
 import Image
- from 'next/image'
+  from 'next/image'
 import piggie from '@/../public/piggie.svg'
 import Roles from './Roles'
 
 
 export default function hostleftTopcomponent() {
-  
+
   const given_roles = [
     {
-      img : piggie,
-      name : '첫째 돼지',
-      actor : ''
+      img: piggie,
+      name: '첫째 돼지',
+      actor: ''
     },
     {
-      img : piggie,
-      name : '첫째 돼지',
-      actor : ''
+      img: piggie,
+      name: '첫째 돼지',
+      actor: ''
     },
     {
-      img : piggie,
-      name : '첫째 돼지',
-      actor : ''
+      img: piggie,
+      name: '첫째 돼지',
+      actor: ''
     },
     {
-      img : piggie,
-      name : '첫째 돼지',
-      actor : ''
+      img: piggie,
+      name: '첫째 돼지',
+      actor: ''
     },
     {
-      img : piggie,
-      name : '첫째 돼지',
-      actor : ''
+      img: piggie,
+      name: '첫째 돼지',
+      actor: ''
     },
     {
-      img : piggie,
-      name : '첫째 돼지',
-      actor : ''
+      img: piggie,
+      name: '첫째 돼지',
+      actor: ''
     },
   ]
-  
+
 
   return (
     <div className='h-3/5 rounded-md bg-white mb-5 p-5'>
@@ -48,15 +48,16 @@ export default function hostleftTopcomponent() {
       </div>
       <div className=' overflow-auto scroll-auto p-5 h-4/5 '>
         {
-          given_roles.map((role) => 
-            (<Roles 
-              img = {role.img}
-              name = {role.name}
-              actor = {role.actor}
-            />)
+          given_roles.map((role) =>
+          (<Roles
+            img={role.img}
+            name={role.name}
+            actor={role.actor}
+            key={role.name}
+          />)
           )
         }
-      </div>  
+      </div>
 
 
     </div>
