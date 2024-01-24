@@ -2,18 +2,29 @@ import Image
  from 'next/image'
 import React from 'react'
 import VideoImage from '@/../public/VideoTag.svg'
+import UserVideoComponent from '../../UserVIdeo'
 
 
+type Props = {
+  streamManager : any
+}
 
-export default function hostmiddlebox() {
+export default function hostmiddlebox(Props : Props) {
+  console.log(Props.streamManager)
   return (
     <div className='col-span-3 '>
         <div className='w-11/12 mx-auto'>
 
-
-
+            {
+              
+              <UserVideoComponent 
+              streamManager={Props.streamManager}
+              />
+            }
+            {/* {
+            
             <Image alt = "메인 비디오" src = {VideoImage} className='w-full mb-5'/>
-
+            } */}
             <div className='flex justify-between'>
                 <div id = "leftbox" className='flex flex-row'>
                 <button type="button" className="h-14

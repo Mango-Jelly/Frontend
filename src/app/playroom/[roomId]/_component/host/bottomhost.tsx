@@ -15,17 +15,19 @@ type UserStatus = {
 
  type Props = {
   ENTRY : UserStatus[]
+  streamManager : any
  }
 
 
 export default function bottomhost(Props : Props) {
-  
+  console.log("BOTTOM HOST에서 공개 ", Props.streamManager)
   return (
     <div className='bottomcontainer'>
 
         <div className='grid grid-cols-5'>
             <Hostleftbox />
-            <Hostmiddlebox />
+            <Hostmiddlebox 
+              streamManager = {Props.streamManager} />
             <Hostrightbox 
              ENTRY = {Props.ENTRY}
             />

@@ -3,13 +3,17 @@ import style from '@/app/_component/modal.module.css'
 import Link from "next/link"
 import Top from './_component/Top'
 // import { useRouter } from 'next/router'
-
+import axios from 'axios';
 import BottomHost from './_component/host/Bottomhost';
 import BottomGuest from './_component/guest/Bottomguest';
 import { useState } from 'react';
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import * as StompJs  from "@stomp/stompjs"
-import { disconnect } from 'process';
+import { OpenVidu } from 'openvidu-browser';
+
+
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://localhost:5000' : 'https://demos.openvidu.io/';
+
 
 type Props = {
   params : { roomId : string } 
@@ -26,15 +30,26 @@ const USERID = `user${Math.random()}`
 export default function Page({ params : { roomId } } : Props ) {
   const [isHost, setIsHost] = useState(false)
   const [ENTRY, setENTRY] = useState<UserStatus[]>([])
-  
+  const [mySessionId, setMySessionId] = useState(`Session${roomId}`)
+  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
 
+
+  const [mainStreamManager, setMainStreamManager] = useState(undefined);
+  const [session, setSession] = useState(undefined);
+  const [subscribers, setSubscribers] = useState([]);
+  const [publisher, setPublisher] = useState(undefined);
+  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
 
   const changeHost = () => {
     setIsHost(a => !a)
   }
 
   const client = useRef<any>({});
+  const OV = useRef(new OpenVidu());
 
+
+
+  
   function onMessageReceived(message : StompJs.Message) {
     try {
       const messageBody = JSON.parse(message.body);
@@ -74,6 +89,87 @@ export default function Page({ params : { roomId } } : Props ) {
     }
   }
 
+
+  const getToken = useCallback(async () => {
+        return createSession(mySessionId).then(sessionId =>
+            createToken(sessionId),
+        );
+    }, [mySessionId]);
+
+    const createSession = async (sessionId) => {
+        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
+            headers: { 'Content-Type': 'application/json', },
+        });
+        return response.data; // The sessionId
+    };
+
+    const createToken = async (sessionId) => {
+        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+            headers: { 'Content-Type': 'application/json', },
+        });
+        return response.data; // The token
+    };
+
+
+    // const leaveSession = useCallback(() => {
+    //   // Leave the session
+    //   if (session) {
+    //       session.disconnect();
+    //   }
+    //   console.log('나는 출력되고있다')
+    //   // 상태관리중인 세션이 있을경우 초기화
+    //   // Reset all states and OpenVidu object
+    //   OV.current = new OpenVidu();
+    //   setSession(undefined);
+    //   setSubscribers([]);
+    //   setMySessionId('SessionA');
+    //   setMyUserName('Participant' + Math.floor(Math.random() * 100));
+    //   setMainStreamManager(undefined);
+    //   setPublisher(undefined);
+    // }, [session]);
+
+
+    const switchCamera = useCallback(async () => {
+      try {
+          const devices = await OV.current.getDevices();
+          const videoDevices = devices.filter(device => device.kind === 'videoinput');
+  
+          if (videoDevices && videoDevices.length > 1) {
+              const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
+  
+              if (newVideoDevice.length > 0) {
+                  const newPublisher = OV.current.initPublisher(undefined, {
+                      videoSource: newVideoDevice[0].deviceId,
+                      publishAudio: true,
+                      publishVideo: true,
+                      mirror: true,
+                  });
+                  // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
+                  if (session) {
+                      await session.unpublish(mainStreamManager);
+                      await session.publish(newPublisher);
+                      setCurrentVideoDevice(newVideoDevice[0]);
+                      setMainStreamManager(newPublisher);
+                      setPublisher(newPublisher);
+                  }
+              }
+          }
+      } catch (e) {
+          console.error(e);
+      }
+  }, [currentVideoDevice, session, mainStreamManager]);
+
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    ///////////시작부터 마운트 될때/////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
+    //////////////////////////////////////////
 
 
   useEffect(() => {
@@ -129,14 +225,85 @@ export default function Page({ params : { roomId } } : Props ) {
       }
       connect();
 
-      window.addEventListener('beforeunload', Disconnect);
 
     // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
+
+
+      // 오픈 vidu 파트
+
+      // 객체 생성
+    const mySession = OV.current.initSession(); 
+
+    
+    mySession.on('streamCreated', (event) => {
+      const subscriber = mySession.subscribe(event.stream, undefined);
+      setSubscribers((subscribers) => [...subscribers, subscriber]);
+    });
+    
+    mySession.on('exception', (exception) => {
+      console.warn(exception);
+    });
+    
+    
+
+    
+      
+
+    // 이거 왜 안됨.
+
+
+
+    console.log("session은 \n" , session)
+      
+
+    // const handleBeforeUnload = () => {
+    //   leaveSession();
+    // };
+
+    // window.addEventListener('beforeunload', handleBeforeUnload);
+
+    window.addEventListener('beforeunload', Disconnect);
+    // mySession으로까지 저장 
+    getToken().then(async (token) => {
+      try {
+          console.log("되긴함")
+          await mySession.connect(token, { clientData: myUserName });
+
+          let publisher = await OV.current.initPublisherAsync(undefined, {
+              audioSource: undefined,
+              videoSource: undefined,
+              publishAudio: true,
+              publishVideo: true,
+              resolution: '640x480',
+              frameRate: 30,
+              insertMode: 'APPEND',
+              mirror: false,
+          });
+
+          mySession.publish(publisher);
+
+          const devices = await OV.current.getDevices();
+          const videoDevices = devices.filter(device => device.kind === 'videoinput');
+          const currentVideoDeviceId = publisher.stream.getMediaStream().getVideoTracks()[0].getSettings().deviceId;
+          const currentVideoDevice = videoDevices.find(device => device.deviceId === currentVideoDeviceId);
+
+          setMainStreamManager(publisher);
+          setPublisher(publisher);
+          setCurrentVideoDevice(currentVideoDevice);
+      } catch (error) {
+          console.log("안되긴함")
+
+          console.log('There was an error connecting to the session:', error.code, error.message);
+      }
+    });
+
+    
+
     return () => {
       window.removeEventListener('beforeunload', Disconnect);
     };
 
-  }, [roomId])
+  }, [])
   
 
   return (
@@ -147,6 +314,8 @@ export default function Page({ params : { roomId } } : Props ) {
       <Top 
       depart = '꿈나무 유치원'
       title = '망고 연극반'
+
+
       />
 
       <p className='text-center'><button type='button' onClick = {changeHost}  className="text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{isHost ? 'Host': 'Guest'}  </button></p>
@@ -155,6 +324,7 @@ export default function Page({ params : { roomId } } : Props ) {
       {isHost? 
         <BottomHost 
           ENTRY = {ENTRY}
+          streamManager = {mainStreamManager}
         />
       : null}
 
