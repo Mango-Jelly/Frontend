@@ -16,15 +16,18 @@ type Props = {
 }
  
 
-type StateCode = {
-  
+type UserStatus = {
+  name : string
+  status : number
 }
+
+const USERID = `user${Math.random()}`
 
 export default function Page({ params : { roomId } } : Props ) {
   const [isHost, setIsHost] = useState(false)
-  const [ENTRY, setENTRY] = useState<string[]>([])
+  const [ENTRY, setENTRY] = useState<UserStatus[]>([])
+  
 
-  const USERID = `user${Math.random()}`
 
   const changeHost = () => {
     setIsHost(a => !a)
@@ -36,15 +39,32 @@ export default function Page({ params : { roomId } } : Props ) {
     try {
       const messageBody = JSON.parse(message.body);
       // console.log((messageBody.code == 100) , isHost)
+      // console.log(messageBody.code)
+
+
+
+
       if ((messageBody.code == 100)) {
-        // console.log(messageBody.id)
-        setENTRY(ENTRY => [...ENTRY, messageBody.id])
+        let newBody : UserStatus = {
+          name : messageBody.id,
+          status : 0
+        }
+        setENTRY(ENTRY => [...ENTRY, newBody])
+
         
       } else if (messageBody.code == 101){
-        // console.log(messageBody.id)
-        setENTRY(ENTRY => ENTRY.filter(item => item != messageBody.id))
+
+        setENTRY(ENTRY => ENTRY.filter(item => item.name != messageBody.id))
         console.log(ENTRY)
       } else if (Math.floor(messageBody.code / 200) == 1){
+        setENTRY(ENTRY => ENTRY.map((item) => {
+          console.log(item.name, messageBody.id)
+          if (item.name === messageBody.id){
+            console.log(item.name)
+            item.status = messageBody.code
+          }
+          return item;
+        }))
 
       }
 
@@ -57,6 +77,9 @@ export default function Page({ params : { roomId } } : Props ) {
 
 
   useEffect(() => {
+
+      // USERID를 일정하게 유지하는 방법
+      // const USERID = `user${Math.random()}`
       
       const subscribe = () => {
           client.current.subscribe(`/sub/channel/${roomId}`, onMessageReceived)
@@ -140,7 +163,7 @@ export default function Page({ params : { roomId } } : Props ) {
           client = {client.current}  
           roomId = {roomId}
           role = '1'
-          userId = {USERID}
+          userId = {USERID ? USERID : ''}
         />
       : null
 

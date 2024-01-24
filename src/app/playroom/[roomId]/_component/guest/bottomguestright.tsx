@@ -57,52 +57,6 @@ export default function bottomguestright(Props : Props) {
                 </div>
             </div>
         </div>
-        
-
-        {/* <div className='grid grid-cols-2 mu-[2rem] h-[40rem] '>
-            <div >
-                <p className='h-1/2 default-component-color  ml-[0.5rem] mt-[0.5rem] rounded-[2rem] relative'>
-                    
-                    <p className='absolute bottom-50 bottom-[10rem]'>선생님 할 말 있어요</p>
-                
-                </p>
-                <p className='h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem]  rounded-[2rem]'>화장실에 가고 싶어요</p>
-            </div>
-            <div >
-                <p className='h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem]  rounded-[2rem]'>저는 준비됐어요</p>
-                <p className='h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem]  rounded-[2rem]'>응급 상황! 확인해 주세요</p>
-            </div>
-        </div> */}
-        {/* <div className='grid grid-cols-2 mu-[2rem] h-[40rem] '>
-            <div className='flex justify-center items-center h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem] relative'>
-                <p >선생님 할 말 있어요</p>
-            </div>
-            <div className='flex justify-center items-center h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem]  rounded-[2rem]'>
-                <p>화장실에 가고 싶어요</p>
-            </div>
-            <div className='flex justify-center items-center h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem]  rounded-[2rem]'>
-                <p>저는 준비됐어요</p>
-            </div>
-            <div className='flex justify-center items-center h-1/2 default-component-color ml-[0.5rem] mt-[0.5rem]  rounded-[2rem]'>
-                <p>응급 상황! 확인해 주세요</p>
-            </div>
-        </div> */}
-
-        {/* <div className='grid grid-cols-2 gap-[2rem] mu-[2rem] h-[40rem]'>
-            <div className='flex justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem] relative'>
-                <p className=' text-5xl w-[151  rem] wrap'>선생님</p>
-                <p className=' text-5xl w-[151  rem] wrap'>할 말 있어요</p>
-            </div>
-            <div className='flex justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
-                <p>화장실에 가고 싶어요</p>
-            </div>
-            <div className='flex justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
-                <p>저는 준비됐어요</p>
-            </div>
-            <div className='flex justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem]'>
-                <p>응급 상황! 확인해 주세요</p>
-            </div>
-        </div> */}
 
         <div className='grid grid-cols-2 gap-[1rem] mu-[2rem] h-[35rem] w-[55rem]'>
 

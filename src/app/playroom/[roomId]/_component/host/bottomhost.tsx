@@ -8,16 +8,18 @@ import Image
  from 'next/image'
 
 
+type UserStatus = {
+  name : string
+  status : number
+}
+
  type Props = {
-  ENTRY : string[]
+  ENTRY : UserStatus[]
  }
 
 
 export default function bottomhost(Props : Props) {
   
-  console.log(Props.ENTRY)
-
-
   return (
     <div className='bottomcontainer'>
 
