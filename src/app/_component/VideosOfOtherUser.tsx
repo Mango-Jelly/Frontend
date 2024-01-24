@@ -1,12 +1,13 @@
 import { publicVideos } from './DummyData'
 import pinIcon from '../../../public/YellowPinIcon.png'
 import Image from 'next/image'
+import Link from 'next/link'
 
 //TODO : 다른 사람들의 연극 구경하기 API 연결
 
 export default function VideosOfOtherUser() {
     return (
-        <div className='bg-white rounded-[2rem] w-1/2 h-auto p-4 mr-2'>
+        <div className='bg-white rounded-[2rem] w-1/2 p-4 mr-2 h-full'>
             <div className='flex px-8 py-4 mb-1'>
                 <Image
                     src={pinIcon}
@@ -20,13 +21,15 @@ export default function VideosOfOtherUser() {
                 </p>
             </div>
 
-            <div className='flex flex-wrap justify-center'>
+            <div className='flex flex-wrap justify-center h-full'>
                 {publicVideos.map((value, key) => {
                     return (
-                        <div key={key} className='w-64 mx-3 mb-4'>
-                            <div className=' bg-gray-200 rounded-2xl h-40 mb-2'></div>
-                            <div className='truncate text-center'>{`${value.title} | ${value.department}`}</div>
-                        </div>
+                        <Link href={`/video/${value.videoId}`} key={key} >
+                            <div className='w-64 mx-3 mb-4 rounded-xl p-2 hover:bg-gray-100 cursor-pointer'>
+                                <div className=' bg-gray-200 rounded-2xl h-40 mb-2'></div>
+                                <div className='truncate text-center'>{`${value.title} | ${value.department}`}</div>
+                            </div>
+                        </Link>
                     )
                 })}
             </div>
