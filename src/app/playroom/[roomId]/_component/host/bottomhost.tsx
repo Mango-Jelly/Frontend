@@ -20,7 +20,7 @@ type UserStatus = {
 
 
 export default function bottomhost(Props : Props) {
-  console.log("BOTTOM HOST에서 공개 ", Props.streamManager)
+  // console.log("BOTTOM HOST에서 공개 ", Props.streamManager)s
   return (
     <div className='bottomcontainer'>
 

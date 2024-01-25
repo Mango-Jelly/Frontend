@@ -53,11 +53,6 @@ export default function Page({ params : { roomId } } : Props ) {
   function onMessageReceived(message : StompJs.Message) {
     try {
       const messageBody = JSON.parse(message.body);
-      // console.log((messageBody.code == 100) , isHost)
-      // console.log(messageBody.code)
-
-
-
 
       if ((messageBody.code == 100)) {
         let newBody : UserStatus = {
@@ -252,10 +247,6 @@ export default function Page({ params : { roomId } } : Props ) {
     // 이거 왜 안됨.
 
 
-
-    console.log("session은 \n" , session)
-      
-
     // const handleBeforeUnload = () => {
     //   leaveSession();
     // };
@@ -266,21 +257,20 @@ export default function Page({ params : { roomId } } : Props ) {
     // mySession으로까지 저장 
     getToken().then(async (token) => {
       try {
-          console.log("되긴함")
-          await mySession.connect(token, { clientData: myUserName });
-
-          let publisher = await OV.current.initPublisherAsync(undefined, {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: '640x480',
-              frameRate: 30,
-              insertMode: 'APPEND',
-              mirror: false,
-          });
-
-          mySession.publish(publisher);
+        await mySession.connect(token, { clientData: myUserName });
+        
+        let publisher = await OV.current.initPublisherAsync(undefined, {
+          audioSource: undefined,
+          videoSource: undefined,
+          publishAudio: true,
+          publishVideo: true,
+          resolution: '640x480',
+          frameRate: 30,
+          insertMode: 'APPEND',
+          mirror: false,
+        });
+        
+        mySession.publish(publisher);
 
           const devices = await OV.current.getDevices();
           const videoDevices = devices.filter(device => device.kind === 'videoinput');
@@ -289,10 +279,8 @@ export default function Page({ params : { roomId } } : Props ) {
 
           setMainStreamManager(publisher);
           setPublisher(publisher);
-          setCurrentVideoDevice(currentVideoDevice);
+          setCurrentVideoDevice(currentVideoDevice);  
       } catch (error) {
-          console.log("안되긴함")
-
           console.log('There was an error connecting to the session:', error.code, error.message);
       }
     });
@@ -314,8 +302,7 @@ export default function Page({ params : { roomId } } : Props ) {
       <Top 
       depart = '꿈나무 유치원'
       title = '망고 연극반'
-
-
+      subscribers = {subscribers}
       />
 
       <p className='text-center'><button type='button' onClick = {changeHost}  className="text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{isHost ? 'Host': 'Guest'}  </button></p>
