@@ -4,8 +4,8 @@ import Image
  from 'next/image'
 import Bottomguestright from './Bottomguestright'
 import Bottomguestleft from './Bottomguestleft'
-
 import * as StompJs  from "@stomp/stompjs"
+
 type Props = {
   client : StompJs.Client
   roomId : string

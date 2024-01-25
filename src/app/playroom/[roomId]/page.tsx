@@ -56,11 +56,9 @@ export default function Page({ params : { roomId } } : Props ) {
 
   
   function onMessageReceived(message : StompJs.Message) {
-    console.log('나는 지금 host인가?' , amIhost.current, USERID, ': say')
 
     try {
       const messageBody = JSON.parse(message.body);
-      console.log( !amIhost.current , Number(messageBody.code) === 300, USERID === messageBody.name)
 
       if (messageBody.code == 100) {
         let newBody : UserStatus = {
@@ -75,9 +73,9 @@ export default function Page({ params : { roomId } } : Props ) {
       else if (200 <= messageBody.code && messageBody.code < 300)
       {
         setENTRY(ENTRY => ENTRY.map((item) => {
-          console.log(item.name, messageBody.id)
+
           if (item.name === messageBody.id){
-            console.log(item.name)
+
             item.status = messageBody.code
           }
           return item;
@@ -85,7 +83,6 @@ export default function Page({ params : { roomId } } : Props ) {
       }
       else if ( !amIhost.current && Number(messageBody.code) === 300 && USERID === messageBody.name)
       {
-        console.log('야호')
         setRole(messageBody.role)
       }
       
@@ -109,6 +106,7 @@ export default function Page({ params : { roomId } } : Props ) {
         });
         return response.data; // The sessionId
     };
+
 
     const createToken = async (sessionId : any) => {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
@@ -244,7 +242,6 @@ export default function Page({ params : { roomId } } : Props ) {
     
     mySession.on('streamCreated', (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
-      console.log('타인 세션 확인용', event )
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
     
@@ -305,7 +302,6 @@ export default function Page({ params : { roomId } } : Props ) {
   
 
   return (
-    // TODO : 화상 채팅방 구현
 
     <div className='flex flex-col items-center'>
     <div className=''>

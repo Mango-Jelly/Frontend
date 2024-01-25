@@ -53,7 +53,6 @@ export default function HostleftBottomcomponent(Props : Props) {
   ]
 
   function sendRoles(role : string, index : number) {
-    console.log(role, '은' , rolestates[index].name ,'이 맡기로 했다')
     rolestates[index].isSelected = true
     const message = {
       code : 300,

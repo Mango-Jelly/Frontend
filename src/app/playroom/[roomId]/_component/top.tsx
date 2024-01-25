@@ -15,7 +15,7 @@ type Props = {
 }
 
 export default function top(props : Props) {    
-    console.log('Top Component', props.subscribers)
+
 
   return (
     <div className = "topcontainer">
