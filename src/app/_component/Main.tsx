@@ -7,7 +7,8 @@ import MakeRoomButton from './MakeRoomButton'
 import { useState } from 'react'
 
 export default function Main() {
-    const [isLogin] = useState(true);
+    const [isLogin] = useState(false);
+
     return (
         <>
             <main className='flex justify-center px-12 md:px-24 lg:px-52'>
