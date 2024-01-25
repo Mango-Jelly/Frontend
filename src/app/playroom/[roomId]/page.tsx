@@ -37,8 +37,6 @@ export default function Page({ params : { roomId } } : Props ) {
   const [ENTRY, setENTRY] = useState<UserStatus[]>([])
   const [mySessionId, setMySessionId] = useState(`Session${roomId}`)
   const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
-
-
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [session, setSession] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);

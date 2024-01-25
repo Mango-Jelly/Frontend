@@ -27,8 +27,8 @@ type UserRoleState = {
 }
 
 
-const [rolestates, setRolestates]  = useState<UserRoleState[]>([]) 
 export default function hostleftBottomcomponent(Props : Props) {
+  const [rolestates, setRolsestates]  = useState<UserRoleState[]>([]) 
 
 
   const given_actors = [
@@ -56,7 +56,7 @@ export default function hostleftBottomcomponent(Props : Props) {
 
   useEffect(() => {
     console.log('hostLeftTopComponent', Props.ENTRY, '감지됨')
-    setRolestates(Props.ENTRY.map((entry) => {
+    setRolsestates(Props.ENTRY.map((entry) => {
       let tmpState : UserRoleState = {
         name : entry.name,
         isSelected :  false
