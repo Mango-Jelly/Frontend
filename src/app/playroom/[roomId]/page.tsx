@@ -33,15 +33,15 @@ type UserRole = {
 const USERID = `user${Math.random()}`
 
 export default function Page({ params : { roomId } } : Props ) {
-  const [isHost, setIsHost] = useState(false)
+  const [isHost, setIsHost] = useState<boolean>(false)
   const [ENTRY, setENTRY] = useState<UserStatus[]>([])
   const [mySessionId, setMySessionId] = useState(`Session${roomId}`)
-  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`)
+  const [myUserName, setMyUserName] = useState<string>(`Participant${Math.floor(Math.random() * 100)}`)
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [session, setSession] = useState(undefined);
-  const [subscribers, setSubscribers] = useState([]);
-  const [publisher, setPublisher] = useState(undefined);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [session, setSession] = useState<any>(undefined);
+  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [publisher, setPublisher] = useState<any>(undefined);
+  const [currentVideoDevice, setCurrentVideoDevice] = useState<any>(null);
   const [role, setRole] = useState('');
 
   const changeHost = () => {
@@ -56,26 +56,24 @@ export default function Page({ params : { roomId } } : Props ) {
 
   
   function onMessageReceived(message : StompJs.Message) {
-    // console.log('나는 지금 host인가?' , amIhost.current)
-
+    console.log('나는 지금 host인가?' , amIhost.current, USERID, ': say')
 
     try {
       const messageBody = JSON.parse(message.body);
-      
-      if ((messageBody.code == 100)) {
+      console.log( !amIhost.current , Number(messageBody.code) === 300, USERID === messageBody.name)
+
+      if (messageBody.code == 100) {
         let newBody : UserStatus = {
           name : messageBody.id,
           status : 0
         }
         setENTRY(ENTRY => [...ENTRY, newBody])
-
-        
-      } else if (messageBody.code == 101){
-
+      } 
+      else if (messageBody.code == 101){
         setENTRY(ENTRY => ENTRY.filter(item => item.name != messageBody.id))
-        console.log(ENTRY)
-
-      } else if (Math.floor(messageBody.code / 200) == 1){
+      } 
+      else if (200 <= messageBody.code && messageBody.code < 300)
+      {
         setENTRY(ENTRY => ENTRY.map((item) => {
           console.log(item.name, messageBody.id)
           if (item.name === messageBody.id){
@@ -85,12 +83,12 @@ export default function Page({ params : { roomId } } : Props ) {
           return item;
         }))
       }
-
-      else if ( !amIhost && messageBody.code === 300 && USERID === messageBody.name)
+      else if ( !amIhost.current && Number(messageBody.code) === 300 && USERID === messageBody.name)
       {
+        console.log('야호')
         setRole(messageBody.role)
       }
-
+      
 
 
     } catch (error) {
@@ -105,14 +103,14 @@ export default function Page({ params : { roomId } } : Props ) {
         );
     }, [mySessionId]);
 
-    const createSession = async (sessionId) => {
+    const createSession = async (sessionId : any) => {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
             headers: { 'Content-Type': 'application/json', },
         });
         return response.data; // The sessionId
     };
 
-    const createToken = async (sessionId) => {
+    const createToken = async (sessionId : any) => {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
@@ -147,7 +145,7 @@ export default function Page({ params : { roomId } } : Props ) {
               const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
   
               if (newVideoDevice.length > 0) {
-                  const newPublisher = OV.current.initPublisher(undefined, {
+                  const newPublisher : any = OV.current.initPublisher(undefined, {
                       videoSource: newVideoDevice[0].deviceId,
                       publishAudio: true,
                       publishVideo: true,
@@ -168,17 +166,17 @@ export default function Page({ params : { roomId } } : Props ) {
       }
   }, [currentVideoDevice, session, mainStreamManager]);
 
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    ///////////시작부터 마운트 될때/////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
-    //////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때/////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
   useEffect(() => {
@@ -271,7 +269,7 @@ export default function Page({ params : { roomId } } : Props ) {
       try {
         await mySession.connect(token, { clientData: myUserName });
         
-        let publisher = await OV.current.initPublisherAsync(undefined, {
+        let publisher : any = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined,
           videoSource: undefined,
           publishAudio: true,
@@ -292,7 +290,7 @@ export default function Page({ params : { roomId } } : Props ) {
           setMainStreamManager(publisher);
           setPublisher(publisher);
           setCurrentVideoDevice(currentVideoDevice);  
-      } catch (error) {
+      } catch (error : any) {
           console.log('There was an error connecting to the session:', error.code, error.message);
       }
     });
@@ -303,7 +301,7 @@ export default function Page({ params : { roomId } } : Props ) {
       window.removeEventListener('beforeunload', Disconnect);
     };
 
-  }, [])
+  }, [getToken, myUserName, roomId])
   
 
   return (
@@ -324,6 +322,7 @@ export default function Page({ params : { roomId } } : Props ) {
         <BottomHost 
           ENTRY = {ENTRY}
           client = {client.current}
+          roomId = {roomId}
           streamManager = {mainStreamManager}
 
         />

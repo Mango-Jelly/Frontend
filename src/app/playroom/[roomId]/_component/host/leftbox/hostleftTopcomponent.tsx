@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { useState } from 'react';
+import { useEffect } from "react";
 import Image
  from 'next/image'
 import piggie from '@/../public/piggie.svg'
@@ -18,6 +20,7 @@ type UserStatus = {
 type Props = {
   ENTRY : UserStatus[]
   client : any
+  roomId : string
 }
 
 
@@ -27,7 +30,7 @@ type UserRoleState = {
 }
 
 
-export default function hostleftBottomcomponent(Props : Props) {
+export default function HostleftBottomcomponent(Props : Props) {
   const [rolestates, setRolsestates]  = useState<UserRoleState[]>([]) 
 
 
@@ -49,9 +52,18 @@ export default function hostleftBottomcomponent(Props : Props) {
     },
   ]
 
-  function sendRoles(role : string, name : string) {
-    console.log(role, '은' , name ,'이 맡기로 했다')
-
+  function sendRoles(role : string, index : number) {
+    console.log(role, '은' , rolestates[index].name ,'이 맡기로 했다')
+    rolestates[index].isSelected = true
+    const message = {
+      code : 300,
+      name : rolestates[index].name,
+      role : role
+    };
+    Props.client.publish({
+      destination: `/sub/channel/${Props.roomId}`,
+      body: JSON.stringify(message),
+  })
   }
 
   useEffect(() => {
@@ -75,7 +87,7 @@ export default function hostleftBottomcomponent(Props : Props) {
       <div className=' overflow-auto scroll-auto p-5 h-4/5 '>
         {
           given_actors.map((role, id) => (
-            <span className='flex justify-between'>
+            <span className='flex justify-between' key={id}>
               <Actors 
                 key={id}
                 name = {role.name}
@@ -83,14 +95,15 @@ export default function hostleftBottomcomponent(Props : Props) {
               <select
               className=" border text-sm rounded-lg block w-1/3 p-2.5 "
               id={`roleSelect_${id}`}
-              onChange={(e) => sendRoles(role.name, e.target.value)}
+              onChange={(e) => sendRoles(role.name, Number(e.target.value))}
               >
                 <option selected>아이를 선택하세요</option>
                 {rolestates.map(
                   (state, id) => (
                     <option 
-                    key={id}
-                    value={state.name}
+                      className = {state.isSelected ? 'bg-gray-500' : ''}
+                      key={id}
+                      value={id}
                     >{state.name}</option>
                   )
                 )}

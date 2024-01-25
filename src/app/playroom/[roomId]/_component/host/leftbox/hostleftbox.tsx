@@ -10,6 +10,7 @@ type UserStatus = {
 type Props = {
   ENTRY : UserStatus[]
   client : any
+  roomId : string
 }
 
 
@@ -19,7 +20,9 @@ export default function hostleftbox(Props : Props) {
         <HostleftTopcomponent 
           ENTRY = {Props.ENTRY}
           client = {Props.client}
+          roomId = {Props.roomId}
         />
+
         <HostleftBottomcomponent />
     </div>
   )

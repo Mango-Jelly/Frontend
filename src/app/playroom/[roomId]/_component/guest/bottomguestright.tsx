@@ -11,7 +11,6 @@ type Props = {
     userId : string
     roomId : string
     role : string
-
   }
   
 
@@ -47,7 +46,7 @@ export default function bottomguestright(Props : Props) {
             <div className='inline-block my-auto mr-[6rem]' >
                 <div className='inline-block '>
                     <h1 className='block text-4xl'>나의 역할은</h1>
-                    {Props.role ? <h2 className='block text-5xl'> <strong className='text-6xl'>돼지쌔끼</strong>에요</h2> : <h2 className='block text-4xl'>아직 정해지지 않았어요</h2>}
+                    {Props.role ? <h2 className='block text-5xl'> <strong className='text-6xl'>{Props.role}</strong>에요</h2> : <h2 className='block text-4xl'>아직 정해지지 않았어요</h2>}
                 </div>
             </div>
             <div className=' h-[8rem] block relative '>

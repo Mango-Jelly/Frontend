@@ -15,6 +15,7 @@ type UserStatus = {
 
  type Props = {
   ENTRY : UserStatus[]
+  roomId : string
   streamManager : any
   client : any
  }
@@ -29,6 +30,7 @@ export default function bottomhost(Props : Props) {
             <Hostleftbox 
             ENTRY = {Props.ENTRY}
             client = {Props.client}
+            roomId = {Props.roomId}
             />
             <Hostmiddlebox 
               streamManager = {Props.streamManager} />

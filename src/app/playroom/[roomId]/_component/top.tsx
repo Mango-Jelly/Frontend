@@ -14,7 +14,7 @@ type Props = {
     subscribers : any[];
 }
 
-export default function top(props : Props) {
+export default function top(props : Props) {    
     console.log('Top Component', props.subscribers)
 
   return (
@@ -51,11 +51,13 @@ export default function top(props : Props) {
                 <div className=' relative w-full overflow-x-auto  '>
                     <div className="overflow-hidden min-w-max flex">
                             {
-                            props.subscribers.map((event) => 
+                            props.subscribers.map((event, id) => 
                                 (
                                     <div
+                                    key = {id}
                                     className='border-solid border-2 mx-[1rem] w-[35rem]'>
                                     <UserVideoComponent 
+                                    key = {id}
                                     streamManager={event}
                                     />
                                     </div>
