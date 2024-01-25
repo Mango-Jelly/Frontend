@@ -25,6 +25,11 @@ type UserStatus = {
   status : number
 }
 
+type UserRole = {
+  name : string
+  role : string 
+}
+
 const USERID = `user${Math.random()}`
 
 export default function Page({ params : { roomId } } : Props ) {
@@ -39,21 +44,26 @@ export default function Page({ params : { roomId } } : Props ) {
   const [subscribers, setSubscribers] = useState([]);
   const [publisher, setPublisher] = useState(undefined);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [role, setRole] = useState('');
 
   const changeHost = () => {
-    setIsHost(a => !a)
+    setIsHost(prevIsHost => !prevIsHost);
+    amIhost.current = !amIhost.current;
   }
 
   const client = useRef<any>({});
   const OV = useRef(new OpenVidu());
 
-
+  const amIhost = useRef<boolean>(false);
 
   
   function onMessageReceived(message : StompJs.Message) {
+    // console.log('나는 지금 host인가?' , amIhost.current)
+
+
     try {
       const messageBody = JSON.parse(message.body);
-
+      
       if ((messageBody.code == 100)) {
         let newBody : UserStatus = {
           name : messageBody.id,
@@ -66,6 +76,7 @@ export default function Page({ params : { roomId } } : Props ) {
 
         setENTRY(ENTRY => ENTRY.filter(item => item.name != messageBody.id))
         console.log(ENTRY)
+
       } else if (Math.floor(messageBody.code / 200) == 1){
         setENTRY(ENTRY => ENTRY.map((item) => {
           console.log(item.name, messageBody.id)
@@ -75,8 +86,13 @@ export default function Page({ params : { roomId } } : Props ) {
           }
           return item;
         }))
-
       }
+
+      else if ( !amIhost && messageBody.code === 300 && USERID === messageBody.name)
+      {
+        setRole(messageBody.role)
+      }
+
 
 
     } catch (error) {
@@ -232,6 +248,7 @@ export default function Page({ params : { roomId } } : Props ) {
     
     mySession.on('streamCreated', (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
+      console.log('타인 세션 확인용', event )
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
     
@@ -242,10 +259,7 @@ export default function Page({ params : { roomId } } : Props ) {
     
 
     
-      
-
-    // 이거 왜 안됨.
-
+    
 
     // const handleBeforeUnload = () => {
     //   leaveSession();
@@ -311,7 +325,9 @@ export default function Page({ params : { roomId } } : Props ) {
       {isHost? 
         <BottomHost 
           ENTRY = {ENTRY}
+          client = {client.current}
           streamManager = {mainStreamManager}
+
         />
       : null}
 
@@ -319,7 +335,7 @@ export default function Page({ params : { roomId } } : Props ) {
         <BottomGuest 
           client = {client.current}  
           roomId = {roomId}
-          role = '1'
+          role = {role}
           userId = {USERID ? USERID : ''}
         />
       : null

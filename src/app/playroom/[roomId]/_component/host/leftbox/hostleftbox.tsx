@@ -2,10 +2,24 @@ import React from 'react'
 import HostleftBottomcomponent from './HostleftBottomcomponent'
 import HostleftTopcomponent from './HostleftTopcomponent'
 
-export default function hostleftbox() {
+
+type UserStatus = {
+  name : string
+  status : number
+} 
+type Props = {
+  ENTRY : UserStatus[]
+  client : any
+}
+
+
+export default function hostleftbox(Props : Props) {
   return (
     <div className='h-[55rem] my-auto'>
-        <HostleftTopcomponent />
+        <HostleftTopcomponent 
+          ENTRY = {Props.ENTRY}
+          client = {Props.client}
+        />
         <HostleftBottomcomponent />
     </div>
   )

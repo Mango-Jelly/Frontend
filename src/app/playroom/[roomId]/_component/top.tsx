@@ -45,17 +45,25 @@ export default function top(props : Props) {
             }
 
             {
-                props.subscribers === undefined ? 
+                props.subscribers === undefined || props.subscribers.length === 0 ?
             null
             :
-                props.subscribers.map((event) => 
-                    (
-                        <UserVideoComponent 
-                        streamManager={event}
-                        />
-                    )
-                )
-            
+                <div className=' relative w-full overflow-x-auto  '>
+                    <div className="overflow-hidden min-w-max flex">
+                            {
+                            props.subscribers.map((event) => 
+                                (
+                                    <div
+                                    className='border-solid border-2 mx-[1rem] w-[35rem]'>
+                                    <UserVideoComponent 
+                                    streamManager={event}
+                                    />
+                                    </div>
+                                )
+                            )
+                            }
+                    </div>
+                </div>
             }
         </div>
 

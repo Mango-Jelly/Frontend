@@ -16,6 +16,7 @@ type UserStatus = {
  type Props = {
   ENTRY : UserStatus[]
   streamManager : any
+  client : any
  }
 
 
@@ -25,7 +26,10 @@ export default function bottomhost(Props : Props) {
     <div className='bottomcontainer'>
 
         <div className='grid grid-cols-5'>
-            <Hostleftbox />
+            <Hostleftbox 
+            ENTRY = {Props.ENTRY}
+            client = {Props.client}
+            />
             <Hostmiddlebox 
               streamManager = {Props.streamManager} />
             <Hostrightbox 
