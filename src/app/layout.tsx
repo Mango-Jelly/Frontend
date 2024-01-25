@@ -21,7 +21,7 @@ export default function RootLayout({ children, modal }: Props) {
       <body className={inter.className}>
         <div className='bg-cover bg-background h-dvh'>
           {/* //TODO : isLogin property를 nextAuth 적용시 AuthSession 컴포넌트로 교체 */}
-          <NavMenu isLogin />
+          <NavMenu isLogin={false} />
           {modal}
           {children}
         </div>

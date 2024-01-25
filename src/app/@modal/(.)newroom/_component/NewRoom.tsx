@@ -3,16 +3,15 @@
 import style from './newRoom.module.css'
 import Image from 'next/image'
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
-import { useRouter } from 'next/navigation';
-import Button from '@/app/_component/LoginButton'
+import Button from '@/app/_component/TriggerButton'
 import pigTailLeft from '@/../public/pigtailLeft.svg'
 import pigTailRight from '@/../public/pigtailRight.svg'
+import BackButton from '@/app/_component/BackButton';
 
 export default function Login() {
     const [roomName, setRoomName] = useState('');
     const [department, setDepartment] = useState('');
     const [isPublic, setIsPublic] = useState(false);
-    const router = useRouter();
 
     const onChangeRoomName: ChangeEventHandler<HTMLInputElement> = (e) => {
         setRoomName(e.target.value);
@@ -26,28 +25,16 @@ export default function Login() {
         setIsPublic(e.target.checked);
     };
 
-    const onClickClose = () => {
-        router.back();
-    };
-
     return (
         <div className={style.modalBackground}>
             <div className={style.modal}>
-
+                <BackButton />
                 <Image src={pigTailLeft} alt="pigTailLeft" className={style.pigTailLeft} />
                 <Image src={pigTailRight} alt="pigTailRight" className={style.pigTailRight} />
 
-                <div className={style.modalHeader}>
-                    <button className={style.closeButton} title='close' onClick={onClickClose}>
-                        <svg width={24} viewBox="0 0 24 24" aria-hidden="true"
-                            className="r-18jsvk2 r-4qtqp9 r-yyyyoo r-z80fyv r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-19wmn03">
-                            <g>
-                                <path
-                                    d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"></path>
-                            </g>
-                        </svg>
-                    </button>
-                </div>
+                <h1 className="text-4xl font-bold mt-8">
+                    방 생성
+                </h1>
                 <form>
                     <div className={style.modalBody}>
                         <div className={style.inputDiv}>
@@ -83,7 +70,7 @@ export default function Login() {
 
                     </div>
                     <div className={style.modalFooter}>
-                        <Button name={"만들기"} />
+                        <Button name='방생성' onClick={() => { }} />
                     </div>
                 </form>
             </div>

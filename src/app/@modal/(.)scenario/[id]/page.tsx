@@ -4,6 +4,7 @@
 import style from './modal.module.css'
 import Leftcontainer from './leftcontainer/Leftcontainer';
 import Rightcontainer from './rightcontainer/Rightcontainer';
+import BackButton from '@/app/_component/BackButton';
 
 type Props = {
     params: {
@@ -13,12 +14,11 @@ type Props = {
 
 export default function Page({ params: { id } }: Props) {
     return (
-        <div className={style.modalBackground } >
+        <div className={style.modalBackground} >
             <div className={style.modal}>
-                <div className='grid grid-cols-3 p-[4rem]'>
-                    <Leftcontainer />
-                    <Rightcontainer />
-                </div>
+                <BackButton />
+                <Leftcontainer />
+                <Rightcontainer />
             </div>
         </div>
     )

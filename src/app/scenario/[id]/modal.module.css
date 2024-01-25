@@ -1,6 +1,6 @@
 .modalBackground {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
 
     width: 100%;
@@ -12,6 +12,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    
     @apply z-50 ;
 }
 

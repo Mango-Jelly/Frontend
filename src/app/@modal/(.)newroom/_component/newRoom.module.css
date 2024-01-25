@@ -44,24 +44,9 @@
     margin-right: 0.3rem;
 }
 
-.closeButton {
-    width: 3.4rem;
-    height: 3.4rem;
-    border-radius: 1.7rem;
-    border: none;
-    cursor: pointer;
-    background-color: #fff;
-}
-
-.closeButton:hover {
-    background-color: rgba(15,20,25, 0.1);
-}
-
 .modalBody {
     width: 100%;
     margin: 3rem 0;
-
-    margin-top: 5rem;
     margin-bottom: 1rem;
 }
 
