@@ -48,8 +48,9 @@ export default function hostleftTopcomponent() {
       </div>
       <div className=' overflow-auto scroll-auto p-5 h-4/5 '>
         {
-          given_roles.map((role) => 
+          given_roles.map((role, id) => 
             (<Roles 
+              key = {id}
               img = {role.img}
               name = {role.name}
               actor = {role.actor}

@@ -9,6 +9,7 @@ export default function bottomguestleft() {
     <div className='ml-[7rem] mt-[2rem] w-[68rem]'>
         <h1 className='text-6xl text-center my-[1rem]'> 우리 선생님 화면 </h1>
         <Image 
+        alt = '메인화면'
         src={VideoImage}
         className='h-[42rem]'/>
 

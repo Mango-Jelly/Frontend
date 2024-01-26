@@ -30,14 +30,23 @@ export const {
         }
 
         const user = await authResponse.json()
-        console.log('user', user);
-        return {
-          email: user.id,
-          name: user.nickname,
-          image: user.image,
-          ...user,
-        }
+        return user;
       },
     }),
-  ]
+  ],
+  callbacks: {
+    async jwt({ token, account }) {
+      if (account) {
+        token.accessToken = account.access_token
+        token.refreshToken = account.refresh_token
+      }
+      return token
+    },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken
+      session.refreshToken = token.refreshToken
+      return session
+    }
+  }
 });

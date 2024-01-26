@@ -1,4 +1,3 @@
-import React from 'react';
 import style from './video.module.css'
 
 // TODO : props로 상위 컴포넌트에서 비디오 링크 전달
