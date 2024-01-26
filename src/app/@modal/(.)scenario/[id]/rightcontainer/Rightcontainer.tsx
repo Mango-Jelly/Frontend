@@ -91,7 +91,6 @@ export default function Rightcontainer() {
             >
               <div className="p-5 border border-b-0 text-3xl bg-arrow">
                 <div className="p-5 border border-b-0 bg-white">
-
                   <p>안녕</p>
                   <p>안녕</p>
                   <p>안녕</p>
@@ -113,8 +112,9 @@ export default function Rightcontainer() {
                 <div className="p-5 border border-b-0 bg-white">
 
 
-                {scene2.lines.map((line) => (
+                {scene2.lines.map((line, id) => (
                   <LineForm 
+                  key = {id}
                   roleImg = {sceneRoles[line.role - 1].img}
                   roleName = {sceneRoles[line.role - 1].name }
                   script =  {line.script}
