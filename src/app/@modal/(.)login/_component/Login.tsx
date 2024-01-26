@@ -16,22 +16,34 @@ export default function Login() {
 
     const onChangeId: ChangeEventHandler<HTMLInputElement> = (e) => {
         setEmail(e.target.value);
+        console.log(email)
     };
 
     const onChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
         setPassword(e.target.value);
+        console.log(password)
     };
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         setMessage('');
+        console.log(email, password);
         try {
-            await signIn("credentials", {
+            const response = await signIn("credentials", {
                 username: email,
                 password: password,
                 redirect: false
             })
+
+            console.log(response);
+
+            if (response) {
+                setMessage('로그인 실패, 잠시 후 다시 시도해주세요.');
+                return;
+            }
+
             router.replace('/');
+
         } catch (error) {
             console.log(error);
             setMessage('로그인 실패, 잠시 후 다시 시도해주세요.');
@@ -64,6 +76,7 @@ export default function Login() {
                             title='로그인 버튼'
                             type='submit'
                             className='text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4'
+                            disabled={!email && !password}
                         >
                             로그인
                         </button >
