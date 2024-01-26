@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
 import NavMenu from './_component/NavMenu'
+import AuthSession from './_component/AuthSession'
 
 const inter = Noto_Sans_KR({ subsets: ['latin'] })
 
@@ -20,10 +21,11 @@ export default function RootLayout({ children, modal }: Props) {
     <html lang='en'>
       <body className={inter.className}>
         <div className='bg-cover bg-background h-dvh'>
-          {/* //TODO : isLogin property를 nextAuth 적용시 AuthSession 컴포넌트로 교체 */}
-          <NavMenu isLogin={false} />
-          {modal}
-          {children}
+          <AuthSession>
+            <NavMenu />
+            {modal}
+            {children}
+          </AuthSession>
         </div>
       </body>
     </html>
