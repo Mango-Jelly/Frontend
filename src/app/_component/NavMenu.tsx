@@ -3,13 +3,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import appLogo from '../../../public/AppMainLogo.png'
 import LoginButton from './LoginButton'
-
-type Props = {
-  isLogin: boolean
-}
+import { auth } from '@/auth'
 
 // TODO : isLogin property를 nextAuth 적용시 삭제
-export default function NavMenu({ isLogin }: Props) {
+export default async function NavMenu() {
+  const session = await auth();
+
+  console.log(session);
+
   return (
     <header>
       <nav className='flex justify-center bg-white px-12 py-4 shadow'>
@@ -18,7 +19,7 @@ export default function NavMenu({ isLogin }: Props) {
             <Image src={appLogo} width={160} height={26} alt='' />
           </Link>
           <div className='lg:order-2'>
-            <LoginButton isLogin={isLogin} />
+            <LoginButton isLogin={session ? true : false} />
           </div>
         </div>
       </nav>
