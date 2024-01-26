@@ -81,16 +81,26 @@ export default function Rightcontainer() {
 
   return (
     <div className='col-span-2 '>
-
-      <div id="accordion-collapse" data-accordion="collapse" className='overflow-auto scroll-auto  h-[60rem]'>
-        <Section
-          id={"accordion-collapse-body-1"}
-          title={"SCENE 1 돼지렐라의 집"}
-          isOpen={openSection === 'accordion-collapse-body-1'}
-          onClick={() => handleAccordionClick('accordion-collapse-body-1')}
-        >
-          <div className="p-5 border border-b-0 text-3xl bg-arrow">
-            <div className="p-5 border border-b-0 bg-white">
+        
+        <div id="accordion-collapse" data-accordion="collapse" className='overflow-auto scroll-auto  h-[60rem]'>
+            <Section
+                id={"accordion-collapse-body-1"}
+                title={"SCENE 1 돼지렐라의 집"}
+                isOpen={openSection === 'accordion-collapse-body-1'}
+                onClick={() => handleAccordionClick('accordion-collapse-body-1')}
+            >
+              <div className="p-5 border border-b-0 text-3xl bg-arrow">
+                <div className="p-5 border border-b-0 bg-white">
+                  <p>안녕</p>
+                  <p>안녕</p>
+                  <p>안녕</p>
+                  <p>안녕</p>
+                  <p>안녕</p>
+                  <p>안녕</p>
+                  <p>안녕</p>
+                </div>
+              </div>
+            </Section>
 
               <p>안녕</p>
               <p>안녕</p>
@@ -112,6 +122,14 @@ export default function Rightcontainer() {
           <div className="p-5 border border-b-0 text-3xl bg-arrow">
             <div className="p-5 border border-b-0 bg-white">
 
+                {scene2.lines.map((line, id) => (
+                  <LineForm 
+                  key = {id}
+                  roleImg = {sceneRoles[line.role - 1].img}
+                  roleName = {sceneRoles[line.role - 1].name }
+                  script =  {line.script}
+                  />
+                ))}
 
               {scene2.lines.map((line) => (
                 <LineForm

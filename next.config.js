@@ -4,7 +4,7 @@ module.exports = {
     output: 'standalone',
     webpack: (config) => {
         config.module.rules.push({
-            test: /\.(mov|mp4)$/,
+            test: /.(mov|mp4)$/,
             use: [
                 {
                     loader: 'file-loader',
@@ -18,4 +18,3 @@ module.exports = {
         return config;
     }
 };
-

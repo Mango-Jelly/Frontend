@@ -10,4 +10,3 @@ const VideoViewer = async () => {
 }
 
 export default VideoViewer;
-
