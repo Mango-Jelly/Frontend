@@ -8,7 +8,7 @@ type Props = {
 }
 
 export default function OpenViduVideoComponent({ streamManager } : Props) {
-    const videoRef = useRef();
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
         if (streamManager && videoRef.current) {
@@ -16,6 +16,6 @@ export default function OpenViduVideoComponent({ streamManager } : Props) {
         }
     }, [streamManager]);
 
-    // return <video autoPlay={true} ref = {videoRef} />;
-    return <video autoPlay={true} />;
+    return <video autoPlay={true} ref = {videoRef} />;
+    // return <video autoPlay={true} />;
 }
