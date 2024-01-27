@@ -7,6 +7,8 @@ import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import BackButton from '@/app/_component/BackButton';
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next/navigation';
+import { AuthError } from 'next-auth';
+
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -27,26 +29,43 @@ export default function Login() {
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         setMessage('');
-        console.log(email, password);
         try {
             const response = await signIn("credentials", {
                 username: email,
-                password: password,
+                password,
                 redirect: false
-            })
+            });
 
-            console.log(response);
+            console.log(
+                "try문----------------------------------------------",
+                response
+            );
 
-            if (response) {
-                setMessage('로그인 실패, 잠시 후 다시 시도해주세요.');
-                return;
+
+            if (!response?.error) {
+                console.log(
+                    "try문2----------------------------------------------",
+                    response
+                );
+                setMessage("아이디와 비밀번호가 일치하지 않습니다.");
+            } else {
+                console.log(
+                    "try문3----------------------------------------------",
+                    response
+                );
+
             }
-
             router.replace('/');
 
         } catch (error) {
-            console.log(error);
-            setMessage('로그인 실패, 잠시 후 다시 시도해주세요.');
+            if (error instanceof AuthError) {
+                switch (error.type) {
+                    case 'CredentialsSignin':
+                        return 'Invalid credentials';
+                    default:
+                        return 'Invalid credentials';
+                }
+            }
         }
     }
 

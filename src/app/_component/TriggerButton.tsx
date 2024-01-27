@@ -1,16 +1,16 @@
 type Props = {
     name: string,
-    onClick?: () => void
+    isSubmitting: boolean
 }
 
 
-export default function TriggerButton({ name, onClick }: Props) {
+export default function TriggerButton({ name, isSubmitting }: Props) {
     return (
         <button
             title='로그인/로그아웃 버튼'
-            type='button'
+            type='submit'
             className='text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4'
-            onClick={onClick}
+            disabled={isSubmitting}
         >
             {name}
         </button >

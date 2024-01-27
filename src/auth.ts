@@ -1,5 +1,8 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
+import cookie from 'cookie';
+import { cookies } from 'next/headers'
+
 
 export const {
   handlers: { GET, POST },
@@ -12,29 +15,27 @@ export const {
   },
   providers: [
     CredentialsProvider({
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+      name: 'mango-server',
 
-        const authResponse = await fetch(`${process.env.AUTH_URL}/member/login`, {
+      async authorize(credentials) {
+        const authResponse = await fetch(`${process.env.AUTH_URL}`, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: credentials.email,
+            email: credentials.username,
             password: credentials.password,
           }),
         })
-
         console.log('authResponse', authResponse);
 
         if (!authResponse.ok) {
+          console.log('authResponse not ok');
           return null
         }
 
         const user = await authResponse.json()
-
-        console.log('user', user);
         return user;
       },
     }),
@@ -52,5 +53,6 @@ export const {
     //   session.refreshToken = token.refreshToken
     //   return session
     // },
+    
   }
 });
