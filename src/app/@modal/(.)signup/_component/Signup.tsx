@@ -6,6 +6,7 @@ import AppLogo from '../../../../../public/AppMainLogo.png';
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import Button from '@/app/_component/TriggerButton'
 import BackButton from '@/app/_component/BackButton';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -16,6 +17,7 @@ export default function Login() {
     const [checkPassword, setCheckPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const router = useRouter();
 
     //TODO : 한번만 클릭할 수 있도록 더블클릭 방지로직 추가
 
@@ -37,25 +39,31 @@ export default function Login() {
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true);
 
         // 유효성 검사 로직 추가
         if (!validateInputs()) {
             return;
         }
 
-        // 서버와의 통신 코드 추가
-        const result = await sendDataToServer();
-
         // 통신 성공 시 처리 로직
-        setIsSubmitting(false);
+
+        // 서버와의 통신 코드 추가
+        // const result = await sendDataToServer();
+
+
+
+        // TODO : 회원가입 성공 시 로그인 페이지로 이동
+
+        alert('회원가입이 완료되었습니다.');
+        router.replace('/login');
     };
 
     const validateInputs = () => {
         // 아이디 유효성 검사
-        const idRegex = /^[a-zA-Z0-9]{5,20}$/;
-        if (!idRegex.test(email)) {
-            setErrorMessage('아이디는 영문과 숫자 조합으로 5~20자 이어야 합니다.');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            setErrorMessage('이메일 형식이 올바르지 않습니다.');
             return false;
         }
 
@@ -104,7 +112,7 @@ export default function Login() {
                 <div className={style.modalHeader}>
                     <Image className={style.applogo} src={AppLogo} width={316} height={59} alt='로고' />
                 </div>
-                <form>
+                <form onSubmit={handleSubmit}>
                     <div className={style.modalBody}>
                         <div className={style.inputDiv}>
                             <label
@@ -135,7 +143,7 @@ export default function Login() {
                                 value={email}
                                 onChange={onChangeEmail}
                                 type="email"
-                                placeholder=""
+                                placeholder="예시) user@mail.com"
                             />
                         </div>
                         <div className={style.inputDiv}>
@@ -173,7 +181,14 @@ export default function Login() {
                         {errorMessage && <p className={style.error}>{errorMessage}</p>}
                     </div>
                     <div className={style.modalFooter}>
-                        <Button isSubmitting={isSubmitting} name='회원가입' />
+                        <button
+                            title='로그인/로그아웃 버튼'
+                            type='submit'
+                            className={`text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isSubmitting}
+                        >
+                            회원가입
+                        </button >
                     </div>
                 </form>
             </div>
