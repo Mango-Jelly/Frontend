@@ -1,5 +1,9 @@
+import RedirectToMainPage from "../_component/RedirectToMainPage"
+
 export default function page() {
     return (
-        <div>회원가입</div>
+        <>
+            <RedirectToMainPage />
+        </>
     )
 }
