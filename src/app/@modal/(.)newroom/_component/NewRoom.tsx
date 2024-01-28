@@ -70,7 +70,7 @@ export default function Login() {
 
                     </div>
                     <div className={style.modalFooter}>
-                        <Button name='방생성' onClick={() => { }} />
+                        <Button name='방생성' isSubmitting={false} />
                     </div>
                 </form>
             </div>
