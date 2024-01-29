@@ -1,12 +1,8 @@
 import React from 'react'
 import '../page.css'
-import Hostleftbox from './leftbox/Hostleftbox'
-
-import Hostmiddlebox from './middlebox/Hostmiddlebox'
-import Hostrightbox from './rightbox/Hostrightbox'
-import Image
- from 'next/image'
-
+import PlayInfoSelectSection from './leftbox/PlayInfoSelectSection'
+import MainVideoSection from './middlebox/MainVideoSection'
+import GuestStateSection from './rightbox/GuestStateSection'
 
 type UserStatus = {
   name : string
@@ -20,25 +16,21 @@ type UserStatus = {
   client : any
  }
 
-
-export default function bottomhost(Props : Props) {
-  // console.log("BOTTOM HOST에서 공개 ", Props.streamManager)s
+export default function HostMainSection(Props : Props) {
   return (
     <div className='bottomcontainer'>
-
         <div className='grid grid-cols-5'>
-            <Hostleftbox 
+            <PlayInfoSelectSection 
             ENTRY = {Props.ENTRY}
             client = {Props.client}
             roomId = {Props.roomId}
             />
-            <Hostmiddlebox 
+            <MainVideoSection 
               streamManager = {Props.streamManager} />
-            <Hostrightbox 
+            <GuestStateSection 
              ENTRY = {Props.ENTRY}
             />
         </div>
     </div>
-
   )
 }

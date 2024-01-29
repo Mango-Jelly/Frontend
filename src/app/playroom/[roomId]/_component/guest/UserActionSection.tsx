@@ -24,7 +24,7 @@ type Props = {
 //     body: JSON.stringify(message),
 //   });
 
-export default function bottomguestright(Props : Props) {
+export default function UserActionSection(Props : Props) {
     function Alert(alarm : number) {
         const message = {
                 code: alarm,

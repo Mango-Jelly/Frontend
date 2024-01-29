@@ -1,6 +1,6 @@
 import React from 'react'
-import HostleftBottomcomponent from './HostleftBottomcomponent'
-import HostleftTopcomponent from './HostleftTopcomponent'
+import RolesSelection from './RolesSelection'
+import ScriptSelection from './ScriptSelection'
 
 
 type UserStatus = {
@@ -14,16 +14,16 @@ type Props = {
 }
 
 
-export default function hostleftbox(Props : Props) {
+export default function PlayInfoSelectSection(Props : Props) {
   return (
     <div className='h-[55rem] my-auto'>
-        <HostleftTopcomponent 
+        <ScriptSelection 
           ENTRY = {Props.ENTRY}
           client = {Props.client}
           roomId = {Props.roomId}
         />
 
-        <HostleftBottomcomponent />
+        <RolesSelection />
     </div>
   )
 }
