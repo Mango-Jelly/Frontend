@@ -1,7 +1,4 @@
-import Image
- from 'next/image'
 import React from 'react'
-import VideoImage from '@/../public/VideoTag.svg'
 import UserVideoComponent from '../../UserVIdeo'
 
 
@@ -9,7 +6,7 @@ type Props = {
   streamManager : any
 }
 
-export default function hostmiddlebox(Props : Props) {
+export default function MainVideoSection(Props : Props) {
   console.log(Props.streamManager)
   return (
     <div className='col-span-3 '>

@@ -1,11 +1,11 @@
 'use client';
 import style from '@/app/_component/modal.module.css'
 import Link from "next/link"
-import Top from './_component/top'
+import Top from './_component/GuestVideosSection'
 // import { useRouter } from 'next/router'
 import axios from 'axios';
-import BottomHost from './_component/host/bottomhost';
-import BottomGuest from './_component/guest/bottomguest';
+import BottomHost from './_component/host/HostMainSection';
+import BottomGuest from './_component/guest/GuestMainSection';
 import { useState } from 'react';
 import { useRef, useEffect, useCallback } from "react";
 import * as StompJs from "@stomp/stompjs"
@@ -51,6 +51,7 @@ export default function Page({ params: { roomId } }: Props) {
 
   const client = useRef<any>({});
   const OV = useRef(new OpenVidu());
+  // 오픈 비두 객체 만듬
 
   const amIhost = useRef<boolean>(false);
 
@@ -91,19 +92,19 @@ export default function Page({ params: { roomId } }: Props) {
     }
   }
 
-
+  // 세션 받기 -> 토큰 받기
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then(sessionId =>
-      createToken(sessionId),
-    );
-  }, [mySessionId]);
-
-  const createSession = async (sessionId: any) => {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-      headers: { 'Content-Type': 'application/json', },
-    });
-    return response.data; // The sessionId
-  };
+        return createSession(mySessionId).then(sessionId =>
+            createToken(sessionId),
+        );
+    }, [mySessionId]); 
+    // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL 
+    const createSession = async (sessionId : any) => {
+        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
+            headers: { 'Content-Type': 'application/json', },
+        });
+        return response.data; // The sessionId
+    };
 
 
   const createToken = async (sessionId: any) => {
@@ -131,29 +132,33 @@ export default function Page({ params: { roomId } }: Props) {
   //   setPublisher(undefined);
   // }, [session]);
 
-
-  const switchCamera = useCallback(async () => {
-    try {
-      const devices = await OV.current.getDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
-
-      if (videoDevices && videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
-
-        if (newVideoDevice.length > 0) {
-          const newPublisher: any = OV.current.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true,
-          });
-          // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
-          if (session) {
-            await session.unpublish(mainStreamManager);
-            await session.publish(newPublisher);
-            setCurrentVideoDevice(newVideoDevice[0]);
-            setMainStreamManager(newPublisher);
-            setPublisher(newPublisher);
+    // 카메라 여러개일 때 바꿔주는 기능
+    const switchCamera = useCallback(async () => {
+      try {
+          // 카메라 받는거 
+          const devices = await OV.current.getDevices();
+          const videoDevices = devices.filter(device => device.kind === 'videoinput');
+  
+          if (videoDevices && videoDevices.length > 1) {
+              const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
+              // html 비디오 태그를 캐치하는 객체
+              if (newVideoDevice.length > 0) { 
+                  const newPublisher : any = OV.current.initPublisher(undefined, {
+                      videoSource: newVideoDevice[0].deviceId,
+                      publishAudio: true,
+                      publishVideo: true,
+                      mirror: true,
+                  });
+                  // 오픈비두 객체에 
+                  // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
+                  if (session) {
+                      await session.unpublish(mainStreamManager);
+                      await session.publish(newPublisher);
+                      setCurrentVideoDevice(newVideoDevice[0]);
+                      setMainStreamManager(newPublisher);
+                      setPublisher(newPublisher);
+                  }
+              }
           }
         }
       }
@@ -237,12 +242,12 @@ export default function Page({ params: { roomId } }: Props) {
     // 객체 생성
     const mySession = OV.current.initSession();
 
-
+    // 새로운 사람이 들어왔다
     mySession.on('streamCreated', (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
-
+    // 
     mySession.on('exception', (exception) => {
       console.warn(exception);
     });
@@ -258,6 +263,7 @@ export default function Page({ params: { roomId } }: Props) {
 
     // window.addEventListener('beforeunload', handleBeforeUnload);
 
+    // 웹사이트나갈때 subscribers에서 사라지게하는 코드
     window.addEventListener('beforeunload', Disconnect);
     // mySession으로까지 저장 
     getToken().then(async (token) => {
@@ -274,7 +280,7 @@ export default function Page({ params: { roomId } }: Props) {
           insertMode: 'APPEND',
           mirror: false,
         });
-
+        // 카메라 뜨는 순간 코드
         mySession.publish(publisher);
 
         const devices = await OV.current.getDevices();
