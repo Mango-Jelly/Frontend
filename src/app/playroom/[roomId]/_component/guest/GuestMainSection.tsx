@@ -5,10 +5,10 @@ import MainHostViedo from './MainHostViedo'
 import * as StompJs  from "@stomp/stompjs"
 
 type Props = {
-  client : StompJs.Client
-  roomId : string
-  userId : string
-  role : string
+  client: StompJs.Client
+  roomId: string
+  userId: string
+  role: string
 }
 
 export default function GuestMainSection(Props : Props) {
