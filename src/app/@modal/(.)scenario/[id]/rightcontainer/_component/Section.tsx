@@ -2,19 +2,14 @@ import React, { Component, useState } from 'react';
 
 
 type Props = {
-  id : string
-  title : string
-  isOpen : boolean
-  onClick : any
-  children : any
+  id: string
+  title: string
+  isOpen: boolean
+  onClick: any
+  children: any
 }
 
-<<<<<<< HEAD
-
-export default function Section({ id, title, isOpen, onClick, children }: { id: string, title: string, isOpen: boolean, onClick: any, children: any }) {
-=======
-export default function Section( { id, title, isOpen, onClick, children  } : Props) {
->>>>>>> 797e6c88d8b431737a3227bbe040f5434bd34e30
+export default function Section({ id, title, isOpen, onClick, children }: Props) {
 
 
   return (
