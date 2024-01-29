@@ -1,39 +1,42 @@
-/* @import './normalized.css'; */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 html {
   font-size: 62.5%;
 }
 
-/* html, 
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+@tailwind base;
 
-  position: fixed;
-  margin: 0;
-  padding: 0;
-  
-  font-size: 62.5%;
-
-  width: 100dvw;
-  height: 100dvh;
+/* 스크롤바 디자인 */
+:root {
+  --primary: #E8E8E880;
+  --secondary: #7f7f7f;
 }
 
+/* Scrollbar styles */
 
-.container {
-  width: 144rem;
-  height: 90rem;
-
-  font-size : 1.6rem;
-
-  position: relative;
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--secondary);
 }
 
-.background-image {
-  z-index: -100;
-}  */
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 1.379rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--primary);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--secondary);
+/*   background: repeating-linear-gradient(
+    45deg,
+    var(--secondary),
+    var(--secondary) 5px,
+    var(--primary) 5px,
+    var(--primary) 10px
+  ); */
+  border-radius: 1rem;
+}
+@tailwind components;
+@tailwind utilities;

@@ -4,13 +4,13 @@ import ScriptSelection from './ScriptSelection'
 
 
 type UserStatus = {
-  name : string
-  status : number
-} 
+  name: string
+  status: number
+}
 type Props = {
-  ENTRY : UserStatus[]
-  client : any
-  roomId : string
+  ENTRY: UserStatus[]
+  client: any
+  roomId: string
 }
 
 

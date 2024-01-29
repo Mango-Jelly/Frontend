@@ -1,6 +1,8 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials";
-import {NextResponse} from "next/server";
+import cookie from 'cookie';
+import { cookies } from 'next/headers'
+
 
 export const {
   handlers: { GET, POST },
@@ -13,31 +15,44 @@ export const {
   },
   providers: [
     CredentialsProvider({
+      name: 'mango-server',
+
       async authorize(credentials) {
-        const authResponse = await fetch(`${process.env.AUTH_URL}/api/login`, {
-          method: "POST",
+        const authResponse = await fetch(`${process.env.AUTH_URL}`, {
+          method: 'POST',
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            id: credentials.username,
+            email: credentials.username,
             password: credentials.password,
           }),
         })
+        console.log('authResponse', authResponse);
 
         if (!authResponse.ok) {
+          console.log('authResponse not ok');
           return null
         }
 
         const user = await authResponse.json()
-        console.log('user', user);
-        return {
-          email: user.id,
-          name: user.nickname,
-          image: user.image,
-          ...user,
-        }
+        return user;
       },
     }),
-  ]
+  ],
+  callbacks: {
+    // async jwt({ token, account }) {
+    //   if (account) {
+    //     token.accessToken = account.access_token
+    //     token.refreshToken = account.refresh_token
+    //   }
+    //   return token
+    // },
+    // async session({ session, token }) {
+    //   session.accessToken = token.accessToken
+    //   session.refreshToken = token.refreshToken
+    //   return session
+    // },
+    
+  }
 });

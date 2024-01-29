@@ -5,16 +5,16 @@ import MainVideoSection from './middlebox/MainVideoSection'
 import GuestStateSection from './rightbox/GuestStateSection'
 
 type UserStatus = {
-  name : string
-  status : number
+  name: string
+  status: number
 }
 
- type Props = {
-  ENTRY : UserStatus[]
-  roomId : string
-  streamManager : any
-  client : any
- }
+type Props = {
+  ENTRY: UserStatus[]
+  roomId: string
+  streamManager: any
+  client: any
+}
 
 export default function HostMainSection(Props : Props) {
   return (

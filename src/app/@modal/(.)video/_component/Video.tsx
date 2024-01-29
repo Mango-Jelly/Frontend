@@ -1,8 +1,6 @@
 'use client'
 
 import React from 'react'
-import { useRouter } from 'next/navigation'
-import style from './video.module.css'
 import { myVideos } from '../_component/DummyData'
 import { Suspense } from 'react'
 import VideoViewer from './VideoViewer'
@@ -12,6 +10,7 @@ import {
   LockOpenIcon,
   XMarkIcon,
 } from '@heroicons/react/20/solid'
+import BackButton from '@/app/_component/BackButton'
 
 type Props = {
   id: string
@@ -20,23 +19,11 @@ type Props = {
 //TODO : 비디오 불러오기 API 연결
 
 export default function Video({ id }: Props) {
-  const router = useRouter()
-
-  const onClickClose = () => {
-    router.back()
-  }
-
   const videoData = myVideos.find((video) => video.id === id) || myVideos[0]
 
   return (
     <div className='flex justify-center items-center size-full'>
-      <button
-        title='close'
-        onClick={onClickClose}
-        className='absolute top-4 right-4'
-      >
-        <XMarkIcon className='fill-gray-400 size-10' />
-      </button>
+      <BackButton />
       <div className='flex flex-col justify-center items-center bg-white/80 w-[30%] h-[88%] m-2'>
         <div className='bg-gray-200 rounded-full size-72'></div>
         <p className='text-3xl font-bold m-4'>{videoData.data.scriptName}</p>
@@ -54,7 +41,7 @@ export default function Video({ id }: Props) {
       </div>
 
       <div className='flex flex-col justify-center items-center bg-white/80 w-[62%] h-[88%] m-2 p-12'>
-        <div className='text-2xl mb-12'>{videoData.data.title}</div>
+        <div className='text-5xl mb-12 font-bold'>{videoData.data.title}</div>
         <div className='flex justify-end  w-full mb-8'>
           <ArrowDownTrayIcon className='size-8 mx-2' />
           {videoData.data.isPublic ? (
