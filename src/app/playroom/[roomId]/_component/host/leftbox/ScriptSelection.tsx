@@ -1,16 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from "react";
-import Image
- from 'next/image'
-import piggie from '@/../public/piggie.svg'
-import Actors from './Actors'
-
-
-type Role = {
-  name : string
-}
-
+import Actors from './Actor'
 
 type UserStatus = {
   name : string
@@ -23,34 +14,32 @@ type Props = {
   roomId : string
 }
 
-
 type UserRoleState = {
   name : string
   isSelected : boolean
 }
 
+const given_actors = [
+  {
+    name : '신데렐라',
+  },
+  {
+    name : '돼지',
+  },
+  {
+    name : '돼지지지',
+  },
+  {
+    name : '찌찌찎',
+  },
+  {
+    name : '커피마려워잉',
+  },
+]
 
-export default function HostleftBottomcomponent(Props : Props) {
+
+export default function ScriptSelection(Props : Props) {
   const [rolestates, setRolsestates]  = useState<UserRoleState[]>([]) 
-
-
-  const given_actors = [
-    {
-      name : '신데렐라',
-    },
-    {
-      name : '돼지',
-    },
-    {
-      name : '돼지지지',
-    },
-    {
-      name : '찌찌찎',
-    },
-    {
-      name : '커피마려워잉',
-    },
-  ]
 
   function sendRoles(role : string, index : number) {
     rolestates[index].isSelected = true

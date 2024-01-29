@@ -1,5 +1,11 @@
 "use client";
 
+import RedirectToMainPage from "@/app/_component/RedirectToMainPage";
+
 export default function Page() {
-    return <>this is item page</>;
+    return (
+        <>
+            <RedirectToMainPage />
+        </>
+    )
 }

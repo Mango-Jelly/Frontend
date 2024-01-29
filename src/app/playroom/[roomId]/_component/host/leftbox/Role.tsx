@@ -7,7 +7,7 @@ type Role = {
    actor : string | undefined
  }
    
-export default function Roles(role : Role) {
+export default function Role(role : Role) {
     return (
       <div className='flex flex-row justify-between '>
         <Image 
@@ -15,7 +15,6 @@ export default function Roles(role : Role) {
           src={role.img}
           className='mr-10 '
         />
-        
         <div>
           <p className='text-gray-700 dark:text-gray-400'>{role.name}</p>
           <p className='text-gray-700 dark:text-gray-400'>{role.actor}</p>

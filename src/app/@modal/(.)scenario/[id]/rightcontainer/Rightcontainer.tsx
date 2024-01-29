@@ -1,13 +1,10 @@
 'use client'
-import style from '../modal.module.css'
-import Image from 'next/image'
+
 import piggie from '@/../public/piggie.svg'
 import badmom from '@/../public/badmom.svg'
 import Section from './_component/Section'
 import LineForm from './_component/LineForm'
-import React, { Component, useState } from 'react';
-
-
+import React, { useState } from 'react';
 
 type line = {
   id: number;
@@ -59,11 +56,17 @@ const scene2: dialog = {
 }
 
 
+const sceneRoles = [
+  { id: 1, name: "계모", img: badmom },
+  { id: 2, name: "돼지렐라", img: piggie },
+  { id: 3, name: "요정", img: piggie },
+];
+
 
 
 export default function Rightcontainer() {
-
   const [openSection, setOpenSection] = useState(null);
+
 
   const handleAccordionClick = (sectionId: any) => {
     setOpenSection((prevOpenSection) =>
@@ -71,101 +74,89 @@ export default function Rightcontainer() {
     );
   };
 
-  const sceneRoles = [
-    { id: 1, name: "계모", img: badmom },
-    { id: 2, name: "돼지렐라", img: piggie },
-    { id: 3, name: "요정", img: piggie },
-  ];
-
-
-
   return (
-    <div className='col-span-2 '>
-        
-        <div id="accordion-collapse" data-accordion="collapse" className='overflow-auto scroll-auto  h-[60rem]'>
-            <Section
-                id={"accordion-collapse-body-1"}
-                title={"SCENE 1 돼지렐라의 집"}
-                isOpen={openSection === 'accordion-collapse-body-1'}
-                onClick={() => handleAccordionClick('accordion-collapse-body-1')}
-            >
-              <div className="p-5 border border-b-0 text-3xl bg-arrow">
-                <div className="p-5 border border-b-0 bg-white">
-                  <p>안녕</p>
-                  <p>안녕</p>
-                  <p>안녕</p>
-                  <p>안녕</p>
-                  <p>안녕</p>
-                  <p>안녕</p>
-                  <p>안녕</p>
-                </div>
-              </div>
-            </Section>
-
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-            </div>
+    <div
+      id="accordion-collapse"
+      data-accordion="collapse"
+      className=' bg-white h-full min-h-[63.4rem] w-full min-w-[80rem] font-bold overflow-y-scroll relative'
+      style={{ padding: '3rem' }}
+    >
+      <Section
+        id={"accordion-collapse-body-1"}
+        title="SCENE 1 돼지렐라의 집"
+        isOpen={openSection === 'accordion-collapse-body-1'}
+        onClick={() => handleAccordionClick('accordion-collapse-body-1')}
+      >
+        <div className="p-5 border border-b-0 text-3xl bg-arrow">
+          <div className="p-5 border border-b-0 font-normal bg-white">
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
           </div>
-        </Section>
-
-        <Section
-          id="accordion-collapse-body-2"
-          title="SCENE 2 무도회"
-          isOpen={openSection === 'accordion-collapse-body-2'}
-          onClick={() => handleAccordionClick('accordion-collapse-body-2')}
-        >
-          <div className="p-5 border border-b-0 text-3xl bg-arrow">
-            <div className="p-5 border border-b-0 bg-white">
-
-                {scene2.lines.map((line, id) => (
-                  <LineForm 
-                  key = {id}
-                  roleImg = {sceneRoles[line.role - 1].img}
-                  roleName = {sceneRoles[line.role - 1].name }
-                  script =  {line.script}
-                  />
-                ))}
-
-              {scene2.lines.map((line) => (
-                <LineForm
-                  roleImg={sceneRoles[line.role - 1].img}
-                  roleName={sceneRoles[line.role - 1].name}
-                  script={line.script}
-                  key={line.id}
-                />
-              ))}
-
-            </div>
+        </div>
+      </Section>
+      <Section
+        id="accordion-collapse-body-2"
+        title="SCENE 2 무도회"
+        isOpen={openSection === 'accordion-collapse-body-2'}
+        onClick={() => handleAccordionClick('accordion-collapse-body-2')}
+      >
+        <div className="p-5 border border-b-0 text-3xl bg-arrow">
+          <div className="p-5 border border-b-0 font-normal bg-white">
+            {scene2.lines.map((line, key) => (
+              <LineForm
+                roleImg={sceneRoles[line.role - 1].img}
+                roleName={sceneRoles[line.role - 1].name}
+                script={line.script}
+                key={key}
+              />
+            ))}
           </div>
-        </Section>
+        </div>
+      </Section>
 
-        <Section
-          id="accordion-collapse-body-3"
-          title="SCENE 3 도살장"
-          isOpen={openSection === 'accordion-collapse-body-3'}
-          onClick={() => handleAccordionClick('accordion-collapse-body-3')}
-        >
-          <div className="p-5 border border-b-0 text-3xl bg-arrow">
-            <div className="p-5 border border-b-0 bg-white">
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-              <p>안녕</p>
-            </div>
+      <Section
+        id="accordion-collapse-body-3"
+        title="SCENE 3 도살장"
+        isOpen={openSection === 'accordion-collapse-body-3'}
+        onClick={() => handleAccordionClick('accordion-collapse-body-3')}
+      >
+        <div className="p-5 border border-b-0 text-3xl bg-arrow">
+          <div className="p-5 border border-b-0 font-normal bg-white">
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
+            <p>안녕</p>
           </div>
-
-        </Section>
-
-      </div>
-
+        </div>
+      </Section>
     </div>
   )
 }

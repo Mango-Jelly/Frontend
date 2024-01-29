@@ -1,19 +1,11 @@
 "use client";
 
-import style from './modal.module.css'
+import RedirectToMainPage from "@/app/_component/RedirectToMainPage";
 
-type Props = {
-    params: {
-        id: string
-    }
-}
-
-export default function Page({ params: { id }  } : Props) {
+export default function Page() {
     return (
-            <div className={style.modalBackground}>
-                <div className={style.modal}>
-                    `${id}`번 비디오 입니다.
-                </div>
-            </div>
+        <>
+            <RedirectToMainPage />
+        </>
     )
 }

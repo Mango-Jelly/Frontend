@@ -1,19 +1,17 @@
 import React from 'react'
 import '../page.css'
-import Image
- from 'next/image'
-import Bottomguestright from './Bottomguestright'
-import Bottomguestleft from './Bottomguestleft'
+import UserActionSection from './UserActionSection'
+import MainHostViedo from './MainHostViedo'
 import * as StompJs  from "@stomp/stompjs"
 
 type Props = {
-  client : StompJs.Client
-  roomId : string
-  userId : string
-  role : string
+  client: StompJs.Client
+  roomId: string
+  userId: string
+  role: string
 }
 
-export default function bottomguest(Props : Props) {
+export default function GuestMainSection(Props : Props) {
 
   // if (Props.client == {}){
   //   console.log(Props.client)
@@ -31,8 +29,8 @@ export default function bottomguest(Props : Props) {
   return (
     <div className='bottomcontainer bg-white '>
         <div className='grid grid-cols-2 gap-[1rem]'>
-              <Bottomguestleft />
-              <Bottomguestright 
+              <MainHostViedo />
+              <UserActionSection 
                 client = {Props.client}
                 roomId = {Props.roomId}
                 userId = {Props.userId}
