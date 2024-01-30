@@ -12,7 +12,7 @@ import * as StompJs from "@stomp/stompjs"
 import { OpenVidu } from 'openvidu-browser';
 
 
-const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://localhost:5000' : 'https://demos.openvidu.io/';
+const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://localhost:5000/' : 'http://localhost:5000/';
 
 
 type Props = {
@@ -66,10 +66,19 @@ export default function Page({ params: { roomId } }: Props) {
           name: messageBody.id,
           status: 0
         }
+        let videoTag : string = messageBody.videoid
         setENTRY(ENTRY => [...ENTRY, newBody])
+        setSubscribers((subscribers) => [...subscribers, videoTag])
       }
       else if (messageBody.code == 101) {
+        let newBody: UserStatus = {
+          name: messageBody.id,
+          status: 0
+        }
+        let videoTag : string = messageBody.videoid
         setENTRY(ENTRY => ENTRY.filter(item => item.name != messageBody.id))
+        setSubscribers((subscribers) => subscribers.filter(vidioId => vidioId != videoTag ))
+
       }
       else if (200 <= messageBody.code && messageBody.code < 300) {
         setENTRY(ENTRY => ENTRY.map((item) => {
@@ -100,16 +109,23 @@ export default function Page({ params: { roomId } }: Props) {
   }, [mySessionId]);
   // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL 
   const createSession = async (sessionId: any) => {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-      headers: { 'Content-Type': 'application/json', },
-    });
+    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/', { customSessionId: sessionId }, {
+      headers: {
+        'Authorization' : 'MYSECRET',
+        'Content-Type': 'application/json',
+     },
+    }
+
+    );
     return response.data; // The sessionId
   };
 
 
   const createToken = async (sessionId: any) => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-      headers: { 'Content-Type': 'application/json', },
+      headers: { 
+        'Authorization' : 'MYSECRET',
+        'Content-Type': 'application/json', },
     });
     return response.data; // The token
   };
@@ -190,7 +206,8 @@ export default function Page({ params: { roomId } }: Props) {
     function Join() {
       const message = {
         code: 100,
-        id: USERID
+        id: USERID,
+        videoid : `${USERID}'s_video`
       };
       // console.log(JSON.stringify(message))
       client.current.publish({
@@ -203,7 +220,8 @@ export default function Page({ params: { roomId } }: Props) {
     function Disconnect() {
       const message = {
         code: 101,
-        id: USERID
+        id: USERID,
+        videoid : `${USERID}'s_video`
       };
       client.current.publish({
         destination: `/sub/channel/${roomId}`,
@@ -216,7 +234,7 @@ export default function Page({ params: { roomId } }: Props) {
     const connect = () => {
 
       client.current = new StompJs.Client({
-        brokerURL: "ws://localhost:8080/ws",
+        brokerURL: "ws://localhost:8081/ws",
         onConnect: () => {
           console.log("connected");
           subscribe();
@@ -317,7 +335,6 @@ export default function Page({ params: { roomId } }: Props) {
               client={client.current}
               roomId={roomId}
               streamManager={mainStreamManager}
-
             />
             : null}
 
