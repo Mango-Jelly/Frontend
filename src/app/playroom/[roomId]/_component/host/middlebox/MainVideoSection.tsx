@@ -7,15 +7,21 @@ type Props = {
 }
 
 export default function MainVideoSection(Props : Props) {
-  console.log(Props.streamManager)
+  // console.log(Props.streamManager)
   return (
     <div className='col-span-3 '>
-        <div className='w-11/12 mx-auto'>
+        <div className='w-11/12 mx-auto h-full flex flex-col justify-between'>
 
-            {
+            { Props.streamManager ? 
               <UserVideoComponent 
               streamManager={Props.streamManager}
               />
+              :
+              <div className='mx-auto my-5 h-full'>
+                <video controls muted className='h-full'>
+                  <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
+                </video>
+              </div>
             }
 
             <div className='flex justify-between'>

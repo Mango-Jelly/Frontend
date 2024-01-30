@@ -21,3 +21,12 @@
 .default-component-color{
     background-color: #D9D9D9;
 }
+
+
+.carousel {
+    display: flex;
+    transition: all 0.5s;
+    position: relative;
+    @apply w-full;
+}
+
