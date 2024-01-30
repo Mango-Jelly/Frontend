@@ -33,7 +33,7 @@
     "/*.ts",
     "/.tsx",
     ".next/types/**/.ts",
-    "video.d.ts",
+    "src/types/video.d.ts",
     ".next/types/**/*.ts",
     "**/*.tsx"
   ],

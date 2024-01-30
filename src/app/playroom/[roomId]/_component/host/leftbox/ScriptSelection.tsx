@@ -1,16 +1,7 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useEffect } from "react";
-import Image
- from 'next/image'
-import piggie from '@/../public/piggie.svg'
-import Actors from './Actors'
-
-
-type Role = {
-  name : string
-}
-
+import Actors from './Actor'
 
 type UserStatus = {
   name : string
@@ -23,42 +14,51 @@ type Props = {
   roomId : string
 }
 
-
 type UserRoleState = {
   name : string
   isSelected : boolean
 }
 
+const given_actors = [
+  {
+    name : '장고 프리맨',
+  },
+  {
+    name : '닥터 킹 슐츠',
+  },
+  {
+    name : '무슈 캔디',
+  },
+  {
+    name : '브룸힐다 폰 샤프트',
+  },
+  {
+    name : '스티븐 워렌',
+  },
+]
 
-export default function HostleftBottomcomponent(Props : Props) {
+
+export default function ScriptSelection(Props : Props) {
   const [rolestates, setRolsestates]  = useState<UserRoleState[]>([]) 
-
-
-  const given_actors = [
-    {
-      name : '신데렐라',
-    },
-    {
-      name : '돼지',
-    },
-    {
-      name : '돼지지지',
-    },
-    {
-      name : '찌찌찎',
-    },
-    {
-      name : '커피마려워잉',
-    },
-  ]
-
+  // const RoleStates = useRef<UserRoleState[]>([])
   function sendRoles(role : string, index : number) {
-    rolestates[index].isSelected = true
+    if (rolestates[index].isSelected) {
+      alert('이미 선택된 친구에요')
+      return;
+    }
+    setRolsestates(function (array) {
+      let narray : UserRoleState[] = array
+      narray[index].isSelected = true
+      console.log(narray)
+      return narray
+    })
+    // RoleStates.current[index].isSelected = true
     const message = {
       code : 300,
       name : rolestates[index].name,
       role : role
     };
+    // console.log(RoleStates.current)
     Props.client.publish({
       destination: `/sub/channel/${Props.roomId}`,
       body: JSON.stringify(message),
@@ -66,7 +66,6 @@ export default function HostleftBottomcomponent(Props : Props) {
   }
 
   useEffect(() => {
-    console.log('hostLeftTopComponent', Props.ENTRY, '감지됨')
     setRolsestates(Props.ENTRY.map((entry) => {
       let tmpState : UserRoleState = {
         name : entry.name,
@@ -74,6 +73,14 @@ export default function HostleftBottomcomponent(Props : Props) {
       }
       return tmpState
     }))
+
+    // RoleStates.current = Props.ENTRY.map((entry) => {
+    //   let tmpState : UserRoleState = {
+    //     name : entry.name,
+    //     isSelected :  false
+    //   }
+    //   return tmpState
+    // })
 
   }, [Props.ENTRY])
 
@@ -94,7 +101,9 @@ export default function HostleftBottomcomponent(Props : Props) {
               <select
               className=" border text-sm rounded-lg block w-1/3 p-2.5 "
               id={`roleSelect_${id}`}
-              onChange={(e) => sendRoles(role.name, Number(e.target.value))}
+              onChange={(e) => {
+                console.log()
+                sendRoles(role.name, Number(e.target.value))}}
               >
                 <option selected>아이를 선택하세요</option>
                 {rolestates.map(
@@ -103,6 +112,7 @@ export default function HostleftBottomcomponent(Props : Props) {
                       className = {state.isSelected ? 'bg-gray-500' : ''}
                       key={id}
                       value={id}
+                      disabled={state.isSelected}
                     >{state.name}</option>
                   )
                 )}

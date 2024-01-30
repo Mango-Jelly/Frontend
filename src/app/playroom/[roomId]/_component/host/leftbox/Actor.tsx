@@ -5,7 +5,7 @@ type Role = {
   }
   
   
-export default function actors(role : Role) {
+export default function Actor(role : Role) {
     return (
       <div className=' '>
         

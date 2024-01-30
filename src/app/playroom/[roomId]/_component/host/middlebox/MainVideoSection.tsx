@@ -1,7 +1,4 @@
-import Image
- from 'next/image'
 import React from 'react'
-import VideoImage from '@/../public/VideoTag.svg'
 import UserVideoComponent from '../../UserVIdeo'
 
 
@@ -9,16 +6,22 @@ type Props = {
   streamManager : any
 }
 
-export default function hostmiddlebox(Props : Props) {
-  console.log(Props.streamManager)
+export default function MainVideoSection(Props : Props) {
+  // console.log(Props.streamManager)
   return (
     <div className='col-span-3 '>
-        <div className='w-11/12 mx-auto'>
+        <div className='w-11/12 mx-auto h-full flex flex-col justify-between'>
 
-            {
+            { Props.streamManager ? 
               <UserVideoComponent 
               streamManager={Props.streamManager}
               />
+              :
+              <div className='mx-auto my-5 h-full'>
+                <video controls muted className='h-full'>
+                  <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
+                </video>
+              </div>
             }
 
             <div className='flex justify-between'>
