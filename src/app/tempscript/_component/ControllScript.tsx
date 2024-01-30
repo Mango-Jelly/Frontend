@@ -1,23 +1,23 @@
-import { useState, useRef } from 'react'
-import { scriptInfo } from '../data/Dummy'
+import { useState, useRef } from 'react';
+import { scriptInfo } from '../../../data/DummyScript';
 
-const sceneNum = scriptInfo.scene.length
+const sceneNum = scriptInfo.scene.length;
 const dialogNums = scriptInfo.scene.map((value) => {
-  return value.dialogs.length
-})
+  return value.dialogs.length;
+});
 
 export const ControllScript = () => {
-  const script = scriptInfo
+  const script = scriptInfo;
   const [curSelection, setCurSelection] = useState({
     scene: 0,
     dialog: 0,
     idx: 0,
-  })
-  const refs = useRef<null[] | HTMLDivElement[]>([])
+  });
+  const refs = useRef<null[] | HTMLDivElement[]>([]);
 
   function moveScript() {
-    changeIdx()
-    moveScroll()
+    changeIdx();
+    moveScroll();
   }
 
   function changeIdx() {
@@ -26,13 +26,13 @@ export const ControllScript = () => {
         ...prev,
         dialog: prev.dialog + 1,
         idx: prev.idx + 1,
-      }))
+      }));
     } else if (curSelection.scene < sceneNum - 1) {
       setCurSelection({
         scene: curSelection.scene + 1,
         dialog: 0,
         idx: curSelection.idx + 1,
-      })
+      });
     }
   }
 
@@ -41,9 +41,9 @@ export const ControllScript = () => {
       refs.current[curSelection.idx]?.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
-      })
+      });
     }
   }
 
-  return { script, curIdx: curSelection, refs, moveScript }
-}
+  return { script, curIdx: curSelection, refs, moveScript };
+};

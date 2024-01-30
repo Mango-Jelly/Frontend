@@ -5,30 +5,30 @@ html {
 @tailwind base;
 
 /* 스크롤바 디자인 */
-:root {
-  --primary: #E8E8E880;
+/* :root {
+  --primary: #e8e8e880;
   --secondary: #7f7f7f;
-}
+} */
 
 /* Scrollbar styles */
 
 /* Firefox */
-* {
+/* * {
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--secondary);
-}
+} */
 
 /* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
+/* *::-webkit-scrollbar {
   width: 1.379rem;
-}
+} */
 
-*::-webkit-scrollbar-track {
+/* *::-webkit-scrollbar-track {
   background: var(--primary);
-}
+} */
 
-*::-webkit-scrollbar-thumb {
-  background-color: var(--secondary);
+/* *::-webkit-scrollbar-thumb {
+  background-color: var(--secondary); */
 /*   background: repeating-linear-gradient(
     45deg,
     var(--secondary),
@@ -36,7 +36,8 @@ html {
     var(--primary) 5px,
     var(--primary) 10px
   ); */
-  border-radius: 1rem;
-}
+/* border-radius: 1rem;
+} */
+
 @tailwind components;
 @tailwind utilities;
