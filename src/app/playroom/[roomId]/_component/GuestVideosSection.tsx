@@ -59,20 +59,23 @@ export default function GuestVideosSection(props : Props) {
                                         {
                                         props.subscribers.map((event, id) =>
                                                 ( typeof props.subscribers[0] === 'string' ?
-                                            
                                             <div
                                                 key={id}
-                                                className ='my-5 px-2 w-1/5'
+                                                className ={`${id === currentIndex ? 'active' : ''} my-5 px-2 w-1/5`}
                                                 >
                                                 <video
-                                                className={`carousel-item ${id === currentIndex ? 'active' : ''} `}
                                                 controls muted>
                                                     <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
                                                 </video>
-                                                <p>{event}</p>
+                                                <p className = {`w-full text-wrap`}
+                                                >{event}</p>
                                             </div>
                                             
-
+                                            //     <video
+                                            //     className ={` ${id === currentIndex ? 'active' : ''}  my-5 px-2 w-1/5`}
+                                            //     controls muted>
+                                            //         <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
+                                            //     </video>
                                             :
                                                 <div
                                                 key = {id}

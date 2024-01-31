@@ -26,6 +26,8 @@ export default function HostMainSection(Props : Props) {
             roomId = {Props.roomId}
             />
             <MainVideoSection
+              client = {Props.client}
+              roomId = {Props.roomId}
               streamManager = {Props.streamManager} />
             <GuestStateSection
               ENTRY = {Props.ENTRY}
