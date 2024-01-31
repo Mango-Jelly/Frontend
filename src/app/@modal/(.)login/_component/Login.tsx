@@ -5,67 +5,42 @@ import Image from 'next/image'
 import AppLogo from '../../../../../public/AppMainLogo.png';
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import BackButton from '@/app/_component/BackButton';
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
-import { AuthError } from 'next-auth';
-
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const router = useRouter();
+    const session = useSession();
 
     const onChangeId: ChangeEventHandler<HTMLInputElement> = (e) => {
         setEmail(e.target.value);
-        console.log(email)
     };
 
     const onChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
         setPassword(e.target.value);
-        console.log(password)
     };
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         setMessage('');
-        try {
-            const response = await signIn("credentials", {
-                username: email,
-                password,
-                redirect: false
-            });
-
-            console.log(
-                "try문----------------------------------------------",
-                response
-            );
 
 
-            if (!response?.error) {
-                console.log(
-                    "try문2----------------------------------------------",
-                    response
-                );
-                setMessage("아이디와 비밀번호가 일치하지 않습니다.");
-            } else {
-                console.log(
-                    "try문3----------------------------------------------",
-                    response
-                );
+        const response = await signIn("credentials", {
+            username: email,
+            password,
+            redirect: false
+        });
 
-            }
-            router.replace('/');
+        if (response?.error === 'CredentialsSignin') {
+            setMessage('인증에 실패했습니다. 아이디와 비밀번호를 다시 확인해주세요.');
+        }
 
-        } catch (error) {
-            if (error instanceof AuthError) {
-                switch (error.type) {
-                    case 'CredentialsSignin':
-                        return 'Invalid credentials';
-                    default:
-                        return 'Invalid credentials';
-                }
-            }
+        if (!response?.error) {
+            router.back();
+            router.refresh();
         }
     }
 

@@ -9,8 +9,6 @@ import { auth } from '@/auth'
 export default async function NavMenu() {
   const session = await auth();
 
-  console.log(session);
-
   return (
     <header>
       <nav className='flex justify-center bg-white px-12 py-4 shadow'>
