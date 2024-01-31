@@ -1,17 +1,15 @@
-import NextAuth from 'next-auth/next'
-import { DefaultSession } from 'next-auth'
+import { DefaultSession } from "next-auth";
+import NextAuth from "next-auth/next";
 
 declare module "next-auth" {
   interface Session {
-    session?: {
-      accessToken: string;
-      refreshToken: string;
-    };
+    user?: {
+      accessToken: string | null | undefined;
+      refreshToken: string | null | undefined;
+    } & DefaultSession["user"];
   }
   interface User {
-    user?: {
-      accessToken: string;
-      refreshToken: string;
-    };
+    accessToken: string | null | undefined;
+    refreshToken: string | null | undefined;
   }
 }

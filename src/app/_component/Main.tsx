@@ -3,6 +3,7 @@ import VideosOfOtherUser from './VideosOfOtherUser'
 import MyVideos from './MyVideos'
 import MakeRoomButton from './MakeRoomButton'
 import { auth } from "@/auth";
+import axios from 'axios';
 
 export default async function Main() {
     const session = await auth();
