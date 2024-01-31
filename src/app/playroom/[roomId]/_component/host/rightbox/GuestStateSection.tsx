@@ -5,7 +5,7 @@ import status202 from '@/../public/status202.svg'
 import status203 from '@/../public/status203.svg'
 import status204 from '@/../public/status204.svg'
 import Image
- from 'next/image'
+from 'next/image'
 
 type UserStatus = {
   name : string
@@ -14,7 +14,7 @@ type UserStatus = {
 
 type Props = {
   ENTRY : UserStatus[]
- }
+}
 
 const status : any[] = [status201, status202, status203, status204]
 
@@ -35,7 +35,7 @@ export default function GuestStateSection(Props : Props) {
                 src = {BasicUser}
                 alt = "프로필 사진"
                 className='h-[5rem] w-[5rem] '
-                /> 
+                />
               </div>
               <div className='flex flex-col'>
                 <p className='text-wrap'>
@@ -44,7 +44,7 @@ export default function GuestStateSection(Props : Props) {
                 <p className='text-center'>
                   {false ? '무엇 무엇': '아직 역할이 없어요'}
                 </p>
-              </div>              
+              </div>
               {entry.status ?
                 <div>
                   <Image

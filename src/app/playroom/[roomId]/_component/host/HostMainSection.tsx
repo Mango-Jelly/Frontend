@@ -20,15 +20,15 @@ export default function HostMainSection(Props : Props) {
   return (
     <div className='bottomcontainer'>
         <div className='grid grid-cols-5'>
-            <PlayInfoSelectSection 
+            <PlayInfoSelectSection
             ENTRY = {Props.ENTRY}
             client = {Props.client}
             roomId = {Props.roomId}
             />
-            <MainVideoSection 
+            <MainVideoSection
               streamManager = {Props.streamManager} />
-            <GuestStateSection 
-             ENTRY = {Props.ENTRY}
+            <GuestStateSection
+              ENTRY = {Props.ENTRY}
             />
         </div>
     </div>

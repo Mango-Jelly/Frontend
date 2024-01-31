@@ -43,6 +43,7 @@ export default function Page({ params: { roomId } }: Props) {
   const [publisher, setPublisher] = useState<any>(undefined);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<any>(null);
   const [role, setRole] = useState('');
+  const [call, setCall] = useState('');
 
   const changeHost = () => {
     setIsHost(prevIsHost => !prevIsHost);
@@ -80,6 +81,7 @@ export default function Page({ params: { roomId } }: Props) {
         setSubscribers((subscribers) => subscribers.filter(vidioId => vidioId != videoTag ))
 
       }
+        // 문제가 생겼다면
       else if (200 <= messageBody.code && messageBody.code < 300) {
         setENTRY(ENTRY => ENTRY.map((item) => {
 
@@ -89,6 +91,14 @@ export default function Page({ params: { roomId } }: Props) {
           }
           return item;
         }))
+        setCall(messageBody.id)
+        setSubscribers((prevsub) => {
+          console.log(prevsub)
+          let newsub = prevsub
+          newsub =  [prevsub.filter(e => { return e != call }) , prevsub.find(element => element === messageBody.id)]
+          return newsub;
+        }
+        )
       }
       else if (!amIhost.current && Number(messageBody.code) === 300 && USERID === messageBody.name) {
         setRole(messageBody.role)
@@ -107,13 +117,13 @@ export default function Page({ params: { roomId } }: Props) {
       createToken(sessionId),
     );
   }, [mySessionId]);
-  // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL 
+  // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL
   const createSession = async (sessionId: any) => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/', { customSessionId: sessionId }, {
       headers: {
         'Authorization' : 'MYSECRET',
         'Content-Type': 'application/json',
-     },
+      },
     }
 
     );
@@ -123,7 +133,7 @@ export default function Page({ params: { roomId } }: Props) {
 
   const createToken = async (sessionId: any) => {
     const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-      headers: { 
+      headers: {
         'Authorization' : 'MYSECRET',
         'Content-Type': 'application/json', },
     });
@@ -151,7 +161,7 @@ export default function Page({ params: { roomId } }: Props) {
   // 카메라 여러개일 때 바꿔주는 기능
   const switchCamera = useCallback(async () => {
     try {
-      // 카메라 받는거 
+      // 카메라 받는거
       const devices = await OV.current.getDevices();
       const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
@@ -165,7 +175,7 @@ export default function Page({ params: { roomId } }: Props) {
             publishVideo: true,
             mirror: true,
           });
-          // 오픈비두 객체에 
+          // 오픈비두 객체에
           // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
           if (session) {
             await session.unpublish(mainStreamManager);
@@ -208,9 +218,9 @@ export default function Page({ params: { roomId } }: Props) {
         code: 100,
         id: USERID,
         videoid : `${USERID}'s_video`
-      };
+    };
       // console.log(JSON.stringify(message))
-      client.current.publish({
+    client.current.publish({
         destination: `/sub/channel/${roomId}`,
         body: JSON.stringify(message),
       });
@@ -234,7 +244,7 @@ export default function Page({ params: { roomId } }: Props) {
     const connect = () => {
 
       client.current = new StompJs.Client({
-        brokerURL: "ws://localhost:8081/ws",
+        brokerURL: "ws://localhost:8080/ws",
         onConnect: () => {
           console.log("connected");
           subscribe();
@@ -263,7 +273,7 @@ export default function Page({ params: { roomId } }: Props) {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
-    // 
+    //
     mySession.on('exception', (exception) => {
       console.warn(exception);
     });
@@ -276,7 +286,7 @@ export default function Page({ params: { roomId } }: Props) {
 
     // 웹사이트나갈때 subscribers에서 사라지게하는 코드
     window.addEventListener('beforeunload', Disconnect);
-    // mySession으로까지 저장 
+    // mySession으로까지 저장
     getToken().then(async (token) => {
       try {
         await mySession.connect(token, { clientData: myUserName });
@@ -323,6 +333,7 @@ export default function Page({ params: { roomId } }: Props) {
         <Top
           depart='꿈나무 유치원'
           title='망고 연극반'
+          call = {call}
           subscribers={subscribers}
         />
 
