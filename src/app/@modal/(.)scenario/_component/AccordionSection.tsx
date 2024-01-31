@@ -15,11 +15,11 @@ export default function Section({ sequence, title, isOpen, onClick, children }: 
       <button
         type='button'
         onClick={onClick}
-        className={`flex items-center bg-arrow justify-between w-full h-[8rem] p-8 ${isOpen ? 'rounded-t-xl' : 'rounded-xl'}`}
+        className={`flex items-center bg-gray-200 justify-between w-full h-[8rem] p-8 ${isOpen ? 'rounded-t-xl' : 'rounded-xl'}`}
         aria-expanded='true'
         aria-controls='accordion-collapse-body-1'
       >
-        <span className='text-3xl'>{`Scene ${sequence} [${title}]`}</span>
+        <span className='text-3xl font-medium'>{`Scene ${sequence} [${title}]`}</span>
         {isOpen ? (
           <ChevronUpIcon className='size-8' />
         ) : (
