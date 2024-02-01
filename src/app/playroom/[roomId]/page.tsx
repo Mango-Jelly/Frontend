@@ -251,11 +251,6 @@ export default function Page({ params: { roomId } }: Props) {
       console.warn(exception);
     });
 
-
-
-
-
-
     // const handleBeforeUnload = () => {
     //   leaveSession();
     // };
