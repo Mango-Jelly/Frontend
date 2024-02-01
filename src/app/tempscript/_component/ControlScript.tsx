@@ -6,7 +6,7 @@ const dialogNums = scriptInfo.scene.map((value) => {
   return value.dialogs.length;
 });
 
-export const ControllScript = () => {
+export const ControlScript = () => {
   const script = scriptInfo;
   const [curSelection, setCurSelection] = useState({
     scene: 0,
