@@ -3,107 +3,32 @@
 import style from './signup.module.css'
 import Image from 'next/image'
 import AppLogo from '../../../../../public/AppMainLogo.png';
-import { ChangeEventHandler, FormEventHandler, useState } from "react";
-import Button from '@/app/_component/TriggerButton'
 import BackButton from '@/app/_component/BackButton';
-import { useRouter } from 'next/navigation';
+import signUp from '@/app/_lib/signup';
+import { useFormState, useFormStatus } from 'react-dom';
 
+function showMessage(message: string | null) {
+    if (message === 'invalid_nickname') {
+        return '닉네임을 올바르게 입력해주세요. (2자 이상 ~ 10자 이내)';
+    }
+    if (message === 'invalid_email') {
+        return '이메일을 올바르게 입력해주세요.';
+    }
+    if (message === 'invalid_password') {
+        return '비밀펀호를 올바르게 입력하세요. (8~20자 이내)';
+    }
+    if (message === 'password_not_match') {
+        return '비밀번호와 비밀번호 확인이 일치하지 않습니다.';
+    }
+    if (message === 'user_exists') {
+        return '이미 가입된 유저입니다.';
+    }
+    return '';
+}
 
-
-export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [nickname, setNickname] = useState('');
-    const [checkPassword, setCheckPassword] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const router = useRouter();
-
-    //TODO : 한번만 클릭할 수 있도록 더블클릭 방지로직 추가
-
-    const onChangeEmail: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const onChangePassword: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setPassword(e.target.value);
-    };
-
-    const onChangeNickname: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setNickname(e.target.value);
-    };
-
-    const onChangeCheckPassword: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setCheckPassword(e.target.value);
-    };
-
-    const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-        e.preventDefault();
-
-        // 유효성 검사 로직 추가
-        if (!validateInputs()) {
-            return;
-        }
-
-        // 통신 성공 시 처리 로직
-
-        // 서버와의 통신 코드 추가
-        // const result = await sendDataToServer();
-
-
-
-        // TODO : 회원가입 성공 시 로그인 페이지로 이동
-
-        alert('회원가입이 완료되었습니다.');
-        router.replace('/login');
-    };
-
-    const validateInputs = () => {
-        // 아이디 유효성 검사
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailPattern.test(email)) {
-            setErrorMessage('이메일 형식이 올바르지 않습니다.');
-            return false;
-        }
-
-        // 비밀번호 유효성 검사
-        if (password.length < 8) {
-            setErrorMessage('비밀번호는 8자 이상이어야 합니다.');
-            return false;
-        }
-
-        // 비밀번호 체크
-        if (password !== checkPassword) {
-            setErrorMessage('비밀번호가 일치하지 않습니다.');
-            return false;
-        }
-
-        // 닉네임 유효성 검사
-        if (nickname.length > 10) {
-            setErrorMessage('닉네임은 최대 10자까지 가능합니다.');
-            return false;
-        }
-
-        // 모든 유효성 검사 통과
-        setErrorMessage('');
-        return true;
-    };
-
-
-    // TODO : 서버와의 통신 코드 작성
-    const sendDataToServer = () => {
-        // 서버와의 통신 코드 작성
-        // 예시: axios.post('/api/signup', { email, password, nickname })
-        //        .then(response => {
-        //            // 통신 성공 시 처리 로직
-        //        })
-        //        .catch(error => {
-        //            // 통신 실패 시 처리 로직
-        //        });
-    };
-
-
+export default function SignUp() {
+    const [state, formAction] = useFormState(signUp, { message: null });
+    const { pending } = useFormStatus();
 
     return (
         <div className={style.modalBackground}>
@@ -112,7 +37,7 @@ export default function Login() {
                 <div className={style.modalHeader}>
                     <Image className={style.applogo} src={AppLogo} width={316} height={59} alt='로고' />
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form action={formAction}>
                     <div className={style.modalBody}>
                         <div className={style.inputDiv}>
                             <label
@@ -123,11 +48,11 @@ export default function Login() {
                             </label>
                             <input
                                 id="nickname"
-                                className={style.input}
-                                value={nickname}
-                                onChange={onChangeNickname}
+                                name="nickname"
                                 type="text"
-                                placeholder="10자 이내로 입력해주세요."
+                                className={style.input}
+                                placeholder="2~10자 이내로 입력해주세요."
+                                required
                             />
                         </div>
                         <div className={style.inputDiv}>
@@ -139,11 +64,11 @@ export default function Login() {
                             </label>
                             <input
                                 id="email"
+                                name='email'
                                 className={style.input}
-                                value={email}
-                                onChange={onChangeEmail}
                                 type="email"
                                 placeholder="예시) user@mail.com"
+                                required
                             />
                         </div>
                         <div className={style.inputDiv}>
@@ -155,37 +80,37 @@ export default function Login() {
                             </label>
                             <input
                                 id="password"
-                                className={style.input}
-                                value={password}
-                                onChange={onChangePassword}
+                                name='password'
                                 type="password"
-                                placeholder="영문, 숫자포함 8자리 이상 입력해주세요"
+                                className={style.input}
+                                placeholder="영문, 숫자포함 8~20자 이내로 입력해주세요"
+                                required
                             />
                         </div>
                         <div className={style.inputDiv}>
                             <label
                                 className={style.inputLabel}
-                                htmlFor="checkPassword"
+                                htmlFor="confirmPassword"
                             >
                                 비밀번호 확인
                             </label>
                             <input
-                                id="checkPassword"
+                                id="confrimPassword"
+                                name='confirmPassword'
                                 className={style.input}
-                                value={checkPassword}
-                                onChange={onChangeCheckPassword}
                                 type="password"
                                 placeholder="입력한 비밀번호와 같은 비밀번호를 입력해주세요"
+                                required
                             />
                         </div>
-                        {errorMessage && <p className={style.error}>{errorMessage}</p>}
+                        {<p className={style.error}>{showMessage(state?.message)}</p>}
                     </div>
                     <div className={style.modalFooter}>
                         <button
-                            title='로그인/로그아웃 버튼'
+                            title='회원가입'
                             type='submit'
-                            className={`text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            disabled={isSubmitting}
+                            className={`text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4 `}
+                            disabled={pending}
                         >
                             회원가입
                         </button >

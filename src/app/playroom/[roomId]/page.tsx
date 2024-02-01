@@ -94,17 +94,17 @@ export default function Page({ params: { roomId } }: Props) {
 
   // 세션 받기 -> 토큰 받기
   const getToken = useCallback(async () => {
-        return createSession(mySessionId).then(sessionId =>
-            createToken(sessionId),
-        );
-    }, [mySessionId]); 
-    // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL 
-    const createSession = async (sessionId : any) => {
-        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-            headers: { 'Content-Type': 'application/json', },
-        });
-        return response.data; // The sessionId
-    };
+    return createSession(mySessionId).then(sessionId =>
+      createToken(sessionId),
+    );
+  }, [mySessionId]);
+  // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL 
+  const createSession = async (sessionId: any) => {
+    const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
+      headers: { 'Content-Type': 'application/json', },
+    });
+    return response.data; // The sessionId
+  };
 
 
   const createToken = async (sessionId: any) => {
@@ -132,36 +132,35 @@ export default function Page({ params: { roomId } }: Props) {
   //   setPublisher(undefined);
   // }, [session]);
 
-    // 카메라 여러개일 때 바꿔주는 기능
-    const switchCamera = useCallback(async () => {
-      try {
-          // 카메라 받는거 
-          const devices = await OV.current.getDevices();
-          const videoDevices = devices.filter(device => device.kind === 'videoinput');
-  
-          if (videoDevices && videoDevices.length > 1) {
-              const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
-              // html 비디오 태그를 캐치하는 객체
-              if (newVideoDevice.length > 0) { 
-                  const newPublisher : any = OV.current.initPublisher(undefined, {
-                      videoSource: newVideoDevice[0].deviceId,
-                      publishAudio: true,
-                      publishVideo: true,
-                      mirror: true,
-                  });
-                  // 오픈비두 객체에 
-                  // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
-                  if (session) {
-                      await session.unpublish(mainStreamManager);
-                      await session.publish(newPublisher);
-                      setCurrentVideoDevice(newVideoDevice[0]);
-                      setMainStreamManager(newPublisher);
-                      setPublisher(newPublisher);
-                  }
-              }
+  // 카메라 여러개일 때 바꿔주는 기능
+  const switchCamera = useCallback(async () => {
+    try {
+      // 카메라 받는거 
+      const devices = await OV.current.getDevices();
+      const videoDevices = devices.filter(device => device.kind === 'videoinput');
+
+      if (videoDevices && videoDevices.length > 1) {
+        const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
+        // html 비디오 태그를 캐치하는 객체
+        if (newVideoDevice.length > 0) {
+          const newPublisher: any = OV.current.initPublisher(undefined, {
+            videoSource: newVideoDevice[0].deviceId,
+            publishAudio: true,
+            publishVideo: true,
+            mirror: true,
+          });
+          // 오픈비두 객체에 
+          // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
+          if (session) {
+            await session.unpublish(mainStreamManager);
+            await session.publish(newPublisher);
+            setCurrentVideoDevice(newVideoDevice[0]);
+            setMainStreamManager(newPublisher);
+            setPublisher(newPublisher);
           }
         }
       }
+
     } catch (e) {
       console.error(e);
     }
