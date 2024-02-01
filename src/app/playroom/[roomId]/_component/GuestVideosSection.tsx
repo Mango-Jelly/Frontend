@@ -54,7 +54,7 @@ export default function GuestVideosSection(props : Props) {
                     
                         <div className='flex flex-row space-x-4 overflow-x-hidden overflow-hidden w-full '>
                             {
-                                props.subscribers.length !== 0 ?
+                                props.subscribers.length > 0 ?
                                 <div className=" carousel " style={{ left: `-${currentIndex * (100 / maxItemsPerSlide)}%` }}>
                                         {
                                         props.subscribers.map((event, id) =>
@@ -76,6 +76,8 @@ export default function GuestVideosSection(props : Props) {
                                             //     controls muted>
                                             //         <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
                                             //     </video>
+
+
                                             :
                                                 <div
                                                 key = {id}

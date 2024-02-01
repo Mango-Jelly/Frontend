@@ -3,7 +3,7 @@
 
 import './_component/page.css'
 import Link from "next/link"
-import Top from './_component/GuestVideosSection'
+import GuestVideosSection from './_component/GuestVideosSection'
 // import { useRouter } from 'next/router'
 import axios from 'axios';
 import BottomHost from './_component/host/HostMainSection';
@@ -14,7 +14,7 @@ import * as StompJs from "@stomp/stompjs"
 import { OpenVidu } from 'openvidu-browser';
 import { start } from 'repl';
 // import curtain from '@/../public/curtain.mov'
-import curtain from './curtain.mov'
+import curtain from '@/../public/curtainsclosing.mp4'
 import dummyVideo from '@/../public/dummyVideo.mp4'
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://mangotail.shop/' : 'http://mangotail.shop/';
@@ -54,6 +54,7 @@ export default function Page({ params: { roomId } }: Props) {
   const [second, setsecond] = useState<boolean>(false)
   const [third, setthird] = useState<boolean>(false)
   const [fourth, setfourth] = useState<boolean>(false)
+  const [token, setToken] = useState<String>('');
   const amIhost = useRef<boolean>(false);
 
   const changeHost = () => {
@@ -85,7 +86,7 @@ export default function Page({ params: { roomId } }: Props) {
         }
         let videoTag : string = messageBody.videoid
         setENTRY(ENTRY => [...ENTRY, newBody])
-        setSubscribers((subscribers) => [...subscribers, videoTag])
+        // setSubscribers((subscribers) => [...subscribers, videoTag])
       }
       else if (messageBody.code == 101) {
         let newBody: UserStatus = {
@@ -94,7 +95,7 @@ export default function Page({ params: { roomId } }: Props) {
         }
         let videoTag : string = messageBody.videoid
         setENTRY(ENTRY => ENTRY.filter(item => item.name != messageBody.id))
-        setSubscribers((subscribers) => subscribers.filter(vidioId => vidioId != videoTag ))
+        // setSubscribers((subscribers) => subscribers.filter(vidioId => vidioId != videoTag ))
 
       }
         // 참가자 중에 문제가 생겼다면
@@ -110,19 +111,21 @@ export default function Page({ params: { roomId } }: Props) {
         setCall(messageBody.id)
         
         // 카메라 정렬을 위한 코드
-        setSubscribers((prevsub) => {
-          let newsub;
-          console.log(prevsub.find((element) => element === `${messageBody.id}'s_video`))
-          if (prevsub.find((element) => element === `${messageBody.id}'s_video`))
-          {
-            newsub =  [prevsub.find((element) => element === `${messageBody.id}'s_video`)].concat(prevsub.filter(e => { return e != `${messageBody.id}'s_video` }))
-          }
-          else 
-          {
-            newsub = prevsub
-          }
-          return newsub;
-        })
+        // setSubscribers((prevsub) => {
+        //   let newsub;
+        //   console.log(prevsub.find((element) => element === `${messageBody.id}'s_video`))
+        //   if (prevsub.find((element) => element === `${messageBody.id}'s_video`))
+        //   {
+        //     newsub =  [prevsub.find((element) => element === `${messageBody.id}'s_video`)].concat(prevsub.filter(e => { return e != `${messageBody.id}'s_video` }))
+        //   }
+        //   else 
+        //   {
+        //     newsub = prevsub
+        //   }
+        //   return newsub;
+        // })
+
+
       }
       else if (!amIhost.current && Number(messageBody.code) === 300 && USERID === messageBody.name) {
         setRole(messageBody.role)
@@ -146,15 +149,6 @@ export default function Page({ params: { roomId } }: Props) {
             }, 5000)
           }, 2000)
         } , 1000)
-        // console.log('시작한닷')
-        // console.log(isStart)
-        // StartCallback(0, true)
-        // setTimeout(() => {
-        //   console.log('1단계 ㄱㄱ')
-        //   console.log(isStart)
-        //   StartCallback(1, true)
-        // } , 1000)
-
       }
 
 
@@ -165,50 +159,58 @@ export default function Page({ params: { roomId } }: Props) {
 
   // 세션 받기 -> 토큰 받기
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then(sessionId =>
-      createToken(sessionId),
-    );
+    // return createSession().then(
+    //   sessionId => createToken(sessionId),
+    // );
+
+    return createToken(roomId)
   }, [mySessionId]);
+
+
   // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL
-  const createSession = async (sessionId: any) => {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'openvidu/api/sessions/', { customSessionId: sessionId }, {
+  const createSession = async () => {
+
+    const response = await axios.post( '/openvidu/api/sessions/', {
       headers: {
-        'Authorization' : 'MYSECRET',
+        'Authorization' : 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
         'Content-Type': 'application/json',
       },
+      // data : body,
     }
-
     );
-    return response.data; // The sessionId
+    // setMySessionId(response.data.sessionId);
+    // setToken(response.data.);
+    return response.data.sessionId; // The sessionId
   };
 
 
   const createToken = async (sessionId: any) => {
-    const response = await axios.post(APPLICATION_SERVER_URL + 'openvidu/api/sessions/' + sessionId + '/connections', {}, {
+ 
+    const response = await axios.post(`/openvidu/api/sessions/${sessionId}/connection `  , {
       headers: {
-        'Authorization' : 'MYSECRET',
+        'Authorization' : 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
         'Content-Type': 'application/json', },
     });
     return response.data; // The token
   };
 
 
-  // const leaveSession = useCallback(() => {
-  //   // Leave the session
-  //   if (session) {
-  //       session.disconnect();
-  //   }
-  //   console.log('나는 출력되고있다')
-  //   // 상태관리중인 세션이 있을경우 초기화
-  //   // Reset all states and OpenVidu object
-  //   OV.current = new OpenVidu();
-  //   setSession(undefined);
-  //   setSubscribers([]);
-  //   setMySessionId('SessionA');
-  //   setMyUserName('Participant' + Math.floor(Math.random() * 100));
-  //   setMainStreamManager(undefined);
-  //   setPublisher(undefined);
-  // }, [session]);
+  const leaveSession = useCallback(() => {
+    // Leave the session
+    if (session) {
+        session.disconnect();
+    }
+    console.log('나는 출력되고있다')
+    // 상태관리중인 세션이 있을경우 초기화
+    // Reset all states and OpenVidu object
+    OV.current = new OpenVidu();
+    setSession(undefined);
+    setSubscribers([]);
+    setMySessionId('SessionA');
+    setMyUserName('Participant' + Math.floor(Math.random() * 100));
+    setMainStreamManager(undefined);
+    setPublisher(undefined);
+  }, [session]);
 
   // 카메라 여러개일 때 바꿔주는 기능
   const switchCamera = useCallback(async () => {
@@ -326,19 +328,23 @@ export default function Page({ params: { roomId } }: Props) {
     // };
 
     // window.addEventListener('beforeunload', handleBeforeUnload);
+
+    
     // 웹사이트나갈때 subscribers에서 사라지게하는 코드
     window.addEventListener('beforeunload', Disconnect);
-    // mySession으로까지 저장
-    getToken().then(async (token) => {
-      try {
-        await mySession.connect(token, { clientData: myUserName });
+    window.addEventListener('beforeunload',() => {mySession.disconnect()});
 
+    getToken().then(async (token) => {
+      console.log(token.token);
+      try {
+
+        await mySession.connect(token.token, { clientData: myUserName });
         let publisher: any = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined,
           videoSource: undefined,
           publishAudio: true,
           publishVideo: true,
-          resolution: '640x480',
+          resolution: '1280x720',
           frameRate: 30,
           insertMode: 'APPEND',
           mirror: false,
@@ -375,11 +381,12 @@ export default function Page({ params: { roomId } }: Props) {
         { third ? 
         <video className='w-full h-full' controls autoPlay>
              {/* <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" /> */}
-             <source src= {curtain} type="video/quicktime" />
+             {/* <source src= './curtainsclosing.mp4' type="video/mp4" /> */}
+             <source src= ".curtainsclosing.mp4" type="video/mp4" />
         </video> : null}
       </div> : null }
       <div className='relative'>
-        <Top
+        <GuestVideosSection
           depart='꿈나무 유치원'
           title='망고 연극반'
           call = {call}
