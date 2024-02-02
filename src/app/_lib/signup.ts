@@ -1,8 +1,6 @@
 "use server";
 
-import { signIn, auth } from "@/auth";
-import { revalidatePath } from "next/cache";
-import {redirect} from "next/navigation";
+import { signIn } from "@/auth";
 
 const signUp = async (formData: FormData) => {
     const email = formData.get('email');
@@ -59,7 +57,7 @@ formData.forEach((value, key) => userSignUpData[key] = value);
   } catch (e) {
     throw e;
   } 
-  
+
   return { message: null };
 }
 

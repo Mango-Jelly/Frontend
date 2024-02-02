@@ -1,5 +1,4 @@
-import NextAuth, { Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export const {
@@ -27,7 +26,7 @@ export const {
               password: credentials.password,
             }),
           })
-          
+
           if (!authResponse.ok) {
             console.log('authResponse not ok');
             return null

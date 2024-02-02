@@ -5,7 +5,7 @@ import Image from 'next/image'
 import AppLogo from '../../../../../public/AppMainLogo.png';
 import { ChangeEventHandler, FormEventHandler, useState } from "react";
 import BackButton from '@/app/_component/BackButton';
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
@@ -13,7 +13,6 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const router = useRouter();
-    const session = useSession();
 
     const onChangeId: ChangeEventHandler<HTMLInputElement> = (e) => {
         setEmail(e.target.value);

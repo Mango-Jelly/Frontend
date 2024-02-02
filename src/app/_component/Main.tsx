@@ -3,11 +3,10 @@ import VideosOfOtherUser from './VideosOfOtherUser'
 import MyVideos from './MyVideos'
 import MakeRoomButton from './MakeRoomButton'
 import { auth } from "@/auth";
-import axios from 'axios';
 
 export default async function Main() {
     const session = await auth();
-
+    67
     return (
         <>
             <main className='flex justify-center px-12 md:px-24 lg:px-52'>

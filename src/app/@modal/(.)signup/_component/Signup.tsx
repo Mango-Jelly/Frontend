@@ -34,8 +34,9 @@ export default function SignUp() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const form = new FormData(e.currentTarget);
 
-        await signUp(new FormData(e.currentTarget));
+        await signUp(form);
         router.back();
         router.refresh();
     };
