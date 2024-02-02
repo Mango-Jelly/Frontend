@@ -27,20 +27,18 @@ export const {
               password: credentials.password,
             }),
           })
-          console.log('authResponse는 다음과 같음', authResponse);
-  
+          
           if (!authResponse.ok) {
             console.log('authResponse not ok');
             return null
           }
   
-          const user = await authResponse.json()
+          const user = await authResponse.json();
           return user;
 
         } catch (e) {
           console.log('error', e);
         }
-
         },
     }),
   ],

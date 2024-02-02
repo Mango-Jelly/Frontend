@@ -1,16 +1,16 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { signIn } from "@/auth";
+import { signIn, auth } from "@/auth";
+import { revalidatePath } from "next/cache";
+import {redirect} from "next/navigation";
 
-const signUp = async (prevState: any, formData: FormData) => {
+const signUp = async (formData: FormData) => {
     const email = formData.get('email');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirmPassword');
     const nickname = formData.get('nickname');
 
-    if (!nickname || !(nickname as string)?.trim() || (nickname as string)?.length < 2 || (nickname as string)?.length > 10) {
-        
+    if (!nickname || !(nickname as string)?.trim() || (nickname as string)?.length < 2 || (nickname as string)?.length > 10) {        
         return { message: 'invalid_nickname' };
     }    
 
@@ -44,28 +44,22 @@ formData.forEach((value, key) => userSignUpData[key] = value);
       }),
       credentials: 'include',
     })
-
-    console.log(response.status);
-
+    
     if (response.status === 400) {
       return { message: 'user_exists' };
     }
 
-    console.log(await response.json())
-    
+    await signIn("credentials", {
+      username: userSignUpData.email,
+      password : userSignUpData.password,
+      redirect: false
+    });
+
     shouldRedirect = true;
-    
-    await signIn("credentials", userSignUpData);
-    
-  } catch (err) {
-    console.error(err);
-    return { message: "회원가입은 성공했으나, 로그인에 실패했습니다. 다시 로그인해주세요."};
-  }
-
-  if (shouldRedirect) {
-    redirect('/');
-  }
-
+  } catch (e) {
+    throw e;
+  } 
+  
   return { message: null };
 }
 

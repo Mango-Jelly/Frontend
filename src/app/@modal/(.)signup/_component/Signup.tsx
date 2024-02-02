@@ -6,6 +6,7 @@ import AppLogo from '../../../../../public/AppMainLogo.png';
 import BackButton from '@/app/_component/BackButton';
 import signUp from '@/app/_lib/signup';
 import { useFormState, useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 function showMessage(message: string | null) {
     if (message === 'invalid_nickname') {
@@ -21,7 +22,7 @@ function showMessage(message: string | null) {
         return '비밀번호와 비밀번호 확인이 일치하지 않습니다.';
     }
     if (message === 'user_exists') {
-        return '이미 가입된 유저입니다.';
+        return '이미 가입된 유저입니다. 다른 이메일을 입력해주세요.';
     }
     return '';
 }
@@ -29,6 +30,15 @@ function showMessage(message: string | null) {
 export default function SignUp() {
     const [state, formAction] = useFormState(signUp, { message: null });
     const { pending } = useFormStatus();
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        await signUp(new FormData(e.currentTarget));
+        router.back();
+        router.refresh();
+    };
 
     return (
         <div className={style.modalBackground}>
@@ -37,7 +47,7 @@ export default function SignUp() {
                 <div className={style.modalHeader}>
                     <Image className={style.applogo} src={AppLogo} width={316} height={59} alt='로고' />
                 </div>
-                <form action={formAction}>
+                <form action={formAction} onSubmit={handleSubmit}>
                     <div className={style.modalBody}>
                         <div className={style.inputDiv}>
                             <label
