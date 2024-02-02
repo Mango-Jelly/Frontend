@@ -24,8 +24,6 @@ const signUp = async (formData: FormData) => {
         return { message: 'password_not_match' };
     }
 
-  let shouldRedirect = false;
-
 const userSignUpData : any = {};
 formData.forEach((value, key) => userSignUpData[key] = value);
 
