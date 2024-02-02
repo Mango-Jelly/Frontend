@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
-import VideoControls from './VideoControls';
+import { useRef, useCallback, useEffect } from 'react';
 
-export default function GuestVideo() {
-  const [isCameraOn, setCameraOn] = useState(true);
-  const [isAudioOn, setAudioOn] = useState(true);
+type Props = {
+  isCameraOn: boolean;
+};
+
+export default function GuestSettings({ isCameraOn }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const getMediaPermission = useCallback(async () => {
@@ -26,14 +27,6 @@ export default function GuestVideo() {
     }
   }, [isCameraOn]);
 
-  const toggleCamera = () => {
-    setCameraOn((prev) => !prev);
-  };
-
-  const toggleAudio = () => {
-    setAudioOn((prev) => !prev);
-  };
-
   useEffect(() => {
     getMediaPermission();
   }, [getMediaPermission]);
@@ -45,14 +38,6 @@ export default function GuestVideo() {
           ref={videoRef}
           autoPlay
           className='rounded-2xl size-full -scale-x-100 object-cover'
-        />
-      </div>
-      <div className='absolute top-[13rem] -right-[21.8rem]'>
-        <VideoControls
-          isCameraOn={isCameraOn}
-          isAudioOn={isAudioOn}
-          toggleCamera={toggleCamera}
-          toggleAudio={toggleAudio}
         />
       </div>
     </div>

@@ -7,22 +7,31 @@ import MicOffIcon from '@/../public/MicOffIcon.svg';
 
 type Props = {
   isCameraOn: boolean;
+  setCameraOn: React.Dispatch<React.SetStateAction<boolean>>;
   isAudioOn: boolean;
-  toggleCamera: () => void;
-  toggleAudio: () => void;
+  setAudioOn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function VideoControls({
+export default function VideoControlButtons({
   isCameraOn,
+  setCameraOn,
   isAudioOn,
-  toggleCamera,
-  toggleAudio,
+  setAudioOn,
 }: Props) {
+  const toggleCamera = () => {
+    setCameraOn((prev) => !prev);
+  };
+
+  const toggleAudio = () => {
+    setAudioOn((prev) => !prev);
+  };
+
   const controlButtonClass =
-    'rounded-[2rem] bg-main px-4 py-2 m-1 hover:bg-maindark';
+    'rounded-[2rem] bg-main px-6 py-2 m-1 hover:bg-maindark';
+
   return (
     <div className='flex flex-col'>
-      <div className='flex items-center mb-3'>
+      <div className='flex items-center mb-4'>
         <Image
           src={pinIcon}
           width={24}
@@ -47,9 +56,9 @@ export default function VideoControls({
         </button>
         <button onClick={toggleAudio} className={controlButtonClass}>
           {isAudioOn ? (
-            <Image src={MicIcon} width={32} height={32} alt='카메라 끄기' />
+            <Image src={MicIcon} width={32} height={32} alt='마이크 끄기' />
           ) : (
-            <Image src={MicOffIcon} width={32} height={32} alt='카메라 켜기' />
+            <Image src={MicOffIcon} width={32} height={32} alt='마이크 켜기' />
           )}
         </button>
       </div>
