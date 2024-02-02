@@ -6,13 +6,23 @@ import VideoImage from '@/../public/VideoTag.svg'
 import LeftArrow from '@/../public/LeftArrow.svg'
 import RightArrow from '@/../public/RightArrow.svg'
 import UserVideoComponent from './UserVIdeo'
+import { OpenVidu, Stream, Subscriber } from 'openvidu-browser';
+
+
+type CameraUnit = {
+    userId : string
+    Subscriber : Subscriber
+}
 
 type Props = {
     depart : string;
     title : string;
     call : string;
-    subscribers : any[];
+    subscribers : CameraUnit[];
 }
+
+
+
 // 요청때마다 정렬 순서가 바뀌고 여기선 1회성이니까 안해도 될수도 방금 저기서는 상태가 저장되어있어야하니까 그랬는데 여기선 지금 말하거나 문제가 생겼다는 놈들의 카메라만 앞에 세워주면됨
 
 export default function GuestVideosSection(props : Props) {
@@ -68,7 +78,7 @@ export default function GuestVideosSection(props : Props) {
                                                     <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
                                                 </video>
                                                 <p className = {`w-full text-wrap`}
-                                                >{event}</p>
+                                                >{event.userId}</p>
                                             </div>
                                             
                                             //     <video
@@ -84,7 +94,7 @@ export default function GuestVideosSection(props : Props) {
                                                 className='border-solid border-2 mx-[1rem] w-[35rem]'>
                                                 <UserVideoComponent
                                                 key = {id}
-                                                streamManager={event}
+                                                streamManager={event.Subscriber}
                                                 />
                                                 </div>
                                                 )

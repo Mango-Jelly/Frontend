@@ -6,12 +6,10 @@ module.exports = {
         {
             source : '/openvidu/:path*',
             destination : `https://mangotail.shop/openvidu/:path*`,
-            // has: [
-            //     {
-            //         type: 'header',
-            //         key: 
-            //     }
-            // ]
+        },
+        {
+            source : '/ws/:path*',
+            destination : `https://mangotail.shop/ws/:path*`,
         },
       ]  
     },

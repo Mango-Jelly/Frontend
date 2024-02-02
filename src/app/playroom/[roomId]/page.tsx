@@ -1,21 +1,16 @@
 'use client';
-
-
 import './_component/page.css'
 import Link from "next/link"
 import GuestVideosSection from './_component/GuestVideosSection'
 // import { useRouter } from 'next/router'
 import axios from 'axios';
-import BottomHost from './_component/host/HostMainSection';
-import BottomGuest from './_component/guest/GuestMainSection';
+import HostMainSection from './_component/host/HostMainSection';
+import GuestMainSection from './_component/guest/GuestMainSection';
 import { useState } from 'react';
 import { useRef, useEffect, useCallback } from "react";
 import * as StompJs from "@stomp/stompjs"
-import { OpenVidu } from 'openvidu-browser';
-import { start } from 'repl';
-// import curtain from '@/../public/curtain.mov'
-import curtain from '@/../public/curtainsclosing.mp4'
-import dummyVideo from '@/../public/dummyVideo.mp4'
+import { OpenVidu, Subscriber } from 'openvidu-browser';
+
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://mangotail.shop/' : 'http://mangotail.shop/';
 
@@ -28,34 +23,33 @@ type Props = {
 type UserStatus = {
   name: string
   status: number
+  role : string
 }
 
-type UserRole = {
-  name: string
-  role: string
+type CameraUnit = {
+  userId : string
+  Subscriber : Subscriber
 }
-
 const USERID = `user${Math.random()}`
 
 export default function Page({ params: { roomId } }: Props) {
   const [isHost, setIsHost] = useState<boolean>(false)
   const [ENTRY, setENTRY] = useState<UserStatus[]>([])
-  const [mySessionId, setMySessionId] = useState(`Session${roomId}`)
   const [myUserName, setMyUserName] = useState<string>(`Participant${Math.floor(Math.random() * 100)}`)
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [session, setSession] = useState<any>(undefined);
-  const [subscribers, setSubscribers] = useState<any[]>([]);
+  const [subscribers, setSubscribers] = useState<CameraUnit[]>([]);
   const [publisher, setPublisher] = useState<any>(undefined);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<any>(null);
   const [role, setRole] = useState('');
   const [call, setCall] = useState('');
-  const [isStart, setStart] = useState<boolean[]>([false, false, false, false]);
+  // const [isStart, setStart] = useState<boolean[]>([false, false, false, false]);
   const [first, setfirst] = useState<boolean>(false)
   const [second, setsecond] = useState<boolean>(false)
   const [third, setthird] = useState<boolean>(false)
-  const [fourth, setfourth] = useState<boolean>(false)
-  const [token, setToken] = useState<String>('');
   const amIhost = useRef<boolean>(false);
+  
+
 
   const changeHost = () => {
     setIsHost(prevIsHost => !prevIsHost);
@@ -66,13 +60,13 @@ export default function Page({ params: { roomId } }: Props) {
   const OV = useRef(new OpenVidu());
   // 오픈 비두 객체 만듬
 
-  function StartCallback(i : number, type : boolean){
-    setStart((prevArray) => {
-      let newArray = prevArray
-      newArray[i] = type
-      return newArray
-    }) 
-  }
+  // function StartCallback(i : number, type : boolean){
+  //   setStart((prevArray) => {
+  //     let newArray = prevArray
+  //     newArray[i] = type
+  //     return newArray
+  //   }) 
+  // }
 
   function onMessageReceived(message: StompJs.Message) {
 
@@ -82,17 +76,14 @@ export default function Page({ params: { roomId } }: Props) {
       if (messageBody.code == 100) {
         let newBody: UserStatus = {
           name: messageBody.id,
-          status: 0
+          status: 0,
+          role : ''
         }
         let videoTag : string = messageBody.videoid
         setENTRY(ENTRY => [...ENTRY, newBody])
         // setSubscribers((subscribers) => [...subscribers, videoTag])
       }
       else if (messageBody.code == 101) {
-        let newBody: UserStatus = {
-          name: messageBody.id,
-          status: 0
-        }
         let videoTag : string = messageBody.videoid
         setENTRY(ENTRY => ENTRY.filter(item => item.name != messageBody.id))
         // setSubscribers((subscribers) => subscribers.filter(vidioId => vidioId != videoTag ))
@@ -103,7 +94,6 @@ export default function Page({ params: { roomId } }: Props) {
         setENTRY(ENTRY => ENTRY.map((item) => {
 
           if (item.name === messageBody.id) {
-
             item.status = messageBody.code
           }
           return item;
@@ -127,21 +117,28 @@ export default function Page({ params: { roomId } }: Props) {
 
 
       }
-      else if (!amIhost.current && Number(messageBody.code) === 300 && USERID === messageBody.name) {
-        setRole(messageBody.role)
+      else if (Number(messageBody.code) === 300) {
+        if (amIhost.current) 
+        {
+          setENTRY(prevEntry => {
+            let newEntry : UserStatus[] = prevEntry
+            newEntry[newEntry.findIndex(arg => arg.name == messageBody.name)].role = messageBody.role
+            return newEntry
+          })
+        } 
+        else if (!amIhost.current && myUserName === messageBody.name)
+        {
+          setRole(messageBody.role)
+        }
       }
       else if (messageBody.code === 400)
       {
 
-        console.log('시작한닷')
-        setfirst(true)
+       setfirst(true)
         setTimeout(() => {
-          console.log('1단계 ㄱㄱ')
-          setsecond(true)
-
+           setsecond(true)
           setTimeout(() => {
-          console.log('2단계 ㄱㄱ')
-            setthird(true)
+             setthird(true)
             setTimeout(() => {
               setfirst(false)
               setsecond(false)
@@ -150,38 +147,13 @@ export default function Page({ params: { roomId } }: Props) {
           }, 2000)
         } , 1000)
       }
+      // 이게 콜백 지옥 아님? 
 
 
     } catch (error) {
       console.error('Error parsing received message:', error);
     }
   }
-
-  // 세션 받기 -> 토큰 받기
-  const getToken = useCallback(async () => {
-    // return createSession().then(
-    //   sessionId => createToken(sessionId),
-    // );
-
-    return createToken(roomId)
-  }, [mySessionId]);
-
-
-  // url  => 나중에 백엔드 서버 연동 해야됨 APPLICATION_SERVER_URL
-  const createSession = async () => {
-
-    const response = await axios.post( '/openvidu/api/sessions/', {
-      headers: {
-        'Authorization' : 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
-        'Content-Type': 'application/json',
-      },
-      // data : body,
-    }
-    );
-    // setMySessionId(response.data.sessionId);
-    // setToken(response.data.);
-    return response.data.sessionId; // The sessionId
-  };
 
 
   const createToken = async (sessionId: any) => {
@@ -200,13 +172,12 @@ export default function Page({ params: { roomId } }: Props) {
     if (session) {
         session.disconnect();
     }
-    console.log('나는 출력되고있다')
     // 상태관리중인 세션이 있을경우 초기화
     // Reset all states and OpenVidu object
+
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
-    setMySessionId('SessionA');
     setMyUserName('Participant' + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
@@ -224,7 +195,7 @@ export default function Page({ params: { roomId } }: Props) {
         if (newVideoDevice.length > 0) {
           const newPublisher: any = OV.current.initPublisher(undefined, {
             videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
+            publishAudio: false,
             publishVideo: true,
             mirror: true,
           });
@@ -264,8 +235,8 @@ export default function Page({ params: { roomId } }: Props) {
     function Join() {
       const message = {
         code: 100,
-        id: USERID,
-        videoid : `${USERID}'s_video`
+        id: myUserName,
+        videoid : `${myUserName}'s_video`
     };
       // console.log(JSON.stringify(message))
     client.current.publish({
@@ -278,8 +249,8 @@ export default function Page({ params: { roomId } }: Props) {
     function Disconnect() {
       const message = {
         code: 101,
-        id: USERID,
-        videoid : `${USERID}'s_video`
+        id: myUserName,
+        videoid : `${myUserName}'s_video`
       };
       client.current.publish({
         destination: `/sub/channel/${roomId}`,
@@ -293,13 +264,12 @@ export default function Page({ params: { roomId } }: Props) {
 
       client.current = new StompJs.Client({
         brokerURL: "ws://localhost:8080/ws",
+        // brokerURL: "http://localhost:3000/ws",
         onConnect: () => {
-          console.log("connected");
           subscribe();
           Join();
         },
         onDisconnect: () => {
-          console.log("failed to connect");
           Disconnect();
         }
       })
@@ -307,16 +277,19 @@ export default function Page({ params: { roomId } }: Props) {
     }
     connect();
 
-
-    // 컴포넌트가 언마운트될 때 이벤트 핸들러 제거
-    // 오픈 vidu 파트
-    // 객체 생성
     const mySession = OV.current.initSession();
 
     // 새로운 사람이 들어왔다
     mySession.on('streamCreated', (event) => {
+      let username = JSON.parse(event.stream.inboundStreamOpts.connection.data)
+      console.log('pages.tsx',username.clientData)
       const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((subscribers) => [...subscribers, subscriber]);
+      const CameraUnit = {
+        userId : username.clientData,
+        Subscriber : subscriber
+      }
+      
+      setSubscribers((subscribers) => [...subscribers, CameraUnit]);
     });
     //
     mySession.on('exception', (exception) => {
@@ -334,15 +307,13 @@ export default function Page({ params: { roomId } }: Props) {
     window.addEventListener('beforeunload', Disconnect);
     window.addEventListener('beforeunload',() => {mySession.disconnect()});
 
-    getToken().then(async (token) => {
-      console.log(token.token);
+    createToken(roomId).then(async (token) => {
       try {
-
         await mySession.connect(token.token, { clientData: myUserName });
         let publisher: any = await OV.current.initPublisherAsync(undefined, {
           audioSource: undefined,
           videoSource: undefined,
-          publishAudio: true,
+          publishAudio: false,
           publishVideo: true,
           resolution: '1280x720',
           frameRate: 30,
@@ -371,17 +342,15 @@ export default function Page({ params: { roomId } }: Props) {
       window.removeEventListener('beforeunload', Disconnect);
     };
 
-  }, [getToken, myUserName, roomId])
+  }, [myUserName, roomId])
 
 
   return (
-  <div className={`flex flex-col items-center` } >
+  <div className={`flex flex-col items-center px-[30rem]` } >
       {/* { isStart[0] ? <div className='fadeoutcomponent' style={{opacity : isStart[1] ? 1.0 : 0}}></div> : null } */}
       { first ? <div className='fadeoutcomponent' style={{opacity : second ? 1.0 : 0}}>
         { third ? 
         <video className='w-full h-full' controls autoPlay>
-             {/* <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" /> */}
-             {/* <source src= './curtainsclosing.mp4' type="video/mp4" /> */}
              <source src= ".curtainsclosing.mp4" type="video/mp4" />
         </video> : null}
       </div> : null }
@@ -395,9 +364,9 @@ export default function Page({ params: { roomId } }: Props) {
 
         <p className='text-center'><button type='button' onClick={changeHost} className="text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{isHost ? 'Host' : 'Guest'}  </button></p>
 
-        <div className='bottomcontainer'>
+        <div className=''>
           {isHost ?
-            <BottomHost
+            <HostMainSection
               ENTRY={ENTRY}
               client={client.current}
               roomId={roomId}
@@ -406,11 +375,11 @@ export default function Page({ params: { roomId } }: Props) {
             : null}
 
           {!isHost ?
-            <BottomGuest
+            <GuestMainSection
               client={client.current}
               roomId={roomId}
               role={role}
-              userId={USERID ? USERID : ''}
+              userId={myUserName ? myUserName : ''}
             />
             : null
 

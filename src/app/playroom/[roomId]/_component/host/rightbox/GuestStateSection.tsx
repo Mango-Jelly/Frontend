@@ -10,6 +10,7 @@ from 'next/image'
 type UserStatus = {
   name : string
   status : number
+  role : string
 }
 
 type Props = {
@@ -19,32 +20,33 @@ type Props = {
 const status : any[] = [status201, status202, status203, status204]
 
 export default function GuestStateSection(Props : Props) {
+  console.log(Props.ENTRY)
   return (
     <div className=' rounded-md bg-white mb-5 p-5'>
-
-
       <div className="max-w-md divide-y divide-gray-200 ">
       {
           Props.ENTRY.map((entry, id) => (
             <div className="py-3"
               key={id}
             >
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <div className="flex-shrink-0">
+            <div className="flex items-center space-x-4 rtl:space-x-reverse justify-between">
+              <div className="flex-shrink-0 flex">
               <Image
                 src = {BasicUser}
                 alt = "프로필 사진"
                 className='h-[5rem] w-[5rem] '
                 />
               </div>
+
               <div className='flex flex-col'>
                 <p className='text-wrap'>
                 {entry.name}
                 </p>
-                <p className='text-center'>
-                  {false ? '무엇 무엇': '아직 역할이 없어요'}
+                <p className='text-left'>
+                  {entry.role ? entry.role: '아직 역할이 없어요'}
                 </p>
               </div>
+
               {entry.status ?
                 <div>
                   <Image
@@ -53,9 +55,15 @@ export default function GuestStateSection(Props : Props) {
                     className='h-[5rem] w-[5rem]'
                   />
                 </div>
-                : null
+                : 
+                <span
+                  className='h-[5rem] w-[5rem]'
+                >
+
+                </span>
               }
-            </div>
+
+              </div>
             </div>
           ))
         }

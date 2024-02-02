@@ -35,7 +35,6 @@ export default function MainVideoSection(Props : Props) {
               </div>
             }
 
-
             <div className='flex justify-between'>
                 <div id = "leftbox" className='flex flex-row'>
                 <button type="button" className="h-14

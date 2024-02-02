@@ -4,8 +4,7 @@
 @tailwind utilities;
 
 .topcontainer{
-    
-    @apply w-[135rem] mx-auto;
+    @apply w-full mx-auto p-[2rem];
 }
 
 .carousel-image{
@@ -14,7 +13,7 @@
 }
 
 .bottomcontainer{
-    @apply w-[135rem] mx-[2rem] h-[60rem];
+    @apply w-full h-[60rem];
     /* @apply mx-[2rem] h-[60rem]; */
 }
 

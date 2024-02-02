@@ -7,6 +7,7 @@ import GuestStateSection from './rightbox/GuestStateSection'
 type UserStatus = {
   name: string
   status: number
+  role : string
 }
 
 type Props = {
