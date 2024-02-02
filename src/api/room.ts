@@ -1,35 +1,59 @@
-import { roomAPI } from "./baseIntance";
+import { roomAPI } from "./baseInstance";
 
-export const deletePlayRoom = async (roomId: number, address : string) => {
-    const response = await roomAPI.delete(`/${address}`, {
-        params: {
-            roomId: roomId,
-            address : address 
-        },
-    });
-    return response.data;
+type Room = {
+    title : string,
+    department : string,
+    visible : boolean,
+    AccessToken : string
 }
 
-export const createPlayRoom = async (title:string, department :string, memberId: number) => {
+export const deletePlayRoom = async (address : string, AccessToken :string) => {
+    const response = await roomAPI.delete(`/${address}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization" : `Bearer ${AccessToken}`
+        },
+    });
+}
+
+export const createPlayRoom = async ({title, department, visible, AccessToken} : Room) => {
     const response = await roomAPI.post(`/create`, {
         "title": title,
         "department" : department,
+        "visible" : visible
     }, {
-        params: {
-            memberId : memberId,
-        },
         headers: {
             "Content-Type": "application/json",
+            "Authorization" : `Bearer ${AccessToken}`
         },
     });
     return response.data;
 }
 
+export const registerFullVideo = async (roomUUID : string, AccessToken : string) => {
+    const response = await roomAPI.post(`/movie/${roomUUID}`, {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization" : `Bearer ${AccessToken}`
+        },
+    });
+    return response.data;
+}
 
-export const getMyRoom = async (memberId: number) => {
+export const getMyPlayRoomInfo = async (AccessToken : string) => {
     const response = await roomAPI.get(`/me`, {
-        params: {
-            memberId : memberId,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization" : `Bearer ${AccessToken}`
+        },
+    });
+    return response.data;
+}
+
+export const startPlay = async (roomUUID : string) => {
+    const response = await roomAPI.post(`/begin/${roomUUID}`, {
+        headers: {
+            "Content-Type": "application/json",
         },
     });
     return response.data;

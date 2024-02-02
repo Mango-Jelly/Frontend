@@ -1,11 +1,7 @@
-import { scriptAPI } from "./baseIntance";
+import { scriptAPI } from "./baseInstance";
 
 export const getScript = async (scriptId: number) => {
-    const response = await scriptAPI.get(`/`, {
-        params: {
-            scriptId : scriptId,
-        },
-    });
+    const response = await scriptAPI.get(`?id=#${scriptId}`);
     return response.data;
 }
 
