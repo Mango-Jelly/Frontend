@@ -51,7 +51,6 @@ formData.forEach((value, key) => userSignUpData[key] = value);
       redirect: false
     });
 
-    shouldRedirect = true;
   } catch (e) {
     throw e;
   } 
