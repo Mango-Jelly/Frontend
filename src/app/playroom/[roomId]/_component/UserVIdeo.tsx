@@ -15,9 +15,9 @@ export default function UserVideoComponent({ streamManager } : Props) {
     }
 
     return (
-        <div>
+        <div className='z-10'>
             {streamManager !== undefined ? (
-                <div className="">
+                <div className="z-10">
                     <OpenViduVideoComponent streamManager={streamManager} />
                     <div><p>{getNicknameTag()}</p></div>
                 </div>

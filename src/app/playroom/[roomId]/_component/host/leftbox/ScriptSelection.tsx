@@ -50,9 +50,14 @@ export default function ScriptSelection(Props : Props) {
       return;
     }
     setRolsestates(function (array) {
-      let narray : UserRoleState[] = array
-      narray[index].isSelected = true
-      console.log(narray)
+      let narray : UserRoleState[] = array.map((arg, idx) => {
+        if (idx === index) {
+          arg.isSelected = true
+        }
+        return arg
+      })
+      // narray[index].isSelected = true
+      // console.log(narray)
       return narray
     })
     // RoleStates.current[index].isSelected = true
