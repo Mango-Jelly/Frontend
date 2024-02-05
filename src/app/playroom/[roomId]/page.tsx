@@ -160,6 +160,7 @@ export default function Page({ params: { roomId } }: Props) {
           }
         }
       }
+
     } catch (e) {
       console.error(e);
     }
