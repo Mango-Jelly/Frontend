@@ -1,8 +1,8 @@
-import ScriptList from './ScriptList'
-import VideosOfOtherUser from './VideosOfOtherUser'
-import MyVideos from './MyVideos'
-import MakeRoomButton from './MakeRoomButton'
-import { auth } from "@/auth";
+import ScriptList from './ScriptList';
+import VideosOfOtherUser from './VideosOfOtherUser';
+import MyVideos from './MyVideos';
+import MakeRoomButton from './MakeRoomButton';
+import { auth } from '@/auth';
 
 export default async function Main() {
     const session = await auth();

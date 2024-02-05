@@ -36,7 +36,7 @@
     "src/types/video.d.ts",
     ".next/types/**/*.ts",
     "**/*.tsx"
-  ],
+, "src/data/Dummy.ts"  ],
   "exclude": [
     "node_modules"
   ]

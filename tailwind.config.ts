@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -15,13 +15,38 @@ const config: Config = {
       },
       colors: {
         main: '#FFC300',
-        maindark: '#F6BC00',
+        maindark: '#E4AF00',
+        mainblue: '#219EBC',
+        mainsky: '#8ECAE6',
         highlight: '#003566',
         background: '#F8F8F8',
         arrow: '#E8E8E8',
       },
+      keyframes: {
+        slowXMovement: {
+          '0%, 100%': { transform: 'translateX(-10px)' },
+          '50%': { transform: 'translateX(20px)' },
+        },
+        slowYMovement: {
+          '0%, 100%': { transform: 'translateY(-5px)' },
+          '50%': { transform: 'translateY(10px)' },
+        },
+        wiggle: {
+          '0%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(180deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+      },
+      animation: {
+        'slowXMovement-6s': 'slowXMovement 6s linear infinite',
+        'slowXMovement-8s': 'slowXMovement 8s linear infinite',
+        'slowXMovement-10s': 'slowXMovement 10s linear infinite',
+        'slowYMovement-4s': 'slowYMovement 4s linear infinite',
+        'wiggle-8s': 'wiggle 8s linear infinite',
+      },
     },
   },
   plugins: [],
-}
-export default config
+};
+
+export default config;
