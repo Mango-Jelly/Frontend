@@ -2,7 +2,7 @@
 
 import { signIn } from "@/auth";
 
-const signUp = async (formData: FormData) => {
+const signUp = async (formData: any) => {
     const email = formData.get('email');
     const password = formData.get('password');
     const confirmPassword = formData.get('confirmPassword');
@@ -25,7 +25,7 @@ const signUp = async (formData: FormData) => {
     }
 
 const userSignUpData : any = {};
-formData.forEach((value, key) => userSignUpData[key] = value);
+formData.forEach((value: any, key: string | number) => userSignUpData[key] = value);
 
   try {
     const response = await fetch(`${process.env.BASE_URL}/member/signup`, {
