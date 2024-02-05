@@ -118,7 +118,7 @@ export const scriptInfo = {
       ],
     },
   ],
-  title: '신데렐라 연극',
+  title: '신데렐라',
   duration: '약 10분',
   thumbnail: '',
   person: 5,

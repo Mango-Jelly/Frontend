@@ -1,25 +1,25 @@
-'use client'
+'use client';
 
-import style from './_component/scrollbar.module.css'
-import { ControllScript } from './_component/ControllScript'
+import style from './_component/scrollbar.module.css';
+import { ControlScript } from './_component/ControlScript';
 
-import Image from 'next/image'
-import CookieHouse from '../../../public/CookieHouse.png'
+import Image from 'next/image';
+import CookieHouse from '../../../public/CookieHouse.png';
 import {
   PlayCircleIcon,
   PauseCircleIcon,
   StopCircleIcon,
-} from '@heroicons/react/24/solid'
+} from '@heroicons/react/24/solid';
 
 export default function Page() {
-  let idx = 0
-  const { script, curIdx, refs, moveScript } = ControllScript()
+  let idx = 0;
+  const { script, curIdx, refs, moveScript } = ControlScript();
 
   const getDynamicClass = (sceneKey: number, dialogKey: number) => {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog) {
-      return 'rounded-xl border-8 border-main font-semibold p-2'
+      return 'rounded-xl border-8 border-main font-semibold p-2';
     }
-  }
+  };
 
   return (
     <div className='flex'>
@@ -60,7 +60,7 @@ export default function Page() {
                       <div
                         key={dialogKey}
                         ref={(element) => {
-                          refs.current[idx++] = element
+                          refs.current[idx++] = element;
                         }}
                         className={`flex items-center py-2 ${getDynamicClass(sceneKey, dialogKey)}`}
                       >
@@ -71,10 +71,10 @@ export default function Page() {
                           {`${dialogValue.role}: ${dialogValue.dialog}`}
                         </p>
                       </div>
-                    )
+                    );
                   })}
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -85,5 +85,5 @@ export default function Page() {
         </p>
       </div>
     </div>
-  )
+  );
 }
