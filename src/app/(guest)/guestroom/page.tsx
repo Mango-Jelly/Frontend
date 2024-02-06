@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
 
-// TODO : 게스트 입장 대기실 페이지 개발
+import GuestSettings from './_component/GuestSettings';
+
 export default function page() {
   return (
-    <>게스트 입장 대기실</>
-  )
+    <div className=''>
+      <GuestSettings />
+    </div>
+  );
 }
