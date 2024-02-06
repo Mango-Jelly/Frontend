@@ -35,7 +35,12 @@ export default function GuestSettings() {
             setAudioOn={setAudioOn}
           />
         </div>
-        <SubmitButton nickname={nickname} isValid={isValid} />
+        <SubmitButton
+          nickname={nickname}
+          isValid={isValid}
+          isCameraOn={isCameraOn}
+          isAudioOn={isAudioOn}
+        />
       </div>
     </div>
   );
