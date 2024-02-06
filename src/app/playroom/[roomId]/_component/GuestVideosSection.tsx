@@ -51,64 +51,41 @@ export default function GuestVideosSection(props : Props) {
         console.log(currentIndex)
         };
     
-    // useEffect(function () {
-    //     console.log(props.call)
-    //     if (typeof subscribers[0] === 'string') {
-    //         setSubscribers((prevsub) => {
-    //             let newsub = prevsub
-    //             newsub = prevsub.find(props.call) + prevsub.filter(e => { return e != call })
-    //             return newsub
-    //         })
-    //     }
-    // } , [props.call])
-    
+
+
+
+
     return (
     <div className = "topcontainer">
-        <div className='top-1/2 left-1/2 mx-auto text-center'>
-            <p className='my-10 text-3xl'>{props.depart}의 {props.title}</p>
+        <div className='top-1/2 left-1/2 mx-auto text-center w-full'>
+            <p className='my-10 text-3xl w-full'>{props.depart}의 {props.title}</p>
 
             
             <div className='flex flex-row w-8/9'>
-                    <div className='mx-auto flex flex-row space-x-10  w-full '>
-                    <Image alt = "왼쪽 화살표" src = {LeftArrow} onClick={handlePrev}/>
+                    <div className='mx-auto flex flex-row space-x-10  w-full  '>
+                    <Image alt = "왼쪽 화살표" src = {LeftArrow} onClick={handlePrev} className='w-1/18'/>
                     
-                        <div className='flex flex-row space-x-4 overflow-x-hidden overflow-hidden w-full '>
+                        <div className='flex flex-row space-x-4 overflow-x-hidden overflow-hidden w-full  '>
                             {
                                 props.subscribers.length > 0 ?
                                 <div className=" carousel " style={{ left: `-${currentIndex * (100 / maxItemsPerSlide)}%` }}>
                                         {
                                         props.ENTRY.map((event, id) =>
-                                                ( typeof props.ENTRY[0] === 'string' ?
-                                            <div
-                                                key={id}
-                                                className ={`${id === currentIndex ? 'active' : ''} my-5 px-2 w-1/5`}
-                                                >
-                                                <video
-                                                controls muted>
-                                                    <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
-                                                </video>
-                                                <p className = {`w-full text-wrap`}
-                                                >{event.name}</p>
-                                            </div>
-                                            
-                                            //     <video
-                                            //     className ={` ${id === currentIndex ? 'active' : ''}  my-5 px-2 w-1/5`}
-                                            //     controls muted>
-                                            //         <source src="https://mongo-jelly.s3.ap-northeast-2.amazonaws.com/frontSampleVideo.mp4" type="video/mp4" />
-                                            //     </video>
-                                            :
-                                                event.camera ? 
-                                                <div
-                                                    key = {id}
-                                                    className='border-solid border-2 mx-[1rem] w-[35rem]'>
-                                                    <UserVideoComponent
-                                                    key = {id}
-                                                    streamManager={event.camera}
-                                                    />
-                                                </div> 
-                                                :
-                                                <Image src={VideoImage} className="max-w-96 rounded" alt="..."/>
+                                                ( 
 
+
+                                                    <div className='w-1/5 p-3' key = {id}>
+
+                                                    { event.camera ? 
+                                                        <div className=''>
+                                                            <UserVideoComponent
+                                                            key = {id}
+                                                            streamManager={event.camera}
+                                                            />
+                                                        </div>
+                                                        :
+                                                        <Image src={VideoImage} className=" rounded" alt="..."/>}
+                                                    </div>
                                                 )
                                             )
                                         }
@@ -122,7 +99,7 @@ export default function GuestVideosSection(props : Props) {
                                 </div>
                         }
                     </div>
-                <Image src = {RightArrow} alt = "오른쪽 화살표" onClick={handleNext}/>
+                <Image src = {RightArrow} alt = "오른쪽 화살표" onClick={handleNext} className='w-1/18'/>
                 </div>
             </div>
         </div>

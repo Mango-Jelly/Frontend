@@ -22,19 +22,19 @@ type UserRoleState = {
 
 const given_actors = [
   {
-    name : '장고 프리맨',
+    name : '신데렐라',
   },
   {
-    name : '닥터 킹 슐츠',
+    name : '엄마',
   },
   {
-    name : '무슈 캔디',
+    name : '마법사',
   },
   {
-    name : '브룸힐다 폰 샤프트',
+    name : '왕',
   },
   {
-    name : '스티븐 워렌',
+    name : '왕자',
   },
 ]
 
@@ -71,6 +71,7 @@ export default function ScriptSelection(Props : Props) {
       destination: `/sub/channel/${Props.roomId}`,
       body: JSON.stringify(message),
   })
+  
   }
 
   useEffect(() => {

@@ -16,7 +16,6 @@ import GuestStateSection from '../host/rightbox/GuestStateSection'
 import { scriptInfo } from './data/Dummy'
 import OpenViduVideoComponent from '../OvVideo';
 
-import { Actor } from "next/font/google";
 
 type CameraUnit = {
   userId : string
@@ -34,14 +33,20 @@ type UserStatus = {
 
 type Props = {
   client : any
-  roomId : string
+  goNext : number
+  subscribers : CameraUnit[];
   streamManager : any;
   ENTRY: UserStatus[]
+  roomId : string
+  userId : string
 }
 
+interface Dialog {
+    role: string;
+    // 다른 속성들이 있다면 여기에 추가
+  }
 
-
-export default function HostTheater(Props : Props) {
+export default function GuestTheater(Props : Props) {
   let idx = 0
   const [actor, setActor] = useState<UserStatus[]>([])
   const { script, curIdx, refs, moveScript } = ControllScript()
@@ -52,21 +57,20 @@ export default function HostTheater(Props : Props) {
   }
 
 
-  function goNext() {
+  function Alert(alarm : number) {
     const message = {
-            code: 500,
+            code: alarm,
+            id : Props.userId
           };
     Props.client.publish({
         destination: `/sub/channel/${Props.roomId}`,
         body: JSON.stringify(message),
     })
-    moveScript()
-  }
+}
 
-  
   useEffect( 
   () => {
-    let roles = new Set();
+    let roles = new Set<string>();
 
     scriptInfo.scene[curIdx.scene].dialogs.forEach(element => {
       roles.add(element.role)
@@ -74,11 +78,22 @@ export default function HostTheater(Props : Props) {
     console.log(roles)
 
     setActor(Props.ENTRY.filter(element => roles.has(element.role)));
+    console.log(Props.ENTRY, actor)
     }
+    
     ,[curIdx.scene])
+
+    useEffect(
+    () => {
+        if (Props.goNext)
+        {
+        moveScript()
+        }
+    }, [Props.goNext]
+    )
   return (
-    <div className='flex h-3/5 w-full relative justify-between'>
-      <div className='bg-white m-4 h-full'>
+    <div className='flex h-full w-full relative justify-between px-[5rem]'>
+      <div className='bg-white m-4 h-4/5'>
         <div className='flex items-center m-4'>
           <Image
             src={CookieHouse}
@@ -125,19 +140,19 @@ export default function HostTheater(Props : Props) {
       </div>
 
       <div className='w-3/5 h-full'>
-        <div className='w-full justify-center p-3 relative h-full'>
-            <Image 
-              src={ForestJpeg}
-              alt='배경화면' 
-              className='object-fill w-full h-full'
-            />
+            <div className='w-full h-4/5 justify-center p-3 relative '>
+                <Image 
+                src={ForestJpeg}
+                alt='배경화면' 
+                className='object-fill w-full h-full'
+                />
             { 
               Props.streamManager ? 
               <div className='absolute top-0 left-0 p-[3rem]  w-full h-full grid grid-cols-4 gap-4 flex'>
                 {
                   actor.map((actor, id) => {
                     return (
-                      <div className="z-10 w-full self-end" key= {id}>
+                      <div className="z-10 w-full self-end" key={id}>
                       <OpenViduVideoComponent streamManager={actor.camera} />
                     </div>
                     )
@@ -152,33 +167,34 @@ export default function HostTheater(Props : Props) {
                 </video>
               </div>
             }
-        </div>
-        <div className='flex flex-row justify-between px-[5rem]'>
-              <div id = "leftbox" className='flex flex-row'>
-                  <button type="button" className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Yellow</button>
-                  <button type="button" className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Yellow</button>
-                  <button onClick={goNext}>
-                    <PlayCircleIcon className='size-20' />
-                  </button>
-                  <button>
-                    <PauseCircleIcon className='size-20' />
-                  </button>
-                  <button>
-                    <StopCircleIcon className='size-20' />
-                  </button>
-              </div>
-              <div className='flex flex-row'>
-              </div>
-              <div id = "rightbox" className='flex flex-row '>
-                  <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800">종료하기</button>
-                  <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800">시작하기</button>
-              </div>
+            </div>
+
+            <div className='flex justify-center items-center bg-white w-full h-1/5  p-3 default-component-color'>
+                <p className='text-3xl'>
+                {script.scene[curIdx.scene].dialogs[curIdx.dialog].dialog}
+                </p>
             </div>
         </div>
-        <div className = 'w-1/5 h-full'>
-        <GuestStateSection
-                ENTRY = {Props.ENTRY}
-              />
+        <div className = 'w-1/5 h-4/5'>
+        <div className='grid grid-cols-1 mu-[2rem] h-full w-full'>
+
+        <div onClick = {() => Alert(201)}  className=' hover:bg-gray-300 default-component-color flex flex-col justify-center items-center h-[calc(50% - 1rem)]  ml-[0.5rem] mt-[0.5rem] rounded-[2rem] p-[3rem]'>
+            <p className='text-5xl wrap text-center'>선생님</p>
+            <p className='text-5xl wrap text-center'>할 말 있어요</p>
+        </div>
+        <div onClick = {() => Alert(202)} className='  hover:bg-gray-300 flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem] p-[3rem]'>
+            <p className='text-5xl wrap text-center'>화장실에 </p>
+            <p className='text-5xl wrap text-center'>가고 싶어요</p>
+        </div>
+        <div onClick = {() => Alert(203)} className='  hover:bg-gray-300 flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem] p-[3rem]'>
+            <p className='text-5xl wrap text-center'>저는</p>
+            <p className='text-5xl wrap text-center'>준비됐어요</p>
+        </div>
+        <div onClick = {() => Alert(204)} className='  hover:bg-gray-300 flex flex-col justify-center items-center h-[calc(50% - 1rem)] default-component-color ml-[0.5rem] mt-[0.5rem] rounded-[2rem] p-[3rem]'>
+            <p className='text-5xl wrap text-center'>응급 상황! </p>
+            <p className='text-5xl wrap text-center'>확인해 주세요</p>
+        </div>
+        </div>
         </div>
 
     </div>

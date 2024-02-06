@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { useRef, useEffect, useCallback } from "react";
 import * as StompJs from "@stomp/stompjs"
 import { OpenVidu, Subscriber } from 'openvidu-browser';
+import GuestTheater from './_component/guest/GuestTheater'
 
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://mangotail.shop/' : 'http://mangotail.shop/';
@@ -51,7 +52,7 @@ export default function Page({ params: { roomId } }: Props) {
   const [second, setsecond] = useState<boolean>(false)
   const [third, setthird] = useState<boolean>(false)
   const amIhost = useRef<boolean>(false);
-  
+  const [goNext, setGoNext] = useState<number>(0)
 
 
   const changeHost = () => {
@@ -77,15 +78,6 @@ export default function Page({ params: { roomId } }: Props) {
       const messageBody = JSON.parse(message.body);
 
       if (messageBody.code == 100) {
-        // let newBody: UserStatus = {
-        //   name: messageBody.id,
-        //   status: 0,
-        //   role : '',
-        //   camera : null
-        // }
-        // let videoTag : string = messageBody.videoid
-        // setENTRY(ENTRY => [...ENTRY, newBody])
-
         setENTRY((entry) => {
           let newEntry : UserStatus[] = []
           if (entry.find((element) =>  element.name === messageBody.id) === undefined)
@@ -122,19 +114,19 @@ export default function Page({ params: { roomId } }: Props) {
         setCall(messageBody.id)
         
         // 카메라 정렬을 위한 코드
-        setSubscribers((prevsub) => {
-          let newsub : CameraUnit[];
-          // console.log(prevsub.find((element) => element.userId === `${messageBody.id}'s_video`))
-          if (prevsub.find((element) => element.userId === messageBody.id ))
-          {
-            newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != messageBody.id }))
-          }
-          else
-          {
-            newsub = prevsub
-          }
-          return newsub;
-        })
+        // setSubscribers((prevsub) => {
+        //   let newsub : CameraUnit[];
+        //   // console.log(prevsub.find((element) => element.userId === `${messageBody.id}'s_video`))
+        //   if (prevsub.find((element) => element.userId === messageBody.id ))
+        //   {
+        //     newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != messageBody.id }))
+        //   }
+        //   else
+        //   {
+        //     newsub = prevsub
+        //   }
+        //   return newsub;
+        // })
         
         setENTRY((entry) => {
 
@@ -154,15 +146,13 @@ export default function Page({ params: { roomId } }: Props) {
         
       }
       else if (Number(messageBody.code) === 300) {
-        if (amIhost.current)
-        {
-          setENTRY(prevEntry => {
-            let newEntry : UserStatus[] = prevEntry
-            newEntry[newEntry.findIndex(arg => arg.name == messageBody.name)].role = messageBody.role
-            return newEntry
-          })
-        }
-        else if (!amIhost.current && myUserName === messageBody.name)
+
+        setENTRY(prevEntry => {
+          let newEntry : UserStatus[] = prevEntry
+          newEntry[newEntry.findIndex(arg => arg.name == messageBody.name)].role = messageBody.role
+          return newEntry.map((arg) => {return arg}) })
+
+        if (!amIhost.current && myUserName === messageBody.name)
         {
           setRole(messageBody.role)
         }
@@ -185,6 +175,14 @@ export default function Page({ params: { roomId } }: Props) {
         } , 1000)
       }
       // 이게 콜백 지옥 아님?
+      else if (messageBody.code === 500) {
+        setGoNext((prev) => {
+          if (prev > 8){
+            return 1
+          }
+          return prev + 1
+        })
+      }
 
 
     } catch (error) {
@@ -427,14 +425,16 @@ export default function Page({ params: { roomId } }: Props) {
        }
      
         <div className='relative h-full w-full'>
+
+        { isHost || (!isStart) ? 
         <GuestVideosSection
           depart='꿈나무 유치원'
           title='망고 연극반'
           call = {call}
           ENTRY={ENTRY}
-          subscribers={subscribers}
-        />
-
+          subscribers={subscribers} 
+        /> : null
+        }
         <p className='text-center'><button type='button' onClick={changeHost} className="text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{isHost ? 'Host' : 'Guest'}  </button></p>
 
         <div className='relative h-full w-full'>
@@ -443,9 +443,8 @@ export default function Page({ params: { roomId } }: Props) {
               <HostTheater
               ENTRY={ENTRY}
               client={client.current}
-              subscribers={subscribers}
+              roomId={roomId}
               streamManager={mainStreamManager}
-              
               />
               :
               <HostMainSection
@@ -458,12 +457,26 @@ export default function Page({ params: { roomId } }: Props) {
             }
 
           {!isHost ?
+            isStart ?
+            <GuestTheater
+            client={client.current}
+            userId={myUserName ? myUserName : ''}
+            ENTRY={ENTRY}
+            roomId={roomId}
+            subscribers={subscribers}
+            streamManager={mainStreamManager}
+            goNext={goNext}
+            />
+
+            :
+
             <GuestMainSection
               client={client.current}
               roomId={roomId}
               role={role}
               userId={myUserName ? myUserName : ''}
-            />
+            /> 
+
             : null
 
           }
