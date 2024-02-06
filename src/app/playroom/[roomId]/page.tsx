@@ -129,7 +129,7 @@ export default function Page({ params: { roomId } }: Props) {
           {
             newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != messageBody.id }))
           }
-          else 
+          else
           {
             newsub = prevsub
           }
@@ -150,18 +150,18 @@ export default function Page({ params: { roomId } }: Props) {
             newEntry = entry
           }
           return newEntry;
-        }) 
+        })
         
       }
       else if (Number(messageBody.code) === 300) {
-        if (amIhost.current) 
+        if (amIhost.current)
         {
           setENTRY(prevEntry => {
             let newEntry : UserStatus[] = prevEntry
             newEntry[newEntry.findIndex(arg => arg.name == messageBody.name)].role = messageBody.role
             return newEntry
           })
-        } 
+        }
         else if (!amIhost.current && myUserName === messageBody.name)
         {
           setRole(messageBody.role)
@@ -170,11 +170,11 @@ export default function Page({ params: { roomId } }: Props) {
       else if (messageBody.code === 400)
       {
 
-       setfirst(true)
+      setfirst(true)
         setTimeout(() => {
-           setsecond(true)
+          setsecond(true)
           setTimeout(() => {
-             setthird(true)
+          setthird(true)
             setTimeout(() => {
               setfirst(false)
               setsecond(false)
@@ -184,7 +184,7 @@ export default function Page({ params: { roomId } }: Props) {
           }, 2000)
         } , 1000)
       }
-      // 이게 콜백 지옥 아님? 
+      // 이게 콜백 지옥 아님?
 
 
     } catch (error) {
@@ -194,7 +194,7 @@ export default function Page({ params: { roomId } }: Props) {
 
 
   const createToken = async (sessionId: any) => {
- 
+
     const response = await axios.post(`/openvidu/api/sessions/${sessionId}/connection `  , {
       headers: {
         'Authorization' : 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
@@ -273,6 +273,8 @@ export default function Page({ params: { roomId } }: Props) {
             userId : username.clientData,
             Subscriber : subscriber
           }
+          // 나 자신이면 받지않는다.
+          if (username.clientData === myUserName) { return; }
         // newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != `${messageBody.id}` }))
 
         
@@ -357,20 +359,20 @@ export default function Page({ params: { roomId } }: Props) {
 
     const subscribe = () => {
       client.current.subscribe(`/sub/channel/${roomId}`, onMessageReceived)
-    }  
+    }
 
     function Join() {
       const message = {
         code: 100,
         id: myUserName,
         videoid : `${myUserName}`
-    };    
+    };
       // console.log(JSON.stringify(message))
     client.current.publish({
         destination: `/sub/channel/${roomId}`,
         body: JSON.stringify(message),
-      });  
-    }  
+      });
+    }
 
 
     function Disconnect() {
@@ -395,14 +397,14 @@ export default function Page({ params: { roomId } }: Props) {
         onConnect: () => {
           subscribe();
           Join();
-        },  
+        },
         onDisconnect: () => {
           Disconnect();
-        }  
-      })  
+        }
+      })
       client.current.activate()
-    }  
-    connect();    
+    }
+    connect();
 
 
     return () => {
@@ -437,7 +439,7 @@ export default function Page({ params: { roomId } }: Props) {
 
         <div className='relative h-full w-full'>
           {isHost ?
-             isStart ? 
+            isStart ?
               <HostTheater
               ENTRY={ENTRY}
               client={client.current}
