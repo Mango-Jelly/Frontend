@@ -1,19 +1,18 @@
-'use client';
-
 import { useRef, useCallback, useEffect } from 'react';
 
 type Props = {
   isCameraOn: boolean;
+  isAudioOn: boolean;
 };
 
-export default function GuestSettings({ isCameraOn }: Props) {
+export default function GuestSettings({ isCameraOn, isAudioOn }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const getMediaPermission = useCallback(async () => {
     try {
       const videoConstraints = {
-        audio: false,
-        video: true,
+        audio: isAudioOn,
+        video: isCameraOn,
       };
 
       const videoStream =
@@ -25,7 +24,7 @@ export default function GuestSettings({ isCameraOn }: Props) {
     } catch (err) {
       console.log(err);
     }
-  }, [isCameraOn]);
+  }, [isCameraOn, isAudioOn]);
 
   useEffect(() => {
     getMediaPermission();

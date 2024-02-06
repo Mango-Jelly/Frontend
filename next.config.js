@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-    reactStrictMode: true,
+    reactStrictMode: false,
     output: 'standalone',
     webpack: (config) => {
         config.module.rules.push({

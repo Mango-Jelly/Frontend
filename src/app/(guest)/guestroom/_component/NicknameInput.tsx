@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEventHandler } from 'react';
+import { ChangeEventHandler } from 'react';
 import Image from 'next/image';
 import pinIcon from '@/../public/YellowPinIcon.png';
 
@@ -25,7 +25,7 @@ export default function NicknameInput({
   };
 
   const validateNickname = () => {
-    if (nickname.length > MAX_NICKNAME_LENGTH) {
+    if (nickname.length === 0 || nickname.length > MAX_NICKNAME_LENGTH) {
       setIsValid(false);
     } else {
       setIsValid(true);

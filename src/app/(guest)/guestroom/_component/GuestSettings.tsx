@@ -15,7 +15,7 @@ export default function GuestSettings() {
 
   return (
     <div className='flex justify-center m-48'>
-      <GuestVideo isCameraOn={isCameraOn} />
+      <GuestVideo isCameraOn={isCameraOn} isAudioOn={isAudioOn} />
       <div
         className='flex flex-col justify-between items-end
       rounded-2xl border-4 border-dashed border-mainsky
@@ -35,7 +35,12 @@ export default function GuestSettings() {
             setAudioOn={setAudioOn}
           />
         </div>
-        <SubmitButton nickname={nickname} isValid={isValid} />
+        <SubmitButton
+          nickname={nickname}
+          isValid={isValid}
+          isCameraOn={isCameraOn}
+          isAudioOn={isAudioOn}
+        />
       </div>
     </div>
   );
