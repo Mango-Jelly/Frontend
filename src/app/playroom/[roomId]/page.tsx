@@ -2,7 +2,6 @@
 import './_component/page.css'
 import Link from "next/link"
 import GuestVideosSection from './_component/GuestVideosSection'
-// import { useRouter } from 'next/router'
 import axios from 'axios';
 import HostMainSection from './_component/host/HostMainSection';
 import GuestMainSection from './_component/guest/GuestMainSection';
@@ -10,6 +9,8 @@ import HostTheater from './_component/theater/HostTheater'
 import { useState } from 'react';
 import { useRef, useEffect, useCallback } from "react";
 import * as StompJs from "@stomp/stompjs"
+import SockJS from 'sockjs-client'
+
 import { OpenVidu, Subscriber } from 'openvidu-browser';
 import GuestTheater from './_component/guest/GuestTheater'
 
@@ -33,7 +34,6 @@ type CameraUnit = {
   userId : string
   Subscriber : Subscriber
 }
-const USERID = `user${Math.random()}`
 
 export default function Page({ params: { roomId } }: Props) {
   const [isHost, setIsHost] = useState<boolean>(false)
@@ -53,8 +53,6 @@ export default function Page({ params: { roomId } }: Props) {
   const [third, setthird] = useState<boolean>(false)
   const amIhost = useRef<boolean>(false);
   const [goNext, setGoNext] = useState<number>(0)
-
-
   const changeHost = () => {
     setIsHost(prevIsHost => !prevIsHost);
     amIhost.current = !amIhost.current;
@@ -71,6 +69,7 @@ export default function Page({ params: { roomId } }: Props) {
   //     return newArray
   //   }) 
   // }
+
 
   function onMessageReceived(message: StompJs.Message) {
 
@@ -202,56 +201,6 @@ export default function Page({ params: { roomId } }: Props) {
   };
 
 
-  const leaveSession = useCallback(() => {
-    // Leave the session
-    if (session) {
-        session.disconnect();
-    }
-    // 상태관리중인 세션이 있을경우 초기화
-    // Reset all states and OpenVidu object
-
-    OV.current = new OpenVidu();
-    setSession(undefined);
-    setSubscribers([]);
-    setMyUserName('Participant' + Math.floor(Math.random() * 100));
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-  }, [session]);
-
-  // 카메라 여러개일 때 바꿔주는 기능
-  const switchCamera = useCallback(async () => {
-    try {
-      // 카메라 받는거
-      const devices = await OV.current.getDevices();
-      const videoDevices = devices.filter(device => device.kind === 'videoinput');
-      if (videoDevices && videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.filter(device => device.deviceId !== currentVideoDevice.deviceId);
-        // html 비디오 태그를 캐치하는 객체
-        if (newVideoDevice.length > 0) {
-          const newPublisher: any = OV.current.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: false,
-            publishVideo: true,
-            mirror: true,
-          });
-          // 오픈비두 객체에
-          // 새로운 퍼블리셔를 설정? 쉽게 말해 카메라 바꾸기, session객체는 publish, unpublish 를 통해서 카메라 바꿀 수 있음
-          if (session) {
-            await session.unpublish(mainStreamManager);
-            await session.publish(newPublisher);
-            setCurrentVideoDevice(newVideoDevice[0]);
-            setMainStreamManager(newPublisher);
-            setPublisher(newPublisher);
-          }
-        }
-      }
-
-    } catch (e) {
-      console.error(e);
-    }
-  }, [currentVideoDevice, session, mainStreamManager]);
-
-
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ///////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때/////////////
@@ -266,7 +215,6 @@ export default function Page({ params: { roomId } }: Props) {
         // 새로운 사람이 들어왔다
         mySession.on('streamCreated', (event) => {
           let username = JSON.parse(event.stream.inboundStreamOpts.connection.data)
-          console.log('pages.tsx',username.clientData)
           const subscriber = mySession.subscribe(event.stream, undefined);
           const CameraUnit = {
             userId : username.clientData,
@@ -304,9 +252,6 @@ export default function Page({ params: { roomId } }: Props) {
           return newEntry
 
         })
-
-        console.log(ENTRY)
-
       });
       //
       mySession.on('exception', (exception) => {
@@ -321,6 +266,8 @@ export default function Page({ params: { roomId } }: Props) {
   
       
       // 웹사이트나갈때 subscribers에서 사라지게하는 코드
+
+      
       window.addEventListener('beforeunload', Disconnect);
       window.addEventListener('beforeunload',() => {mySession.disconnect()});
   
@@ -352,10 +299,6 @@ export default function Page({ params: { roomId } }: Props) {
         }
       });
   
-
-    // USERID를 일정하게 유지하는 방법
-    // const USERID = `user${Math.random()}`
-
     const subscribe = () => {
       client.current.subscribe(`/sub/channel/${roomId}`, onMessageReceived)
     }
@@ -390,25 +333,27 @@ export default function Page({ params: { roomId } }: Props) {
     // 커넥트 함수 /*
     const connect = () => {
 
-      client.current = new StompJs.Client({
-        brokerURL: "ws://localhost:8080/ws",
-        // brokerURL: "http://localhost:3000/ws",
-        onConnect: () => {
-          subscribe();
-          Join();
-        },
-        onDisconnect: () => {
-          Disconnect();
-        }
-      })
+      client.current = StompJs.Stomp.over(function() {return new SockJS(`https://mangotail.shop/ws`)})
+      // client.current = new StompJs.Client({
+      //   brokerURL: "ws://localhost:8080/ws",
+      //   onConnect: () => {
+      //     subscribe();
+      //     Join();
+      //   },
+      //   onDisconnect: () => {
+      //     Disconnect();
+      //   }
+      // })
+      client.current.onConnect = () => {
+        subscribe();
+        Join();
+      }
+      client.current.onDisconnect = () => {
+        Disconnect(); 
+      }
       client.current.activate()
     }
     connect();
-
-
-    return () => {
-      window.removeEventListener('beforeunload', Disconnect);
-    };
 
   }, [myUserName, roomId])
 
