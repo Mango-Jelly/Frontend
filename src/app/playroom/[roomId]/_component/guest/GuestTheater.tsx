@@ -34,7 +34,6 @@ type UserStatus = {
 type Props = {
   client : any
   goNext : number
-  subscribers : CameraUnit[];
   streamManager : any;
   ENTRY: UserStatus[]
   roomId : string

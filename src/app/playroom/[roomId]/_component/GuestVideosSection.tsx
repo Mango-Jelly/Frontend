@@ -28,7 +28,6 @@ type Props = {
     title : string;
     call : string;
     ENTRY : UserStatus[]
-    subscribers : CameraUnit[];
 }
 
 
@@ -37,7 +36,7 @@ type Props = {
 
 export default function GuestVideosSection(props : Props) {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [subscribers, setSubscribers] = useState(props.subscribers)
+
     const [call, setCall] = useState(props.call);
     const maxItemsPerSlide : number = 5;
     const handlePrev = () => {
@@ -47,7 +46,7 @@ export default function GuestVideosSection(props : Props) {
         };
 
     const handleNext = () => {
-        setCurrentIndex((prevIndex) => (prevIndex < props.subscribers.length - maxItemsPerSlide ? prevIndex + 1 : prevIndex));
+        setCurrentIndex((prevIndex) => (prevIndex < props.ENTRY.length - maxItemsPerSlide ? prevIndex + 1 : prevIndex));
         console.log(currentIndex)
         };
     
@@ -58,23 +57,23 @@ export default function GuestVideosSection(props : Props) {
     return (
     <div className = "topcontainer">
         <div className='top-1/2 left-1/2 mx-auto text-center w-full'>
-            <p className='my-10 text-3xl w-full'>{props.depart}의 {props.title}</p>
+            <p className=' text-3xl w-full'>{props.depart}의 {props.title}</p>
 
             
             <div className='flex flex-row w-8/9'>
                     <div className='mx-auto flex flex-row space-x-10  w-full  '>
                     <Image alt = "왼쪽 화살표" src = {LeftArrow} onClick={handlePrev} className='w-1/18'/>
                     
-                        <div className='flex flex-row space-x-4 overflow-x-hidden overflow-hidden w-full  '>
+                        <div className='flex flex-row space-x-4 overflow-x-hidden overflow-hidden w-full h-full'>
                             {
-                                props.subscribers.length > 0 ?
-                                <div className=" carousel " style={{ left: `-${currentIndex * (100 / maxItemsPerSlide)}%` }}>
+                                props.ENTRY.length > 0 ?
+                                <div className=" carousel" style={{ left: `-${currentIndex * (100 / maxItemsPerSlide)}%` }}>
                                         {
                                         props.ENTRY.map((event, id) =>
                                                 ( 
 
 
-                                                    <div className='w-1/5 p-3' key = {id}>
+                                                    <div className='w-1/5 h-full p-3' key = {id}>
 
                                                     { event.camera ? 
                                                         <div className=''>
@@ -84,7 +83,7 @@ export default function GuestVideosSection(props : Props) {
                                                             />
                                                         </div>
                                                         :
-                                                        <Image src={VideoImage} className=" rounded" alt="..."/>}
+                                                        <Image src={VideoImage} className="w-full h-full rounded" alt="..."/>}
                                                     </div>
                                                 )
                                             )

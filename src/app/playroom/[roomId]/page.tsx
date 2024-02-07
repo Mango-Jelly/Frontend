@@ -1,6 +1,8 @@
 'use client';
 import './_component/page.css'
 import Link from "next/link"
+import Image
+ from 'next/image'
 import GuestVideosSection from './_component/GuestVideosSection'
 import axios from 'axios';
 import HostMainSection from './_component/host/HostMainSection';
@@ -13,6 +15,7 @@ import SockJS from 'sockjs-client'
 
 import { OpenVidu, Subscriber } from 'openvidu-browser';
 import GuestTheater from './_component/guest/GuestTheater'
+import curtain from '@/../public/Curtain.jpg'
 
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? 'http://mangotail.shop/' : 'http://mangotail.shop/';
@@ -22,7 +25,6 @@ type Props = {
   params: { roomId: string }
 }
 
-
 type UserStatus = {
   name: string
   status: number
@@ -30,10 +32,6 @@ type UserStatus = {
   camera : Subscriber | null
 }
 
-type CameraUnit = {
-  userId : string
-  Subscriber : Subscriber
-}
 
 export default function Page({ params: { roomId } }: Props) {
   const [isHost, setIsHost] = useState<boolean>(false)
@@ -41,16 +39,11 @@ export default function Page({ params: { roomId } }: Props) {
   const [ENTRY, setENTRY] = useState<UserStatus[]>([])
   const [myUserName, setMyUserName] = useState<string>(`Participant${Math.floor(Math.random() * 100)}`)
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [session, setSession] = useState<any>(undefined);
-  const [subscribers, setSubscribers] = useState<CameraUnit[]>([]);
   const [publisher, setPublisher] = useState<any>(undefined);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<any>(null);
   const [role, setRole] = useState('');
   const [call, setCall] = useState('');
-  // const [isStart, setStart] = useState<boolean[]>([false, false, false, false]);
-  const [first, setfirst] = useState<boolean>(false)
-  const [second, setsecond] = useState<boolean>(false)
-  const [third, setthird] = useState<boolean>(false)
+  const [startProcess, setStartProcess] = useState<boolean[]>([false, false, false, false, false, false, false]);
   const amIhost = useRef<boolean>(false);
   const [goNext, setGoNext] = useState<number>(0)
   const changeHost = () => {
@@ -60,16 +53,57 @@ export default function Page({ params: { roomId } }: Props) {
 
   const client = useRef<any>({});
   const OV = useRef(new OpenVidu());
-  // 오픈 비두 객체 만듬
 
-  // function StartCallback(i : number, type : boolean){
-  //   setStart((prevArray) => {
-  //     let newArray = prevArray
-  //     newArray[i] = type
-  //     return newArray
-  //   }) 
-  // }
+  const changeProcess = (index : number, isBegin : boolean) => {
+    setStartProcess((prev) => {
+      return prev.map((arg, id) => 
+      {
+        if (id === index) arg = isBegin
+        return arg
+      }) 
+    })
+  }
+  const delay = (ms : number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
+  async function GotoTheater() {
+        
+    changeProcess(0, true)
+    await delay(2000)
+    
+    changeProcess(1, true)
+    await delay(2000)
+    
+    changeProcess(2, true)
+    await delay(2000)
+    changeProcess(3, true)
+    await delay(2000)
+    changeProcess(3, false)
+    changeProcess(4, true)
+
+
+    await delay(1000)
+    changeProcess(5, true)
+    await delay(3000)
+    setIsStart(true)
+    
+    changeProcess(5, false)
+    await delay(1000)
+
+    // await delay(1000)
+    // changeProcess(6, true)
+    // await delay(3000)
+    // changeProcess(6, false)
+    // await delay(1000)
+    
+    changeProcess(4, false)
+    changeProcess(2, false)
+    changeProcess(1, false)
+    changeProcess(0, false)
+    
+
+  }
 
   function onMessageReceived(message: StompJs.Message) {
 
@@ -86,15 +120,11 @@ export default function Page({ params: { roomId } }: Props) {
               status: 0,
               role : '',
               camera : null,
-
             }
             newEntry = [state].concat(entry)
           }
           return newEntry
         })
-
-
-        // setSubscribers((subscribers) => [...subscribers, videoTag])
       }
       else if (messageBody.code == 101) {
         let videoTag : string = messageBody.videoid
@@ -112,20 +142,6 @@ export default function Page({ params: { roomId } }: Props) {
         }))
         setCall(messageBody.id)
         
-        // 카메라 정렬을 위한 코드
-        // setSubscribers((prevsub) => {
-        //   let newsub : CameraUnit[];
-        //   // console.log(prevsub.find((element) => element.userId === `${messageBody.id}'s_video`))
-        //   if (prevsub.find((element) => element.userId === messageBody.id ))
-        //   {
-        //     newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != messageBody.id }))
-        //   }
-        //   else
-        //   {
-        //     newsub = prevsub
-        //   }
-        //   return newsub;
-        // })
         
         setENTRY((entry) => {
 
@@ -142,8 +158,8 @@ export default function Page({ params: { roomId } }: Props) {
           }
           return newEntry;
         })
-        
       }
+
       else if (Number(messageBody.code) === 300) {
 
         setENTRY(prevEntry => {
@@ -159,21 +175,12 @@ export default function Page({ params: { roomId } }: Props) {
       else if (messageBody.code === 400)
       {
 
-      setfirst(true)
-        setTimeout(() => {
-          setsecond(true)
-          setTimeout(() => {
-          setthird(true)
-            setTimeout(() => {
-              setfirst(false)
-              setsecond(false)
-              setthird(false)
-              setIsStart(true)
-            }, 5000)
-          }, 2000)
-        } , 1000)
+
+        GotoTheater()
+        
+
       }
-      // 이게 콜백 지옥 아님?
+
       else if (messageBody.code === 500) {
         setGoNext((prev) => {
           if (prev > 8){
@@ -225,7 +232,7 @@ export default function Page({ params: { roomId } }: Props) {
         // newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != `${messageBody.id}` }))
 
         
-        setSubscribers((subscribers) => [...subscribers, CameraUnit]);
+        // setSubscribers((subscribers) => [...subscribers, CameraUnit]);
         setENTRY((entry) => {
 
           let newEntry : UserStatus[] = []
@@ -314,6 +321,7 @@ export default function Page({ params: { roomId } }: Props) {
         destination: `/sub/channel/${roomId}`,
         body: JSON.stringify(message),
       });
+
     }
 
 
@@ -333,24 +341,25 @@ export default function Page({ params: { roomId } }: Props) {
     // 커넥트 함수 /*
     const connect = () => {
 
-      client.current = StompJs.Stomp.over(function() {return new SockJS(`https://mangotail.shop/ws`)})
-      // client.current = new StompJs.Client({
-      //   brokerURL: "ws://localhost:8080/ws",
-      //   onConnect: () => {
-      //     subscribe();
-      //     Join();
-      //   },
-      //   onDisconnect: () => {
-      //     Disconnect();
-      //   }
-      // })
-      client.current.onConnect = () => {
-        subscribe();
-        Join();
-      }
-      client.current.onDisconnect = () => {
-        Disconnect(); 
-      }
+      client.current = new StompJs.Client({
+        brokerURL: "ws://localhost:8080/ws",
+        onConnect: () => {
+          subscribe();
+          Join();
+        },
+        onDisconnect: () => {
+          Disconnect();
+        }
+      })
+
+      // client.current = StompJs.Stomp.over(function() {return new SockJS(`https://mangotail.shop/ws`)})
+      // client.current.onConnect = () => {
+      //   subscribe();
+      //   Join();
+      // }
+      // client.current.onDisconnect = () => {
+      //   Disconnect(); 
+      // }
       client.current.activate()
     }
     connect();
@@ -362,71 +371,81 @@ export default function Page({ params: { roomId } }: Props) {
   <div className={`flex flex-col items-center px-[15rem] h-lvh ` } >
       {/* { isStart[0] ? <div className='fadeoutcomponent' style={{opacity : isStart[1] ? 1.0 : 0}}></div> : null } */}
      
-      { first ? <div className='fadeoutcomponent' style={{opacity : second ? 1.0 : 0}}>
-        { third ? 
-        <video className='w-full h-full' controls autoPlay>
-             <source src= ".curtainsclosing.mp4" type="video/mp4" />
-        </video> : null}
+      { startProcess[0] ? <div className='fadeoutcomponent' style={{opacity : startProcess[1] ? 1.0 : 0}}>
+        { startProcess[3] ? 
+          <div>
+            <video className='w-full h-full' controls autoPlay>
+                <source src= "./curtainsclosing.mp4" type="video/mp4" />
+            </video> 
+          </div>
+          :
+          null
+        }
+        {
+          startProcess[4] ? 
+          <div>
+            {/* <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ top : startProcess[5] ? `0%` : `-100%` , transition: 'all 1.0s'}}/>  */}
+            <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ left : startProcess[5] ? `-50%` : `-100%` , transition: 'all 1.0s'}}/> 
+            <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ left : startProcess[5] ? `50%` : `100%` , transition: 'all 1.0s'}}/> 
+          </div> 
+          :
+          null
+        }
       </div> : null
        }
      
         <div className='relative h-full w-full'>
 
-        { isHost || (!isStart) ? 
-        <GuestVideosSection
-          depart='꿈나무 유치원'
-          title='망고 연극반'
-          call = {call}
-          ENTRY={ENTRY}
-          subscribers={subscribers} 
-        /> : null
-        }
-        <p className='text-center'><button type='button' onClick={changeHost} className="text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{isHost ? 'Host' : 'Guest'}  </button></p>
+          { isHost || (!isStart) ? 
+          <GuestVideosSection
+            depart='꿈나무 유치원'
+            title='망고 연극반'
+            call = {call}
+            ENTRY={ENTRY}
 
-        <div className='relative h-full w-full'>
-          {isHost ?
-            isStart ?
-              <HostTheater
-              ENTRY={ENTRY}
-              client={client.current}
-              roomId={roomId}
-              streamManager={mainStreamManager}
-              />
-              :
-              <HostMainSection
+          /> : null
+          }
+          <p className='text-center'><button type='button' onClick={changeHost} className="z-20 text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 absolute" style={{bottom : '100%'}}>{isHost ? 'Host' : 'Guest'} </button></p>
+
+          <div className='relative h-4/5 w-full'>
+            {isHost ?
+              isStart ?
+                <HostTheater
                 ENTRY={ENTRY}
                 client={client.current}
                 roomId={roomId}
                 streamManager={mainStreamManager}
-              />
-            : null
-            }
+                />
+                :
+                <HostMainSection
+                  ENTRY={ENTRY}
+                  client={client.current}
+                  roomId={roomId}
+                  streamManager={mainStreamManager}
+                />
+              : null
+              }
 
-          {!isHost ?
-            isStart ?
-            <GuestTheater
-            client={client.current}
-            userId={myUserName ? myUserName : ''}
-            ENTRY={ENTRY}
-            roomId={roomId}
-            subscribers={subscribers}
-            streamManager={mainStreamManager}
-            goNext={goNext}
-            />
-
-            :
-
-            <GuestMainSection
+            {!isHost ?
+              isStart ?
+              <GuestTheater
               client={client.current}
-              roomId={roomId}
-              role={role}
               userId={myUserName ? myUserName : ''}
-            /> 
-
-            : null
-
-          }
-          <Link href={`/scenario/1`}>링크</Link>
+              ENTRY={ENTRY}
+              roomId={roomId}
+              streamManager={mainStreamManager}
+              goNext={goNext}
+              />
+              :
+              <GuestMainSection
+                client={client.current}
+                roomId={roomId}
+                role={role}
+                userId={myUserName ? myUserName : ''}
+              /> 
+              : null
+            }
+            <Link href={`/scenario/1`}>링크</Link>
         </div>
       </div>
     </div>

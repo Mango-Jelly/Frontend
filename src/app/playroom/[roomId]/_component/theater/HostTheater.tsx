@@ -77,7 +77,7 @@ export default function HostTheater(Props : Props) {
     }
     ,[curIdx.scene])
   return (
-    <div className='flex h-3/5 w-full relative justify-between'>
+    <div className='flex h-full w-full relative justify-between p-[2rem]'>
       <div className='bg-white m-4 h-full'>
         <div className='flex items-center m-4'>
           <Image
@@ -92,7 +92,7 @@ export default function HostTheater(Props : Props) {
           className='overflow-auto w-[36rem] h-full  p-4'
           id={style.scroll}
         >
-          <div>
+
             {script.scene.map((sceneValue, sceneKey) => {
               return (
                 <div key={sceneKey}>
@@ -120,7 +120,7 @@ export default function HostTheater(Props : Props) {
                 </div>
               )
             })}
-          </div>
+
         </div>
       </div>
 
