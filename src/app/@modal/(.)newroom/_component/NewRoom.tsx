@@ -2,7 +2,7 @@
 
 import style from './newRoom.module.css'
 import Image from 'next/image'
-import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 import Button from '@/app/_component/TriggerButton'
 import pigTailLeft from '@/../public/pigtailLeft.svg'
 import pigTailRight from '@/../public/pigtailRight.svg'
