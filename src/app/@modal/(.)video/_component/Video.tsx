@@ -1,25 +1,35 @@
-'use client'
+'use client';
 
-import React from 'react'
-import { myVideos } from '../_component/DummyData'
-import { Suspense } from 'react'
-import VideoViewer from './VideoViewer'
+import React from 'react';
+import { Suspense } from 'react';
+import VideoViewer from './VideoViewer';
 import {
   ArrowDownTrayIcon,
   LockClosedIcon,
   LockOpenIcon,
-  XMarkIcon,
-} from '@heroicons/react/20/solid'
-import BackButton from '@/app/_component/BackButton'
+} from '@heroicons/react/20/solid';
+import BackButton from '@/app/_component/BackButton';
+
+import { myVideos } from '../_component/DummyData';
+import { getVideo } from '@/api/movie';
 
 type Props = {
-  id: string
+  id: number;
+};
+
+async function displayVideo(videoId: number, AccessToken: string) {
+  try {
+    const video = await getVideo(videoId, AccessToken);
+    console.log('Video:', video);
+    // TODO: 더미데이터 API로 바꾸기
+  } catch (error) {
+    console.error('Error displaying video:', error);
+  }
 }
 
-//TODO : 비디오 불러오기 API 연결
-
 export default function Video({ id }: Props) {
-  const videoData = myVideos.find((video) => video.id === id) || myVideos[0]
+  // displayVideo(id, '');
+  const videoData = myVideos.find((video) => video.id === id) || myVideos[0];
 
   return (
     <div className='flex justify-center items-center size-full'>
@@ -35,7 +45,7 @@ export default function Video({ id }: Props) {
         </div>
         <div className='flex flex-col justify-center items-center text-xl bg-gray-200 rounded-3xl w-4/5 h-72 m-2'>
           {videoData.data.party.split('_').map((value, key) => {
-            return <div key={key}>{`${value}\n`}</div>
+            return <div key={key}>{`${value}\n`}</div>;
           })}
         </div>
       </div>
@@ -57,5 +67,5 @@ export default function Video({ id }: Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }

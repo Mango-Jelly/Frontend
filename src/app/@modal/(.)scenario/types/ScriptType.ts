@@ -1,7 +1,10 @@
-export type Dialog = {
-  img: string;
-  role: string;
-  dialog: string;
+export type ScriptType = {
+  scenes: Scene[];
+  title: string;
+  duration: string;
+  thumbnail: string;
+  person: number;
+  roles: RoleInfo[];
 };
 
 export type Scene = {
@@ -10,16 +13,16 @@ export type Scene = {
   dialogs: Dialog[];
 };
 
-export type RoleInfo = {
-  img: string;
-  role: string;
+export type Dialog = {
+  role: {
+    name: String;
+    img: String;
+  }[];
+  dialog: string;
 };
 
-export type ScriptType = {
-  scene: Scene[];
-  title: string;
-  duration: string;
-  thumbnail: string;
-  person: number;
-  roles: RoleInfo[];
+export type RoleInfo = {
+  id: number;
+  img: string;
+  role: string;
 };

@@ -28,7 +28,7 @@ export default function ScenarioDialog({ scriptInfo }: Props) {
         id={style.scroll}
         // data-accordion='collapse'
       >
-        {scriptInfo.scene.map((value, key) => {
+        {scriptInfo.scenes.map((value, key) => {
           return (
             <div key={key}>
               <AccordionSection
@@ -42,9 +42,7 @@ export default function ScenarioDialog({ scriptInfo }: Props) {
                     {value.dialogs.map((dialogValue, dialogKey) => {
                       return (
                         <div key={dialogKey} className='flex items-center'>
-                          <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
-                            {dialogValue.img}
-                          </div>
+                          <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'></div>
                           <p className='text-xl'>
                             {`${dialogValue.role}: ${dialogValue.dialog}`}
                           </p>

@@ -1,10 +1,20 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import pinIcon from '../../../public/YellowPinIcon.png';
-import { myVideos } from '../../data/Dummy';
 
-// TODO : 내가 나온 연극 API 연결
-export default function MyVideos({ isLogin }: { isLogin: boolean }) {
+import { myVideos } from '../../data/Dummy';
+import { getMyVideos } from '@/api/movie';
+
+export default async function MyVideos({ isLogin }: { isLogin: boolean }) {
+  // let myVideos = [];
+
+  // try {
+  //   const fetchedData = await getMyVideos(AccessToken);
+  //   myVideos = fetchedData.data.videos;
+  // } catch (error) {
+  //   console.error('내 연극 리스트 가져오기 에러', error);
+  // }
+
   return (
     <div className='bg-white rounded-[2rem] h-[22rem] p-4 mb-4'>
       <div className='flex px-8 py-2'>
