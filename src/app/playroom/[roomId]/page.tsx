@@ -341,25 +341,25 @@ export default function Page({ params: { roomId } }: Props) {
     // 커넥트 함수 /*
     const connect = () => {
 
-      client.current = new StompJs.Client({
-        brokerURL: "ws://localhost:8080/ws",
-        onConnect: () => {
-          subscribe();
-          Join();
-        },
-        onDisconnect: () => {
-          Disconnect();
-        }
-      })
+      // client.current = new StompJs.Client({
+      //   brokerURL: "ws://localhost:8080/ws",
+      //   onConnect: () => {
+      //     subscribe();
+      //     Join();
+      //   },
+      //   onDisconnect: () => {
+      //     Disconnect();
+      //   }
+      // })
 
-      // client.current = StompJs.Stomp.over(function() {return new SockJS(`https://mangotail.shop/ws`)})
-      // client.current.onConnect = () => {
-      //   subscribe();
-      //   Join();
-      // }
-      // client.current.onDisconnect = () => {
-      //   Disconnect(); 
-      // }
+      client.current = StompJs.Stomp.over(function() {return new SockJS(`https://mangotail.shop/ws`)})
+      client.current.onConnect = () => {
+        subscribe();
+        Join();
+      }
+      client.current.onDisconnect = () => {
+        Disconnect(); 
+      }
       client.current.activate()
     }
     connect();
