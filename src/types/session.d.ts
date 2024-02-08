@@ -8,6 +8,6 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
     accessToken: string;
     refreshToken: string;
-    Authorization : string;
+    Authorization : string | null ;
   }
 }

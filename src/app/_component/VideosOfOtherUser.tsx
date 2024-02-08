@@ -39,13 +39,13 @@ export default async function VideosOfOtherUser() {
       <div className='flex flex-wrap justify-evenly h-auto mt-4'>
         {publicVideos.map((value: PublicVideo) => {
           return (
-            <Link href={`/video/${value.videoId}`} key={`${value.videoId}`}>
+            <Link href={`/video/${value.videoId}`} key={value.videoId}>
               <div className='w-[17rem] rounded-2xl p-2 hover:bg-gray-100 cursor-pointer'>
                 <Image
-                  src={`${value.urlThumbnail}`}
+                  src={value.urlThumbnail}
                   width={300}
                   height={300}
-                  alt={`${value.title}`}
+                  alt={value.title}
                   className='rounded-2xl h-40 mb-2'
                 ></Image>
                 <div className='truncate text-lg text-center'>{`${value.title} | ${value.department}`}</div>

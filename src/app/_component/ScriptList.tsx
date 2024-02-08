@@ -38,15 +38,15 @@ export default async function ScriptList() {
         {scripts.map((value: Script) => {
           return (
             <div
-              key={`${value.scriptId}`}
+              key={value.scriptId}
               className='w-[17rem] rounded-2xl p-2 hover:bg-gray-100 cursor-pointer'
             >
               <Link href={`/scenario/${value.scriptId}`}>
                 <Image
-                  src={`${value.thumbnail}`}
+                  src={value.thumbnail}
                   width={300}
                   height={300}
-                  alt={`${value.title}`}
+                  alt={value.title}
                   className='rounded-2xl h-40 mb-2'
                 ></Image>
                 <div className='truncate text-lg text-center'>
