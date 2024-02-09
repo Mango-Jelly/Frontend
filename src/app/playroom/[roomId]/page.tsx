@@ -476,7 +476,7 @@ export default function Page({ params: { roomId } }: Props) {
               roomId={roomId}
               role={role}
               userId={myUserName ? myUserName : ''}
-            /> 
+            />
 
             : null
 
