@@ -9,11 +9,20 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 
 function showMessage(message: string | null) {
-    if (message === 'invalid_playName') {
-        return '방 제목을 올바르게 입력해주세요. (30자 이내)';
+    if (message === 'invalid_nickname') {
+        return '닉네임을 올바르게 입력해주세요. (2자 이상 ~ 10자 이내)';
     }
-    if (message === 'invalid_department') {
-        return '소속을 올바르게 입력해주세요. (20자 이내)';
+    if (message === 'invalid_email') {
+        return '이메일을 올바르게 입력해주세요.';
+    }
+    if (message === 'invalid_password') {
+        return '비밀펀호를 올바르게 입력하세요. (8~20자 이내)';
+    }
+    if (message === 'password_not_match') {
+        return '비밀번호와 비밀번호 확인이 일치하지 않습니다.';
+    }
+    if (message === 'user_exists') {
+        return '이미 가입된 유저입니다. 다른 이메일을 입력해주세요.';
     }
     return '';
 }

@@ -2,14 +2,25 @@
 
 import style from './newRoom.module.css'
 import Image from 'next/image'
-import { ChangeEventHandler, useState } from "react";
-import Button from '@/app/_component/TriggerButton'
 import pigTailLeft from '@/../public/pigtailLeft.svg'
 import pigTailRight from '@/../public/pigtailRight.svg'
 import BackButton from '@/app/_component/BackButton';
 import makePlayRoom from '@/app/_lib/makePlayRoom';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
+
+function showMessage(message: string | null) {
+    if (message === 'invalid_playName') {
+        return '방 제목을 올바르게 입력해주세요. (30자 이내)';
+    }
+    if (message === 'invalid_department') {
+        return '소속을 올바르게 입력해주세요. (20자 이내)';
+    }
+    if (message === 'failure make room') {
+        return '서버 에러로 방 생성에 실패했습니다.';
+    }
+    return '';
+}
 
 export default function Login() {
     const [state, formAction] = useFormState(makePlayRoom, { message: null });
@@ -46,7 +57,7 @@ export default function Login() {
                                 name="roomName"
                                 className={style.input}
                                 type="text"
-                                placeholder="20자 이내로 방 제목을 입력해 주세요."
+                                placeholder="5자 이상 20자 이내로 방 제목을 입력해 주세요."
                                 required
                             />
                         </div>
@@ -63,18 +74,27 @@ export default function Login() {
                         </div>
                         <label 
                             htmlFor="isPublic"
+                            className="text-lg font-semibold mt-4"
                         >
-                            완성영상 공개 설정
+                            완성된 영상을 사이트에 공개하시겠습니까? 
                         </label>
                         <input
                             type="checkbox"
                             id='isPublic'
                             name="isPublic"
+                            className="ml-2"
                         />
-
+                        {<p className={style.error}>{showMessage(state?.message)}</p>}
                     </div>
                     <div className={style.modalFooter}>
-                        <Button name='방생성' isSubmitting={false} />
+                        <button
+                            title='방생성'
+                            type='submit'
+                            className={`text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4 `}
+                            disabled={pending}
+                        >
+                            회원가입
+                        </button >
                     </div>
                 </form>
             </div>
