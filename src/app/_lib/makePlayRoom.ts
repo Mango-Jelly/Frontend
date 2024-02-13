@@ -22,12 +22,12 @@ const makePlayRoom = async (formData: any) => {
 const userInputData : any = {};
 formData.forEach((value: any, key: string | number) => userInputData[key] = value);
 
-userInputData['Authorization'] = session?.Authorization;
+userInputData['AccessToken'] = session?.Authorization;
 
   try {
     const response = await createPlayRoom(userInputData);
     
-    if (response.status === 400) {
+    if (response.status === 401) {
       return { message: 'failure make room' };
     }
 

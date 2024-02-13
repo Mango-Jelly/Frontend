@@ -10,7 +10,7 @@ import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 
 function showMessage(message: string | null) {
-    if (message === 'invalid_playName') {
+    if (message === 'invalid_roomName') {
         return '방 제목을 올바르게 입력해주세요. (30자 이내)';
     }
     if (message === 'invalid_department') {
