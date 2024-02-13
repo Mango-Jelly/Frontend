@@ -208,15 +208,12 @@ export default function HostTheater(Props : Props) {
 
     const mediaStream = canvasRef.current?.captureStream()
     
-    // if ( audioCamera.current )
-    // {
-    //   const mediaStream2 =  audioCamera.current.
-    // }
-    // const options = {
-    //     audioBitsPerSecond: 128000,
-    //     videoBitsPerSecond: 2500000,
-    //     mimeType: "video/mp4",
-    //   };
+
+    const options = {
+        audioBitsPerSecond: 0,
+        videoBitsPerSecond: 2500000,
+        // mimeType: "video/webm",
+      };
     // const audioStream =
     const speechVideo = mapping.current.get(script.scene[curIdx.scene].dialogs[curIdx.dialog].role)
     if (speechVideo)
@@ -224,20 +221,21 @@ export default function HostTheater(Props : Props) {
       // const mediaStream2 = speechVideo.captureStream()
       // console.log(speechVideo.stream.getMediaStream().getAudioTracks())
       const audioTrack = speechVideo.stream.getMediaStream().getAudioTracks()
-      console.log(audioTrack)
+
       const mediaStream2 = new MediaStream()
       mediaStream2.addTrack(audioTrack[0])
       
       console.log(script.scene[curIdx.scene].dialogs[curIdx.dialog].role)
 
       if (mediaStream) {
-        mediaRecorder.current = new MediaRecorder(mediaStream)
+        mediaRecorder.current = new MediaRecorder(mediaStream, options)
         mediaRecorder2.current = new MediaRecorder(mediaStream2)
 
 
         mediaRecorder.current.ondataavailable = (event) =>
         {
           // 스트림 데이터(Blob)가 들어올 때마다 배열에 담아둔다.
+          console.log(event.data)
           arrVideoData.current.push(event.data);
         }
         mediaRecorder2.current.ondataavailable = (event) => {
@@ -254,7 +252,7 @@ export default function HostTheater(Props : Props) {
             document.body.appendChild($anchor);
             $anchor.style.display = "none";
             $anchor.href = blobURL; // 다운로드 경로 설정
-            $anchor.download = "test.mp4"; // 파일명 설정
+            $anchor.download = "test.webm"; // 파일명 설정
             $anchor.click(); // 앵커 클릭
             
             // 배열 초기화

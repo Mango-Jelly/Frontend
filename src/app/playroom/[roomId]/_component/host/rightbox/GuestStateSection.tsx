@@ -6,6 +6,8 @@ import status203 from '@/../public/status203.svg'
 import status204 from '@/../public/status204.svg'
 import Image
 from 'next/image'
+import img_clovar from '@/../public/img_clovar.png';
+import style from '../_component/scrollbar.module.css';
 
 type UserStatus = {
   name : string
@@ -21,11 +23,15 @@ const status : any[] = [status201, status202, status203, status204]
 
 export default function GuestStateSection(Props : Props) {
   return (
-    <div className=' rounded-md bg-white mb-5 p-5 h-full'>
-      <div className="max-w-md divide-y divide-gray-200 ">
+    <div className=' bg-white shadow w-[24rem] h-[50rem] ml-6 px-4'>
+          <div className='flex items-center px-4 py-4'>
+        <Image src={img_clovar} width={28} height={28} alt='참가자 상태 확인' />
+        <p className='text-3xl font-medium ml-3'>참가자 상태 확인</p>
+      </div>
+      <div className="overflow-auto h-[43.5rem]">
       {
           Props.ENTRY.map((entry, id) => (
-            <div className="py-3"
+            <div className="flex items-center m-4"
               key={id}
             >
             <div className="flex items-center space-x-4 rtl:space-x-reverse justify-between">
