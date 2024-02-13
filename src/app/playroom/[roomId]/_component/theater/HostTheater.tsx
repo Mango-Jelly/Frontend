@@ -12,10 +12,8 @@ import {
 import ForestJpeg from '@/../public/ForestJpeg.jpg'
 import cinderella from '@/../public/cinderella.jpg'
 import { OpenVidu, Stream, Subscriber } from 'openvidu-browser';
-import UserVideoComponent from '../UserVIdeo'
 import GuestStateSection from '../host/rightbox/GuestStateSection'
 import { scriptInfo } from './data/Dummy'
-import OpenViduVideoComponent from '../OvVideo';
 import axios from 'axios'
 
 
@@ -35,11 +33,14 @@ type Props = {
   ENTRY: UserStatus[]
 }
 
+interface HTMLMediaElementWithCaptureStream extends HTMLMediaElement{
+  captureStream(): MediaStream;
+}
 
 export default function HostTheater(Props : Props) {
   let idx = 0
   const [actor, setActor] = useState<UserStatus[]>([])
-  const { script, curIdx, refs, moveScript } = ControllScript()
+  const { script, curIdx, refs, moveScript, roleNow } = ControllScript()
   const getDynamicClass = (sceneKey: number, dialogKey: number) =>
   {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog)
@@ -53,7 +54,11 @@ export default function HostTheater(Props : Props) {
   const actorDom = useRef<HTMLVideoElement[]>([])
   const isNewscene = useRef<boolean>(false)
   const arrVideoData = useRef<BlobPart[]>([])
+  const arrAudioData = useRef<BlobPart[]>([])
   const mediaRecorder = useRef<MediaRecorder>()
+  const mediaRecorder2 = useRef<MediaRecorder>()
+  const mapping = useRef<Map<string, any | null>> (new Map())
+  // const audioCamera = useRef<Subscriber | null | undefined> (mapping.current.get(script.scene[curIdx.scene].dialogs[curIdx.dialog].role))
   // const [Image, setImage] = useState<any>(null)
 
   function goNext() {
@@ -64,7 +69,7 @@ export default function HostTheater(Props : Props) {
         destination: `/sub/channel/${Props.roomId}`,
         body: JSON.stringify(message),
     })
-    moveScript()
+    moveScript()    
   }
 
   useEffect(
@@ -80,6 +85,9 @@ export default function HostTheater(Props : Props) {
       actorDom.current.length = roles.size
       const canvas = canvasRef.current
 
+
+
+
       if (canvas && backgroundImage.current)
       {
         canvas.width = backgroundImage.current.width
@@ -91,8 +99,6 @@ export default function HostTheater(Props : Props) {
         }
       }
     
-
-
       setActor(Props.ENTRY.filter(element => roles.has(element.role)));
       setTimeout(() => {
         isNewscene.current = false
@@ -102,11 +108,17 @@ export default function HostTheater(Props : Props) {
   
   useEffect(
     () => {
-      // console.log('actor을 재설정했다', actor)
-      // console.log(actorDom.current)
       const canvas = canvasRef.current
 
-
+      // Props.ENTRY.forEach(
+      //   (element) => {
+      //     if (mapping.current.get(element.role) !== undefined)
+      //     {
+      //       mapping.current.set(element.role, element.camera)
+      //     }
+      //   } 
+      // )
+      mapping.current.clear()
       if (canvas) {
       let cameraSize = canvas.width / (actorDom.current.length + 1)
       let cameraGap = cameraSize / (actorDom.current.length + 1)
@@ -123,6 +135,7 @@ export default function HostTheater(Props : Props) {
                       while (!actorDom.current[id] === null) { continue }
                     if (element && actorDom.current[id]) {
                         element.camera.addVideoElement(actorDom.current[id]);
+                        mapping.current.set(element.role, element.camera)
                       }
                     }
                 });
@@ -145,12 +158,32 @@ export default function HostTheater(Props : Props) {
                     })();
                     });
                 }, 2000);
-          }
+            }
         }, 300);
         }
       }
     }
     , [actor])
+
+  // useEffect(
+  //   () => {
+  //     script.roles.forEach((element) => 
+  //     {
+  //       mapping.current.set(element.role, null)
+  //     })
+
+  //     Props.ENTRY.forEach(
+  //       (element) => {
+  //         if (mapping.current.get(element.role) !== undefined)
+  //         {
+  //           mapping.current.set(element.role, element.camera)
+  //         }
+  //       } 
+  //     )
+  //   }
+  //   , [] 
+  // )
+
   function reload() {
     const canvas = canvasRef.current
     if (canvas && backgroundImage.current)
@@ -164,50 +197,82 @@ export default function HostTheater(Props : Props) {
         ctx.drawImage(backgroundImage.current, 0, 0, canvas.width, canvas.height);
       }
     }
-
   }
   
+
+  // 녹화 시작한다
   function startRecording() {
 
     setIsRecording(true)
       console.log('녹화 시작')
 
     const mediaStream = canvasRef.current?.captureStream()
+    
+    // if ( audioCamera.current )
+    // {
+    //   const mediaStream2 =  audioCamera.current.
+    // }
     // const options = {
     //     audioBitsPerSecond: 128000,
     //     videoBitsPerSecond: 2500000,
     //     mimeType: "video/mp4",
     //   };
-
-    if (mediaStream) {
-      mediaRecorder.current = new MediaRecorder(mediaStream)
-
-
-      mediaRecorder.current.ondataavailable = (event) =>
-      {
-        // 스트림 데이터(Blob)가 들어올 때마다 배열에 담아둔다.
-        arrVideoData.current.push(event.data);
-      }
+    // const audioStream =
+    const speechVideo = mapping.current.get(script.scene[curIdx.scene].dialogs[curIdx.dialog].role)
+    if (speechVideo)
+    {
+      // const mediaStream2 = speechVideo.captureStream()
+      // console.log(speechVideo.stream.getMediaStream().getAudioTracks())
+      const audioTrack = speechVideo.stream.getMediaStream().getAudioTracks()
+      console.log(audioTrack)
+      const mediaStream2 = new MediaStream()
+      mediaStream2.addTrack(audioTrack[0])
       
-      mediaRecorder.current.onstop = (event)=>{
-          // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
-          const blob = new Blob(arrVideoData.current);
+      console.log(script.scene[curIdx.scene].dialogs[curIdx.dialog].role)
 
-          // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
-          const blobURL = window.URL.createObjectURL(blob);
-          // 다운로드 구현
-          const $anchor = document.createElement("a"); // 앵커 태그 생성
-          document.body.appendChild($anchor);
-          $anchor.style.display = "none";
-          $anchor.href = blobURL; // 다운로드 경로 설정
-          $anchor.download = "test.mp4"; // 파일명 설정
-          $anchor.click(); // 앵커 클릭
-          
-          // 배열 초기화
-          arrVideoData.current.splice(0);
-      }
-          // 녹화 시작
-          mediaRecorder.current.start();
+      if (mediaStream) {
+        mediaRecorder.current = new MediaRecorder(mediaStream)
+        mediaRecorder2.current = new MediaRecorder(mediaStream2)
+
+
+        mediaRecorder.current.ondataavailable = (event) =>
+        {
+          // 스트림 데이터(Blob)가 들어올 때마다 배열에 담아둔다.
+          arrVideoData.current.push(event.data);
+        }
+        mediaRecorder2.current.ondataavailable = (event) => {
+          arrAudioData.current.push(event.data)
+        }
+        
+        mediaRecorder.current.onstop = (event)=>{
+            // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
+            const blob = new Blob(arrVideoData.current);
+            // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
+            const blobURL = window.URL.createObjectURL(blob);
+            // 다운로드 구현
+            const $anchor = document.createElement("a"); // 앵커 태그 생성
+            document.body.appendChild($anchor);
+            $anchor.style.display = "none";
+            $anchor.href = blobURL; // 다운로드 경로 설정
+            $anchor.download = "test.mp4"; // 파일명 설정
+            $anchor.click(); // 앵커 클릭
+            
+            // 배열 초기화
+            arrVideoData.current.splice(0);
+        }
+        mediaRecorder2.current.onstop = (event) => {
+          const blob = new Blob(arrAudioData.current, { 'type' : 'audio/mp3' });
+          const audioURL = window.URL.createObjectURL(blob);
+          const b = document.createElement('a');
+          b.href = audioURL;
+          b.download = 'audio.mp3';
+          b.click();
+          arrAudioData.current.splice(0)
+        }
+            // 녹화 시작
+            mediaRecorder.current.start();
+            mediaRecorder2.current.start();
+    }
     }
   }
 
@@ -262,14 +327,11 @@ export default function HostTheater(Props : Props) {
 
       <div className='w-3/5 h-full relative'>
         <div className='w-full justify-center relative h-full'>
-
-
             <Image
-              src = {cinderella}
+              src = {ForestJpeg}
               alt='배경화면'
               className='h-full w-full  z-0'
               ref={backgroundImage}
-              
             />
           <canvas ref={canvasRef}  style={{ width : '100%', height : '100%'}} className="z-10 absolute top-0 left-0"></canvas>
 
@@ -277,8 +339,6 @@ export default function HostTheater(Props : Props) {
           {
             Props.streamManager ?
               <div className='absolute top-0 left-0 p-[3rem]  w-full h-full grid grid-cols-4 gap-4 flex z-0'>
-                
-                
               {
                 actor.map((actor, id) => {
                   return (
@@ -299,8 +359,8 @@ export default function HostTheater(Props : Props) {
               </video>
             </div>
           }
-
         </div>
+        
         <div className='flex flex-row justify-between px-[5rem]'>
               <div id = "leftbox" className='flex flex-row'>
                   <button type="button" className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Yellow</button>
@@ -313,7 +373,7 @@ export default function HostTheater(Props : Props) {
                   </button>
             <button onClick={() => {
                     reload()
-                  }}>
+                    }}> 
                     <StopCircleIcon className='size-20' />
                   </button>
               </div>
@@ -328,6 +388,7 @@ export default function HostTheater(Props : Props) {
                   {() => {
                     setIsRecording(false)
                     mediaRecorder.current?.stop()
+                    mediaRecorder2.current?.stop()
                   }} className="text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800">녹화 멈추기</button>
                 :
                 <button type="button" onClick={() => { startRecording() }} className="text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800">녹화 하기</button>

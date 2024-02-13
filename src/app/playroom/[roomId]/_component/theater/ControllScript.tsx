@@ -18,6 +18,7 @@ export const ControllScript = () => {
 
   // 씬이 바뀐거는 scene을 통해 알 수 있다
   const refs = useRef<null[] | HTMLDivElement[]>([])
+  const roleNow = useRef<any>(scriptInfo ? scriptInfo['scene'][curSelection.scene]['dialogs'][curSelection.dialog] : null)
 
   function moveScript() {
     changeIdx()
@@ -49,5 +50,6 @@ export const ControllScript = () => {
     }
   }
 
-  return { script, curIdx: curSelection, refs, moveScript }
+
+  return { script, curIdx: curSelection, refs, moveScript,  roleNow}
 }

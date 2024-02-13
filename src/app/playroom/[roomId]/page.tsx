@@ -281,7 +281,7 @@ export default function Page({ params: { roomId } }: Props) {
           let publisher: any = await OV.current.initPublisherAsync(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: false,
+            publishAudio: true,
             publishVideo: true,
             resolution: '1280x720',
             frameRate: 30,
