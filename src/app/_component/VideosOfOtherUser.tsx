@@ -9,14 +9,19 @@ interface PublicVideo {
   title: string;
   urlThumbnail: string;
   department: string;
+  isPublic: boolean;
 }
 
-export default async function VideosOfOtherUser() {
+export default async function VideosOfOtherUser({
+  isLogin,
+}: {
+  isLogin: boolean;
+}) {
   let publicVideos = [];
 
   try {
     const fetchedData = await getPublicVideos();
-    publicVideos = fetchedData.data.movies;
+    publicVideos = fetchedData.data.videos;
   } catch (error) {
     console.error('다른 사람 연극 리스트 가져오기 에러', error);
   }
@@ -39,8 +44,18 @@ export default async function VideosOfOtherUser() {
       <div className='flex flex-wrap justify-evenly h-auto mt-4'>
         {publicVideos.map((value: PublicVideo) => {
           return (
-            <Link href={`/video/${value.videoId}`} key={value.videoId}>
-              <div className='w-[17rem] rounded-2xl p-2 hover:bg-gray-100 cursor-pointer'>
+            <Link
+              href={{
+                pathname: `/video/${value.videoId}`,
+                query: { isLogin: isLogin },
+              }}
+              as={`/video/${value.videoId}`}
+              key={value.videoId}
+            >
+              <div
+                className='w-[17rem] rounded-2xl p-2 hover:bg-gray-100 cursor-pointer'
+                title={`${value.title} | ${value.department}`}
+              >
                 <Image
                   src={value.urlThumbnail}
                   width={300}

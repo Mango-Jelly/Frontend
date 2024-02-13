@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import pinIcon from '../../../public/YellowPinIcon.png';
 
-import { myVideos } from '../../data/Dummy';
 import { getMyVideos } from '@/api/movie';
 import { auth } from '@/auth';
 
@@ -13,14 +12,16 @@ interface MyVideo {
 }
 
 export default async function MyVideos({ isLogin }: { isLogin: boolean }) {
-  const { Authrization } = await auth();
+  const session: any = await auth();
   let myVideos = [];
 
-  try {
-    const fetchedData = await getMyVideos(Authrization);
-    myVideos = fetchedData.data.videos;
-  } catch (error) {
-    console.error('내 연극 리스트 가져오기 에러', error);
+  if (isLogin) {
+    try {
+      const fetchedData = await getMyVideos(session.Authorization);
+      myVideos = fetchedData.data.videos;
+    } catch (error) {
+      console.error('내 연극 리스트 가져오기 에러', error);
+    }
   }
 
   return (

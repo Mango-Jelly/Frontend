@@ -42,7 +42,19 @@ export const getPublicVideos = async () => {
   return response.data;
 };
 
-export const getVideo = async (videoId: number, AccessToken: string) => {
+export const getVideo = async (videoId: number) => {
+  const response = await movieAPI.get(`/${videoId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return response.data;
+};
+
+export const getVideoLoginUser = async (
+  videoId: number,
+  AccessToken: string
+) => {
   const response = await movieAPI.get(`/${videoId}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -59,7 +71,7 @@ export const uploadVideo = async (
 ) => {
   const formData = new FormData();
   formData.append('video', video);
-  const response = await movieAPI.post(`/scene?movie=#${movie}`, formData, {
+  const response = await movieAPI.post(`/scene?movie=${movie}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${AccessToken}`,

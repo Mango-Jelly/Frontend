@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { Suspense } from 'react';
 import VideoViewer from './VideoViewer';
@@ -10,26 +8,30 @@ import {
 } from '@heroicons/react/20/solid';
 import BackButton from '@/app/_component/BackButton';
 
-import { myVideos } from '../_component/DummyData';
+import { auth } from '@/auth';
 import { getVideo } from '@/api/movie';
+import { getVideoLoginUser } from '@/api/movie';
 
 type Props = {
   id: number;
+  isLogin: boolean;
 };
 
-async function displayVideo(videoId: number, AccessToken: string) {
-  try {
-    const video = await getVideo(videoId, AccessToken);
-    console.log('Video:', video);
-    // TODO: 더미데이터 API로 바꾸기
-  } catch (error) {
-    console.error('Error displaying video:', error);
-  }
-}
+export default async function Video({ id, isLogin }: Props) {
+  let videoData;
 
-export default function Video({ id }: Props) {
-  // displayVideo(id, '');
-  const videoData = myVideos.find((video) => video.id === id) || myVideos[0];
+  try {
+    let fetchedData;
+    if (isLogin) {
+      const session: any = await auth();
+      fetchedData = await getVideoLoginUser(id, session.Authorization);
+    } else {
+      fetchedData = await getVideo(id);
+    }
+    videoData = fetchedData.data.videos;
+  } catch (error) {
+    console.error('퍼블릭 비디오 가져오기 에러', error);
+  }
 
   return (
     <div className='flex justify-center items-center size-full'>

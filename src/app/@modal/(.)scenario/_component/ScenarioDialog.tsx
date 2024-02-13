@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import AccordionSection from './AccordionSection';
 import { ScriptType } from '../types/ScriptType';
 import style from './scrollbar.module.css';
@@ -32,20 +33,29 @@ export default function ScenarioDialog({ scriptInfo }: Props) {
           return (
             <div key={key}>
               <AccordionSection
-                sequence={value.sequence}
+                sequence={value.seq}
                 title={value.title}
-                isOpen={openSection === value.sequence}
-                onClick={() => handleAccordionClick(value.sequence)}
+                isOpen={openSection === value.seq}
+                onClick={() => handleAccordionClick(value.seq)}
               >
                 <div className='rounded-b-xl bg-gray-200 px-8 pb-8'>
                   <div className='bg-white p-4'>
                     {value.dialogs.map((dialogValue, dialogKey) => {
                       return (
                         <div key={dialogKey} className='flex items-center'>
-                          <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'></div>
-                          <p className='text-xl'>
-                            {`${dialogValue.role}: ${dialogValue.dialog}`}
-                          </p>
+                          {dialogValue.roles.map((roleValue, roleKey) => {
+                            return (
+                              <Image
+                                key={roleKey}
+                                src={roleValue.roleImg}
+                                width={100}
+                                height={100}
+                                alt={value.title}
+                                className='shrink-0 rounded-full size-12 m-2'
+                              ></Image>
+                            );
+                          })}
+                          <p className='text-xl'>{`: ${dialogValue.dialog}`}</p>
                         </div>
                       );
                     })}

@@ -3,26 +3,26 @@ export type ScriptType = {
   title: string;
   duration: string;
   thumbnail: string;
-  person: number;
+  reqPerson: number;
   roles: RoleInfo[];
 };
 
 export type Scene = {
-  sequence: number;
+  seq: number;
   title: string;
   dialogs: Dialog[];
 };
 
 export type Dialog = {
-  role: {
-    name: String;
-    img: String;
+  roles: {
+    roleName: String;
+    roleImg: String;
   }[];
   dialog: string;
 };
 
 export type RoleInfo = {
-  id: number;
-  img: string;
-  role: string;
+  roleId: number;
+  roleImg: string;
+  roleName: string;
 };
