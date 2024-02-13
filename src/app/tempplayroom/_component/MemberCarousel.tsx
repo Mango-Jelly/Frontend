@@ -4,10 +4,7 @@ export default function MemberCarousel() {
   const member = [1, 2, 3, 4];
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="my-6 bg-amber-200">
-        <p className="text-2xl">꿈나무 유치원 망고 연극반</p>
-      </div>
+    <div className="my-8">
       <div className="flex items-center">
         <ChevronLeftIcon className="fill-gray-200 size-24" />
         {member.map((value, key) => {
