@@ -16,5 +16,5 @@ export default function OpenViduVideoComponent({ streamManager } : Props) {
         }
     }, [streamManager]);
 
-    return <video autoPlay={true} ref = {videoRef} />;
+    return <video autoPlay={true} ref = {videoRef} className='z-10 w-full'/>;
 }
