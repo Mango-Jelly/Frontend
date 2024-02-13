@@ -1,4 +1,6 @@
-import Main from "./_component/Main"
+import dynamic from 'next/dynamic'
+
+const Main = dynamic(() => import("./_component/Main"))
 
 export default function Page() {
   return (
