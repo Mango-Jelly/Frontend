@@ -40,7 +40,7 @@ const given_actors = [
 
 
 export default function ScriptSelection(Props : Props) {
-  const [rolestates, setRolsestates]  = useState<UserRoleState[]>([]) 
+  const [rolestates, setRolsestates]  = useState<UserRoleState[]>([])
   const [selectedRolestates, setSelectedRolestates] = useState(new Array(rolestates.length).fill(rolestates[0]));
   const [availableRolestates, setAvailableRolestates] = useState([...rolestates]);
   // const RoleStates = useRef<UserRoleState[]>([])
@@ -103,7 +103,7 @@ export default function ScriptSelection(Props : Props) {
         {
           given_actors.map((role, id) => (
             <span className='flex justify-between' key={id}>
-              <Actors 
+              <Actors
                 key={id}
                 name = {role.name}
               />
@@ -111,12 +111,14 @@ export default function ScriptSelection(Props : Props) {
               className=" border text-sm rounded-lg block w-1/3 p-2.5 "
               id={`roleSelect_${id}`}
               onChange={(e) => {
-                sendRoles(role.name, Number(e.target.value))}}
+                sendRoles(role.name, Number(e.target.value))
+              }}
+                value={'아이를 선택하세요'}
               >
-                <option selected>아이를 선택하세요</option>
+                <option value={0}>아이를 선택하세요</option>
                 {rolestates.map(
                   (state, id) => (
-                    <option 
+                    <option
                       className = {state.isSelected ? 'bg-gray-500' : ''}
                       key={id}
                       value={id}
@@ -129,7 +131,7 @@ export default function ScriptSelection(Props : Props) {
             ))
           
         }
-      </div>  
+      </div>
     </div>
   )
 }

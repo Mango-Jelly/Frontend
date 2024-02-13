@@ -70,26 +70,26 @@ export default function Page({ params: { roomId } }: Props) {
   async function GotoTheater() {
         
     changeProcess(0, true)
-    await delay(2000)
+    await delay(500)
     
     changeProcess(1, true)
-    await delay(2000)
+    await delay(500)
     
     changeProcess(2, true)
-    await delay(2000)
+    await delay(500)
     changeProcess(3, true)
-    await delay(2000)
+    await delay(500)
     changeProcess(3, false)
     changeProcess(4, true)
 
 
-    await delay(1000)
+    await delay(500)
     changeProcess(5, true)
-    await delay(3000)
+    await delay(500)
     setIsStart(true)
     
     changeProcess(5, false)
-    await delay(1000)
+    await delay(500)
 
     // await delay(1000)
     // changeProcess(6, true)
@@ -228,11 +228,8 @@ export default function Page({ params: { roomId } }: Props) {
             Subscriber : subscriber
           }
           // 나 자신이면 받지않는다.
-          if (username.clientData === myUserName) { return; }
-        // newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != `${messageBody.id}` }))
+          // if (username.clientData === myUserName) { return; }
 
-        
-        // setSubscribers((subscribers) => [...subscribers, CameraUnit]);
         setENTRY((entry) => {
 
           let newEntry : UserStatus[] = []
@@ -330,12 +327,12 @@ export default function Page({ params: { roomId } }: Props) {
         code: 101,
         id: myUserName,
         videoid : `${myUserName}`
-      };  
+      };
       client.current.publish({
         destination: `/sub/channel/${roomId}`,
         body: JSON.stringify(message),
-      })  
-    }  
+      })
+    }
 
 
     // 커넥트 함수 /*
@@ -358,7 +355,7 @@ export default function Page({ params: { roomId } }: Props) {
         Join();
       }
       client.current.onDisconnect = () => {
-        Disconnect(); 
+        Disconnect();
       }
       client.current.activate()
     }
@@ -372,7 +369,7 @@ export default function Page({ params: { roomId } }: Props) {
       {/* { isStart[0] ? <div className='fadeoutcomponent' style={{opacity : isStart[1] ? 1.0 : 0}}></div> : null } */}
      
       { startProcess[0] ? <div className='fadeoutcomponent' style={{opacity : startProcess[1] ? 1.0 : 0}}>
-        { startProcess[3] ? 
+        { startProcess[3] ?
           <div>
             <video className='w-full h-full' controls autoPlay>
                 <source src= "./curtainsclosing.mp4" type="video/mp4" />
@@ -382,28 +379,29 @@ export default function Page({ params: { roomId } }: Props) {
           null
         }
         {
-          startProcess[4] ? 
+          startProcess[4] ?
           <div>
             {/* <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ top : startProcess[5] ? `0%` : `-100%` , transition: 'all 1.0s'}}/>  */}
             <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ left : startProcess[5] ? `-50%` : `-100%` , transition: 'all 1.0s'}}/> 
             <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ left : startProcess[5] ? `50%` : `100%` , transition: 'all 1.0s'}}/> 
-          </div> 
+          </div>
           :
           null
         }
       </div> : null
-       }
+      }
      
         <div className='relative h-full w-full'>
 
-          { isHost || (!isStart) ? 
+          { isHost || (!isStart) ?
+          
           <GuestVideosSection
             depart='꿈나무 유치원'
             title='망고 연극반'
             call = {call}
             ENTRY={ENTRY}
-
           /> : null
+
           }
           <p className='text-center'><button type='button' onClick={changeHost} className="z-20 text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800   font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 absolute" style={{bottom : '100%'}}>{isHost ? 'Host' : 'Guest'} </button></p>
 

@@ -20,7 +20,6 @@ type Props = {
 const status : any[] = [status201, status202, status203, status204]
 
 export default function GuestStateSection(Props : Props) {
-  console.log(Props.ENTRY)
   return (
     <div className=' rounded-md bg-white mb-5 p-5 h-full'>
       <div className="max-w-md divide-y divide-gray-200 ">
