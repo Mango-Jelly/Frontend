@@ -6,7 +6,9 @@ import Link from 'next/link';
 import MemberCarousel from '@/app/tempplayroom/_component/MemberCarousel';
 
 import axios from 'axios';
-import HostMainSection from './_component/host/HostMainSection';
+
+// import HostMainSection from './_component/host/HostMainSection';
+import HostMainSection from '@/app/tempplayroom/host/HostMainSection';
 
 // import GuestMainSection from './_component/guest/GuestMainSection';
 import GuestMainSection from '@/app/tempplayroom/guest/GuestMainSection';
@@ -414,6 +416,8 @@ export default function Page({ params: { roomId } }: Props) {
             />
           ) : (
             <HostMainSection
+              depart='꿈나무 유치원'
+              title='망고 연극반'
               ENTRY={ENTRY}
               client={client.current}
               roomId={roomId}
