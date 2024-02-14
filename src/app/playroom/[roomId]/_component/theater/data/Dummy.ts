@@ -1,5 +1,5 @@
 export const scriptInfo = {
-  scene: [
+  scenes: [
     {
       sequence: 1,
       title: '가족집',

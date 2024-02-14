@@ -23,7 +23,7 @@ const status : any[] = [status201, status202, status203, status204]
 
 export default function GuestStateSection(Props : Props) {
   return (
-    <div className=' bg-white shadow w-[24rem] h-[50rem] ml-6 px-4'>
+    <div className=' bg-white shadow w-[30rem] h-[50rem] ml-6 px-4'>
           <div className='flex items-center px-4 py-4'>
         <Image src={img_clovar} width={28} height={28} alt='참가자 상태 확인' />
         <p className='text-3xl font-medium ml-3'>참가자 상태 확인</p>

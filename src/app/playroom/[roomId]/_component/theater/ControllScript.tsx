@@ -1,24 +1,53 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { scriptInfo } from './data/Dummy'
+import axios from 'axios'
 
-const sceneNum = scriptInfo.scene.length
+const sceneNum = scriptInfo.scenes.length
 // 길이를 나타내는 코드
-const dialogNums = scriptInfo.scene.map((value) => {
-  return value.dialogs.length
-})
+// const dialogNums = scriptInfo.scenes.map((value) => {
+//   return value.dialogs.length
+// })
 // 한 씬의 길이
 
+
 export const ControllScript = () => {
-  const script = scriptInfo
+  const [script, setScript] = useState<any> (scriptInfo)
+  const [dialogNums, setDialogNums] = useState<Number[]> ( scriptInfo.scenes.map((value) => {
+    return value.dialogs.length
+  }))
+  // let script = scriptInfo
+  useEffect(
+    () => {
+      axios.get(
+        'https://mangotail.shop/api/v1/script',
+        {params : {scriptId : 2}},
+      ).then((res) => {
+        setScript(res.data.data)
+
+      }) .catch ((e) => {console.log(e)})
+      
+    }, []
+  )
+
+  useEffect(
+    () => {
+      console.log(script)
+      setDialogNums (script.scenes.map((value) => {
+        return value.dialogs.length
+      }))
+    }
+    ,[script]
+  )
+
+
   const [curSelection, setCurSelection] = useState({
     scene: 0,
     dialog: 0,
     idx: 0,
-  })
+  }) 
 
   // 씬이 바뀐거는 scene을 통해 알 수 있다
   const refs = useRef<null[] | HTMLDivElement[]>([])
-  const roleNow = useRef<any>(scriptInfo ? scriptInfo['scene'][curSelection.scene]['dialogs'][curSelection.dialog] : null)
 
   function moveScript() {
     changeIdx()
@@ -51,5 +80,5 @@ export const ControllScript = () => {
   }
 
 
-  return { script, curIdx: curSelection, refs, moveScript,  roleNow}
+  return { script, curIdx: curSelection, refs, moveScript }
 }

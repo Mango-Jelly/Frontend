@@ -15,6 +15,11 @@ import { OpenVidu, Stream, Subscriber } from 'openvidu-browser';
 import GuestStateSection from '../host/rightbox/GuestStateSection'
 import { scriptInfo } from './data/Dummy'
 import axios from 'axios'
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import VideoIcon from '@/../public/VideoIcon.svg';
+import VideoOffIcon from '@/../public/VideoOffIcon.svg';
+import MicIcon from '@/../public/MicIcon.svg';
+import MicOffIcon from '@/../public/MicOffIcon.svg';
 
 
 
@@ -40,7 +45,7 @@ interface HTMLMediaElementWithCaptureStream extends HTMLMediaElement{
 export default function HostTheater(Props : Props) {
   let idx = 0
   const [actor, setActor] = useState<UserStatus[]>([])
-  const { script, curIdx, refs, moveScript, roleNow } = ControllScript()
+  const { script, curIdx, refs, moveScript } = ControllScript()
   const getDynamicClass = (sceneKey: number, dialogKey: number) =>
   {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog)
@@ -49,17 +54,36 @@ export default function HostTheater(Props : Props) {
     }
   }
   const [isRecording, setIsRecording] = useState<boolean>(false)
+
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
   const backgroundImage = useRef<HTMLImageElement>(null)
   const actorDom = useRef<HTMLVideoElement[]>([])
+  const controlButtonClass =
+  'rounded-[2rem] bg-main px-6 py-2 m-1 hover:bg-maindark';
   const isNewscene = useRef<boolean>(false)
   const arrVideoData = useRef<BlobPart[]>([])
   const arrAudioData = useRef<BlobPart[]>([])
   const mediaRecorder = useRef<MediaRecorder>()
   const mediaRecorder2 = useRef<MediaRecorder>()
+
+
   const mapping = useRef<Map<string, any | null>> (new Map())
   // const audioCamera = useRef<Subscriber | null | undefined> (mapping.current.get(script.scene[curIdx.scene].dialogs[curIdx.dialog].role))
   // const [Image, setImage] = useState<any>(null)
+  const ffmpeg = new FFmpeg();
+
+  
+  const [isCameraOn, setCameraOn] = useState(true);
+  const [isAudioOn, setAudioOn] = useState(true);
+
+  const toggleCamera = () => {
+    setCameraOn((prev) => !prev);
+  };
+
+  const toggleAudio = () => {
+    setAudioOn((prev) => !prev);
+  };
 
   function goNext() {
     const message = {
@@ -78,15 +102,12 @@ export default function HostTheater(Props : Props) {
     isNewscene.current = true
     let roles = new Set();
 
-    scriptInfo.scene[curIdx.scene].dialogs.forEach(element => {
+    script.scenes[curIdx.scene].dialogs.forEach(element => {
       roles.add(element.role)
     });
       actorDom.current = []
       actorDom.current.length = roles.size
       const canvas = canvasRef.current
-
-
-
 
       if (canvas && backgroundImage.current)
       {
@@ -110,14 +131,6 @@ export default function HostTheater(Props : Props) {
     () => {
       const canvas = canvasRef.current
 
-      // Props.ENTRY.forEach(
-      //   (element) => {
-      //     if (mapping.current.get(element.role) !== undefined)
-      //     {
-      //       mapping.current.set(element.role, element.camera)
-      //     }
-      //   } 
-      // )
       mapping.current.clear()
       if (canvas) {
       let cameraSize = canvas.width / (actorDom.current.length + 1)
@@ -165,24 +178,38 @@ export default function HostTheater(Props : Props) {
     }
     , [actor])
 
-  // useEffect(
-  //   () => {
-  //     script.roles.forEach((element) => 
-  //     {
-  //       mapping.current.set(element.role, null)
-  //     })
 
-  //     Props.ENTRY.forEach(
-  //       (element) => {
-  //         if (mapping.current.get(element.role) !== undefined)
-  //         {
-  //           mapping.current.set(element.role, element.camera)
-  //         }
-  //       } 
-  //     )
-  //   }
-  //   , [] 
-  // )
+//   const convertMedia = async () => {
+//     await ffmpeg.load();
+//     const video = await videoFileRef.current.files[0].arrayBuffer();
+//     const audio = await audioFileRef.current.files[0].arrayBuffer();
+
+// await ffmpeg.writeFile("video.mp4", new Uint8Array(video));
+// await ffmpeg.writeFile("audio.mp3", new Uint8Array(audio));
+
+// await ffmpeg.exec([
+//   "-i",
+//   "video.mp4",
+//   "-i",
+//   "audio.mp3",
+//   "-c:v",
+//   "copy",
+//   "-c:a",
+//   "aac",
+//   "-strict",
+//   "experimental",
+//   "output.mp4",
+// ]);
+// const data = await ffmpeg.readFile("output.mp4");
+// const videoBlob = new Blob([data.buffer], { type: "video/mp4" });
+// getChildShorts(videoBlob, musicRoot);
+// // const videoUrl = URL.createObjectURL(videoBlob);
+// // const link = document.createElement("a");
+// // link.href = videoUrl;
+// // link.download = "output.mp4";
+// // link.click();
+//   };
+
 
   function reload() {
     const canvas = canvasRef.current
@@ -215,7 +242,7 @@ export default function HostTheater(Props : Props) {
         // mimeType: "video/webm",
       };
     // const audioStream =
-    const speechVideo = mapping.current.get(script.scene[curIdx.scene].dialogs[curIdx.dialog].role)
+    const speechVideo = mapping.current.get(script.scenes[curIdx.scene].dialogs[curIdx.dialog].role)
     if (speechVideo)
     {
       // const mediaStream2 = speechVideo.captureStream()
@@ -225,7 +252,7 @@ export default function HostTheater(Props : Props) {
       const mediaStream2 = new MediaStream()
       mediaStream2.addTrack(audioTrack[0])
       
-      console.log(script.scene[curIdx.scene].dialogs[curIdx.dialog].role)
+      console.log(script.scenes[curIdx.scene].dialogs[curIdx.dialog].role)
 
       if (mediaStream) {
         mediaRecorder.current = new MediaRecorder(mediaStream, options)
@@ -274,9 +301,22 @@ export default function HostTheater(Props : Props) {
     }
   }
 
+  // useEffect(
+  //   () => {
+  //     axios.get(
+  //       'https://mangotail.shop/api/v1/script',
+  //       {params : {scriptId : 2}},
+  //     ).then((res) => {
+  //       console.log(res)
+  //       script = res.data
+  //     }) .catch ((e) => {console.log(e)})
+    
+  //   }
+  //   , []
+  // )
 
   return (
-    <div className='flex h-full w-full relative justify-between p-[2rem]'>
+    <div className='flex h-full w-fit relative justify-between p-[2rem]'>
       <div className='bg-white m-4 h-full'>
         <div className='flex items-center m-4'>
           <Image
@@ -287,16 +327,18 @@ export default function HostTheater(Props : Props) {
           />
           <p className='text-3xl'>현재 연극 대본</p>
         </div>
+
+
         <div
-          className='overflow-auto w-[36rem] h-full  p-4'
+          className='overflow-auto w-[30rem] h-[50rem]  p-4'
           id={style.scroll}
         >
-
-            {script.scene.map((sceneValue, sceneKey) => {
+          
+            {script.scenes.map((sceneValue, sceneKey) => {
               return (
                 <div key={sceneKey}>
                   <p className='sticky top-0 text-lg bg-gray-100 p-2 my-2'>
-                    {`${sceneValue.sequence}번째 씬`}
+                    {`${sceneValue.seq}번째 씬`}
                   </p>
                   {sceneValue.dialogs.map((dialogValue, dialogKey) => {
                     return (
@@ -310,9 +352,18 @@ export default function HostTheater(Props : Props) {
                         <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
                           {dialogValue.img}
                         </div>
-                        <p className='text-xl'>
-                          {`${dialogValue.role}: ${dialogValue.dialog}`}
-                        </p>
+                       
+                          {
+                            
+                          }
+                          {
+                            dialogValue.roles
+                            ?
+                            <p className='text-xl'> {`${dialogValue.roles[0].roleName}: ${dialogValue.dialog}`}</p>
+                            :
+                            <p className='text-xl'> {`${dialogValue.role}: ${dialogValue.dialog}`} </p>
+                          }
+                        
                       </div>
                     )
                   })}
@@ -321,17 +372,18 @@ export default function HostTheater(Props : Props) {
             })}
 
         </div>
+        
       </div>
 
-      <div className='w-3/5 h-full relative'>
+      <div className='w-[96rem] h-[54rem] relative'>
         <div className='w-full justify-center relative h-full'>
             <Image
               src = {ForestJpeg}
               alt='배경화면'
-              className='h-full w-full  z-0'
+              className='h-full w-full  z-0 rounded-2xl'
               ref={backgroundImage}
             />
-          <canvas ref={canvasRef}  style={{ width : '100%', height : '100%'}} className="z-10 absolute top-0 left-0"></canvas>
+          <canvas ref={canvasRef}  style={{ width : '100%', height : '100%'}} className="z-10 absolute top-0 left-0 rounded-2xl"></canvas>
 
           
           {
@@ -345,7 +397,7 @@ export default function HostTheater(Props : Props) {
                     // </div>
                     <video key={actor.name} autoPlay={true} ref={(element) => {
                       if (element) { actorDom.current[id] = element }
-                    }} className='z-10 w-full' hidden />
+                    }} className='z-10 w-full rounded-2xl' hidden />
                   )
                 })
               }
@@ -359,10 +411,27 @@ export default function HostTheater(Props : Props) {
           }
         </div>
         
-        <div className='flex flex-row justify-between px-[5rem]'>
+        <div className='flex flex-row justify-between px-[5rem] py-[1rem]'>
               <div id = "leftbox" className='flex flex-row'>
-                  <button type="button" className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Yellow</button>
-                  <button type="button" className="text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:focus:ring-yellow-900">Yellow</button>
+              <button onClick={toggleCamera} className={controlButtonClass}>
+                {isCameraOn ? (
+                  <Image src={VideoIcon} width={32} height={32} alt='카메라 끄기' />
+                ) : (
+                  <Image
+                    src={VideoOffIcon}
+                    width={32}
+                    height={32}
+                    alt='카메라 켜기'
+                  />
+                )}
+              </button>
+              <button onClick={toggleAudio} className={controlButtonClass}>
+                {isAudioOn ? (
+                  <Image src={MicIcon} width={32} height={32} alt='마이크 끄기' />
+                ) : (
+                  <Image src={MicOffIcon} width={32} height={32} alt='마이크 켜기' />
+                )}
+              </button>
                   <button onClick={goNext}>
                     <PlayCircleIcon className='size-20' />
                   </button>

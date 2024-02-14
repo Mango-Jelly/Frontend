@@ -230,7 +230,7 @@ export default function Page({ params: { roomId } }: Props) {
       }
       // newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != `${messageBody.id}` }))
 
-      setSubscribers((subscribers) => [...subscribers, CameraUnit]);
+      // setSubscribers((subscribers) => [...subscribers, CameraUnit]);
       setENTRY((entry) => {
         let newEntry: UserStatus[] = [];
 
@@ -391,7 +391,7 @@ export default function Page({ params: { roomId } }: Props) {
 
       <div className='flex flex-col items-center size-full'>
         {isHost || !isStart ? (
-          <MemberCarousel call={call} ENTRY={ENTRY} subscribers={subscribers} />
+          <MemberCarousel call={call} ENTRY={ENTRY} />
         ) : null}
 
         <button
@@ -429,7 +429,7 @@ export default function Page({ params: { roomId } }: Props) {
               userId={myUserName ? myUserName : ''}
               ENTRY={ENTRY}
               roomId={roomId}
-              subscribers={subscribers}
+              // subscribers={subscribers}
               streamManager={mainStreamManager}
               goNext={goNext}
             />
