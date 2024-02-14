@@ -1,7 +1,7 @@
 import Image from "next/image";
 import img_yellowcorn from "@/../public/img_yellowcorn.svg";
 
-export default function HostVideo() {
+export default function HostVideoToGuest() {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex self-start ml-4">
