@@ -1,21 +1,18 @@
 'use client';
 import './_component/page.css';
-import Link from 'next/link';
-
+import Image
+from 'next/image'
 // import GuestVideosSection from './_component/GuestVideosSection';
 import MemberCarousel from '@/app/tempplayroom/_component/MemberCarousel';
-
 import axios from 'axios';
-
 // import HostMainSection from './_component/host/HostMainSection';
 import HostMainSection from '@/app/tempplayroom/host/HostMainSection';
-
 // import GuestMainSection from './_component/guest/GuestMainSection';
 import GuestMainSection from '@/app/tempplayroom/guest/GuestMainSection';
-
+import curtain from '@/../public/Curtain.jpg'
 import HostTheater from './_component/theater/HostTheater';
 import { useState } from 'react';
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
@@ -38,11 +35,6 @@ type UserStatus = {
   camera: Subscriber | null;
 };
 
-type CameraUnit = {
-  userId: string;
-  Subscriber: Subscriber;
-};
-
 export default function Page({ params: { roomId } }: Props) {
   const [isHost, setIsHost] = useState<boolean>(false);
   const [isStart, setIsStart] = useState<boolean>(false);
@@ -52,36 +44,76 @@ export default function Page({ params: { roomId } }: Props) {
   );
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState<any>(undefined);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState<any>(null);
   const [role, setRole] = useState('');
   const [call, setCall] = useState('');
-  // const [isStart, setStart] = useState<boolean[]>([false, false, false, false]);
-  const [first, setfirst] = useState<boolean>(false);
-  const [second, setsecond] = useState<boolean>(false);
-  const [third, setthird] = useState<boolean>(false);
+  const [startProcess, setStartProcess] = useState<boolean[]>([false, false, false, false, false, false, false]);
   const amIhost = useRef<boolean>(false);
+  // const scriptNum = useRef<number>(999);
+  const [scriptNum, setScriptNum] = useState<number>(999);
   const [goNext, setGoNext] = useState<number>(0);
   const changeHost = () => {
     setIsHost((prevIsHost) => !prevIsHost);
     amIhost.current = !amIhost.current;
   };
-
+  const [myHost, setMyHost] = useState<[string, Subscriber | null]>(['', null])
   const client = useRef<any>({});
+
+
   const OV = useRef(new OpenVidu());
 
-  // function StartCallback(i : number, type : boolean){
-  //   setStart((prevArray) => {
-  //     let newArray = prevArray
-  //     newArray[i] = type
-  //     return newArray
-  //   })
-  // }
+  const changeProcess = (index : number, isBegin : boolean) => {
+    setStartProcess((prev) => {
+      return prev.map((arg, id) =>
+      {
+        if (id === index) arg = isBegin
+        return arg
+      })
+    })
+  }
+  const delay = (ms : number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+    async function GotoTheater() {
+        
+    changeProcess(0, true)
+    await delay(500)
+    changeProcess(1, true)
+    await delay(500)
+    changeProcess(2, true)
+    await delay(500)
+    changeProcess(3, true)
+    await delay(500)
+    changeProcess(3, false)
+    changeProcess(4, true)
+
+
+    await delay(500)
+    changeProcess(5, true)
+    await delay(500)
+    setIsStart(true)
+    
+    changeProcess(5, false)
+    await delay(500)
+
+    changeProcess(4, false)
+    changeProcess(2, false)
+    changeProcess(1, false)
+    changeProcess(0, false)
+    
+
+  }
+
 
   function onMessageReceived(message: StompJs.Message) {
     try {
       const messageBody = JSON.parse(message.body);
 
-      if (messageBody.code == 100) {
+      if (messageBody.code == 100)
+      {
+        if (amIhost) {
+          console.log('호스트가 게스트의 이름을 감지')
+        }
+
         setENTRY((entry) => {
           let newEntry: UserStatus[] = [];
           if (
@@ -99,16 +131,42 @@ export default function Page({ params: { roomId } }: Props) {
           return newEntry;
         });
 
-        // setSubscribers((subscribers) => [...subscribers, videoTag])
-      } else if (messageBody.code == 101) {
-        let videoTag: string = messageBody.videoid;
+        if (amIhost.current) {
+            const message = {
+            code: 102,
+            id: myUserName,
+          };
+          // console.log(JSON.stringify(message))
+          client.current.publish({
+            destination: `/sub/channel/${roomId}`,
+            body: JSON.stringify(message),
+      });
+
+
+        }
+      }
+      else if (messageBody.code == 101)
+      {
         setENTRY((ENTRY) =>
           ENTRY.filter((item) => item.name != messageBody.id)
         );
-        // setSubscribers((subscribers) => subscribers.filter(vidioId => vidioId != videoTag ))
+      }
+      else if (messageBody.code == 102 && !amIhost.current)
+      {
+        if (myHost[0]) { return; }
+        console.log('게스트가 호스트의 이름을 감지', messageBody.id)
+        setMyHost((prev) => [messageBody.id, prev[1]])
+        setTimeout(() => {}, 500)
+        let newEntity: UserStatus | undefined = ENTRY.find((element) => (element.name === messageBody.id))
+        console.log('새로운 객체는 ', newEntity, myHost)
+        if (newEntity !== undefined) {
+          setMyHost((prev) => [messageBody.id, newEntity.camera])
+        }
+
       }
       // 참가자 중에 문제가 생겼다면
-      else if (200 <= messageBody.code && messageBody.code < 300) {
+      else if (200 <= messageBody.code && messageBody.code < 300)
+      {
         setENTRY((ENTRY) =>
           ENTRY.map((item) => {
             if (item.name === messageBody.id) {
@@ -118,21 +176,6 @@ export default function Page({ params: { roomId } }: Props) {
           })
         );
         setCall(messageBody.id);
-
-        // 카메라 정렬을 위한 코드
-        // setSubscribers((prevsub) => {
-        //   let newsub : CameraUnit[];
-        //   // console.log(prevsub.find((element) => element.userId === `${messageBody.id}'s_video`))
-        //   if (prevsub.find((element) => element.userId === messageBody.id ))
-        //   {
-        //     newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != messageBody.id }))
-        //   }
-        //   else
-        //   {
-        //     newsub = prevsub
-        //   }
-        //   return newsub;
-        // })
 
         setENTRY((entry) => {
           let newEntry: UserStatus[] = [];
@@ -153,7 +196,8 @@ export default function Page({ params: { roomId } }: Props) {
           }
           return newEntry;
         });
-      } else if (Number(messageBody.code) === 300) {
+      }
+      else if (Number(messageBody.code) === 300) {
         setENTRY((prevEntry) => {
           let newEntry: UserStatus[] = prevEntry;
           newEntry[
@@ -167,29 +211,30 @@ export default function Page({ params: { roomId } }: Props) {
         if (!amIhost.current && myUserName === messageBody.name) {
           setRole(messageBody.role);
         }
-      } else if (messageBody.code === 400) {
-        setfirst(true);
-        setTimeout(() => {
-          setsecond(true);
-          setTimeout(() => {
-            setthird(true);
-            setTimeout(() => {
-              setfirst(false);
-              setsecond(false);
-              setthird(false);
-              setIsStart(true);
-            }, 5000);
-          }, 2000);
-        }, 1000);
       }
-
-      else if (messageBody.code === 500) {
+      else if (messageBody.code === 400) {
+        GotoTheater()
+      }
+    else if (messageBody.code === 500) {
         setGoNext((prev) => {
           if (prev > 8) {
             return 1;
           }
           return prev + 1;
         });
+      }
+    else if (messageBody.code === 600)
+      {
+        if (!isHost) {
+          setRole('')
+        }
+        setScriptNum(messageBody.script)
+        setENTRY((prevEntry) => {
+          return prevEntry.map((userstatuse) => {
+            userstatuse.role = ''
+            return userstatuse
+          })
+        })
       }
     } catch (error) {
       console.error('Error parsing received message:', error);
@@ -209,36 +254,20 @@ export default function Page({ params: { roomId } }: Props) {
     return response.data; // The token
   };
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  ///////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때////////////////////////시작부터 마운트 될때/////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
   useEffect(() => {
     const mySession = OV.current.initSession();
-
-    // 새로운 사람이 들어왔다
     mySession.on('streamCreated', (event) => {
       let username = JSON.parse(event.stream.inboundStreamOpts.connection.data);
       const subscriber = mySession.subscribe(event.stream, undefined);
-      const CameraUnit = {
-        userId: username.clientData,
-        Subscriber: subscriber,
-      };
-      // 나 자신이면 받지않는다.
-      if (username.clientData === myUserName) {
-        return;
+      console.log('새로 오픈비두 객체 추가', username.clientData, myHost[0])
+      if (username.clientData === myHost[0]){
+        setMyHost([myHost[0], subscriber])
       }
-      // newsub = [prevsub.find((element) => element.userId === `${messageBody.id}`)].concat(prevsub.filter(e => { return e.userId != `${messageBody.id}` }))
 
-      // setSubscribers((subscribers) => [...subscribers, CameraUnit]);
       setENTRY((entry) => {
         let newEntry: UserStatus[] = [];
-
         if (
-          entry.find((element) => element.name === username.clientData) !==
-          undefined
+          entry.find((element) => element.name === username.clientData) !== undefined
         ) {
           let newEntity: UserStatus | undefined = entry.find(
             (element) => element.name === username.clientData
@@ -310,7 +339,7 @@ export default function Page({ params: { roomId } }: Props) {
         );
         setMainStreamManager(publisher);
         setPublisher(publisher);
-        setCurrentVideoDevice(currentVideoDevice);
+
       } catch (error: any) {
         console.log(
           'There was an error connecting to the session:',
@@ -328,7 +357,7 @@ export default function Page({ params: { roomId } }: Props) {
       const message = {
         code: 100,
         id: myUserName,
-        videoid: `${myUserName}`,
+
       };
       // console.log(JSON.stringify(message))
       client.current.publish({
@@ -342,7 +371,7 @@ export default function Page({ params: { roomId } }: Props) {
       const message = {
         code: 101,
         id: myUserName,
-        videoid: `${myUserName}`,
+
       };
       client.current.publish({
         destination: `/sub/channel/${roomId}`,
@@ -381,15 +410,30 @@ export default function Page({ params: { roomId } }: Props) {
 
   return (
     <>
-      {first ? (
-        <div className='fadeoutcomponent' style={{ opacity: second ? 1.0 : 0 }}>
-          {third ? (
+      { startProcess[0] ? <div className='fadeoutcomponent' style={{opacity : startProcess[1] ? 1.0 : 0}}>
+        { startProcess[3] ?
+          <div>
             <video className='w-full h-full' controls autoPlay>
-              <source src='.curtainsclosing.mp4' type='video/mp4' />
+                <source src= "./curtainsclosing.mp4" type="video/mp4" />
             </video>
-          ) : null}
-        </div>
-      ) : null}
+          </div>
+          :
+          null
+        }
+        {
+          startProcess[4] ?
+          <div>
+            {/* <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ top : startProcess[5] ? `0%` : `-100%` , transition: 'all 1.0s'}}/>  */}
+            <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ left : startProcess[5] ? `-50%` : `-100%` , transition: 'all 1.0s'}}/> 
+            <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ left : startProcess[5] ? `50%` : `100%` , transition: 'all 1.0s'}}/> 
+          </div>
+          :
+          null
+        }
+      </div> : null
+      }
+      
+
 
       <div className='flex flex-col items-center size-full'>
         {isHost || !isStart ? (
@@ -413,12 +457,14 @@ export default function Page({ params: { roomId } }: Props) {
               client={client.current}
               roomId={roomId}
               streamManager={mainStreamManager}
+              scriptIdx={scriptNum}
             />
           ) : (
             <HostMainSection
               depart='꿈나무 유치원'
               title='망고 연극반'
               ENTRY={ENTRY}
+              scriptIdx={scriptNum}
               client={client.current}
               roomId={roomId}
               streamManager={mainStreamManager}
@@ -433,9 +479,9 @@ export default function Page({ params: { roomId } }: Props) {
               userId={myUserName ? myUserName : ''}
               ENTRY={ENTRY}
               roomId={roomId}
-              // subscribers={subscribers}
               streamManager={mainStreamManager}
               goNext={goNext}
+              scriptIdx={scriptNum}
             />
           ) : (
             <GuestMainSection
@@ -443,7 +489,8 @@ export default function Page({ params: { roomId } }: Props) {
               title='망고 연극반'
               client={client.current}
               roomId={roomId}
-              curRole={role}
+                curRole={role}
+                myHost ={myHost}
               userId={myUserName ? myUserName : ''}
             />
           )

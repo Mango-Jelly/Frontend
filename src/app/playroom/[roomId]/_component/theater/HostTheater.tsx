@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useEffect, useCallback, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import style from './scrollbar.module.css'
 import { ControllScript } from './ControllScript'
 import Image, { StaticImageData } from 'next/image'
@@ -10,10 +10,8 @@ import {
   StopCircleIcon,
 } from '@heroicons/react/24/solid'
 import ForestJpeg from '@/../public/ForestJpeg.jpg'
-import cinderella from '@/../public/cinderella.jpg'
 import { OpenVidu, Stream, Subscriber } from 'openvidu-browser';
 import GuestStateSection from '../host/rightbox/GuestStateSection'
-import { scriptInfo } from './data/Dummy'
 import axios from 'axios'
 import VideoIcon from '@/../public/VideoIcon.svg';
 import VideoOffIcon from '@/../public/VideoOffIcon.svg';
@@ -26,14 +24,15 @@ type UserStatus = {
   name: string
   status: number
   role : string
-  camera : Subscriber | null
+  camera: Subscriber | null
 }
 
 
 type Props = {
   client : any
   roomId : string
-  streamManager : any;
+  streamManager: any;
+  scriptIdx : number
   ENTRY: UserStatus[]
 }
 
@@ -44,7 +43,7 @@ interface HTMLMediaElementWithCaptureStream extends HTMLMediaElement{
 export default function HostTheater(Props : Props) {
   let idx = 0
   const [actor, setActor] = useState<UserStatus[]>([])
-  const { script, curIdx, refs, moveScript } = ControllScript()
+  const { script, curIdx, refs, moveScript } = ControllScript( {scriptIdx : Props.scriptIdx })
   const getDynamicClass = (sceneKey: number, dialogKey: number) =>
   {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog)
@@ -68,11 +67,6 @@ export default function HostTheater(Props : Props) {
 
 
   const mapping = useRef<Map<string, any | null>> (new Map())
-  // const audioCamera = useRef<Subscriber | null | undefined> (mapping.current.get(script.scene[curIdx.scene].dialogs[curIdx.dialog].role))
-  // const [Image, setImage] = useState<any>(null)
-  const ffmpeg = new FFmpeg();
-
-  
   const [isCameraOn, setCameraOn] = useState(true);
   const [isAudioOn, setAudioOn] = useState(true);
 
@@ -92,18 +86,24 @@ export default function HostTheater(Props : Props) {
         destination: `/sub/channel/${Props.roomId}`,
         body: JSON.stringify(message),
     })
-    moveScript()    
+    moveScript()
   }
 
   useEffect(
     () =>
     {
+      console.log('link1')
+
     isNewscene.current = true
     let roles = new Set();
-
-    script.scenes[curIdx.scene].dialogs.forEach(element => {
-      roles.add(element.role)
-    });
+    // if (!script){return} 
+    script.scenes[curIdx.scene].dialogs.forEach( element => {
+      // roles.add(element.roles)
+      element.roles.forEach((roless) => {
+        roles.add(roless.roleName)
+        })
+      });
+      console.log(roles, script.scenes[curIdx.scene].dialogs)
       actorDom.current = []
       actorDom.current.length = roles.size
       const canvas = canvasRef.current
@@ -122,92 +122,69 @@ export default function HostTheater(Props : Props) {
       setActor(Props.ENTRY.filter(element => roles.has(element.role)));
       setTimeout(() => {
         isNewscene.current = false
-      }, 300)
+      }, 500)
     }
-    , [curIdx.scene])
+    , [curIdx.scene, script.title])
+  
+  
   
   useEffect(
     () => {
+      console.log('link2', actor)
       const canvas = canvasRef.current
+      isNewscene.current = true
 
-      mapping.current.clear()
-      if (canvas) {
-      let cameraSize = canvas.width / (actorDom.current.length + 1)
-      let cameraGap = cameraSize / (actorDom.current.length + 1)
-
-        let ctx = canvas.getContext('2d')
-        if (ctx && backgroundImage.current)
-        {
-          ctx.drawImage(backgroundImage.current, 0, 0, canvas.width, canvas.height);
-          setTimeout(() => {
-            if (ctx) {
-              setTimeout(() => {
-                actor.forEach((element, id) => {
-                    if (element.camera && actorDom.current[id]) {
-                      while (!actorDom.current[id] === null) { continue }
-                    if (element && actorDom.current[id]) {
-                        element.camera.addVideoElement(actorDom.current[id]);
-                        mapping.current.set(element.role, element.camera)
-                      }
-                    }
-                });
-        
-                actorDom.current.forEach(
-                  (element, id) => {
-                    (function loop() {
-                        if (isNewscene.current) {
-                            return;
+      setTimeout(() => {
+        isNewscene.current = false
+        mapping.current.clear()
+        if (canvas) {
+        let cameraSize = canvas.width / (actorDom.current.length + 1)
+        let cameraGap = cameraSize / (actorDom.current.length + 1)
+  
+          let ctx = canvas.getContext('2d')
+          if (ctx && backgroundImage.current)
+          {
+            ctx.drawImage(backgroundImage.current, 0, 0, canvas.width, canvas.height);
+            setTimeout(() => {
+              if (ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                setTimeout(() => {
+                  actor.forEach((element, id) => {
+                      if (element.camera && actorDom.current[id]) {
+                        while (!actorDom.current[id] === null) { continue }
+                      if (element && actorDom.current[id]) {
+                          element.camera.addVideoElement(actorDom.current[id]);
+                          mapping.current.set(element.role, element.camera)
                         }
-                        if (ctx && element)
-                        ctx.drawImage(
-                            element,
-                            cameraGap * (id + 1) + cameraSize * id,
-                            50,
-                            cameraSize,
-                            (cameraSize * 9) / 16
-                        );
-                        setTimeout(loop, 1000 / 30); // drawing at 30fps
-                    })();
-                    });
-                }, 2000);
-            }
-        }, 300);
+                      }
+                  });
+          
+                  actorDom.current.forEach(
+                    (element, id) => {
+                      (function loop() {
+                          if (isNewscene.current) {
+                              return;
+                          }
+                          if (ctx && element)
+                          ctx.drawImage(
+                              element,
+                              cameraGap * (id + 1) + cameraSize * id,
+                              50,
+                              cameraSize,
+                              (cameraSize * 9) / 16
+                          );
+                          setTimeout(loop, 1000 / 30); // drawing at 30fps
+                      })();
+                      });
+                  }, 2000);
+              }
+          }, 300);
+          }
         }
-      }
+      }, 200)
+
     }
     , [actor])
-
-
-//   const convertMedia = async () => {
-//     await ffmpeg.load();
-//     const video = await videoFileRef.current.files[0].arrayBuffer();
-//     const audio = await audioFileRef.current.files[0].arrayBuffer();
-
-// await ffmpeg.writeFile("video.mp4", new Uint8Array(video));
-// await ffmpeg.writeFile("audio.mp3", new Uint8Array(audio));
-
-// await ffmpeg.exec([
-//   "-i",
-//   "video.mp4",
-//   "-i",
-//   "audio.mp3",
-//   "-c:v",
-//   "copy",
-//   "-c:a",
-//   "aac",
-//   "-strict",
-//   "experimental",
-//   "output.mp4",
-// ]);
-// const data = await ffmpeg.readFile("output.mp4");
-// const videoBlob = new Blob([data.buffer], { type: "video/mp4" });
-// getChildShorts(videoBlob, musicRoot);
-// // const videoUrl = URL.createObjectURL(videoBlob);
-// // const link = document.createElement("a");
-// // link.href = videoUrl;
-// // link.download = "output.mp4";
-// // link.click();
-//   };
 
 
   function reload() {
@@ -217,7 +194,7 @@ export default function HostTheater(Props : Props) {
       canvas.width = backgroundImage.current.width
       canvas.height = backgroundImage.current.height
       let ctx = canvas.getContext('2d');
-      console.log('해상도 비교', backgroundImage.current?.width, canvas?.width)
+      // console.log('해상도 비교', backgroundImage.current?.width, canvas?.width)
       if (ctx)
       {
         ctx.drawImage(backgroundImage.current, 0, 0, canvas.width, canvas.height);
@@ -230,8 +207,6 @@ export default function HostTheater(Props : Props) {
   function startRecording() {
 
     setIsRecording(true)
-      console.log('녹화 시작')
-
     const mediaStream = canvasRef.current?.captureStream()
     
 
@@ -241,7 +216,8 @@ export default function HostTheater(Props : Props) {
         // mimeType: "video/webm",
       };
     // const audioStream =
-    const speechVideo = mapping.current.get(script.scenes[curIdx.scene].dialogs[curIdx.dialog].role)
+    const speechVideo = mapping.current.get(script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles[0].roleName)
+    // console.log(mapping.current, '과연 여기에 있을까요? ' , speechVideo, script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles[0].roleName)
     if (speechVideo)
     {
       // const mediaStream2 = speechVideo.captureStream()
@@ -268,7 +244,8 @@ export default function HostTheater(Props : Props) {
           arrAudioData.current.push(event.data)
         }
         
-        mediaRecorder.current.onstop = (event)=>{
+        mediaRecorder.current.onstop = (event) => {
+          console.log('멈추겠습니닷')
             // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
             const blob = new Blob(arrVideoData.current);
             // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
@@ -285,6 +262,7 @@ export default function HostTheater(Props : Props) {
             arrVideoData.current.splice(0);
         }
         mediaRecorder2.current.onstop = (event) => {
+          console.log('멈추겠습니닷')
           const blob = new Blob(arrAudioData.current, { 'type' : 'audio/mp3' });
           const audioURL = window.URL.createObjectURL(blob);
           const b = document.createElement('a');
@@ -293,26 +271,14 @@ export default function HostTheater(Props : Props) {
           b.click();
           arrAudioData.current.splice(0)
         }
-            // 녹화 시작
+        // 녹화 시작
+        console.log('찐시작')
             mediaRecorder.current.start();
             mediaRecorder2.current.start();
     }
     }
   }
 
-  // useEffect(
-  //   () => {
-  //     axios.get(
-  //       'https://mangotail.shop/api/v1/script',
-  //       {params : {scriptId : 2}},
-  //     ).then((res) => {
-  //       console.log(res)
-  //       script = res.data
-  //     }) .catch ((e) => {console.log(e)})
-    
-  //   }
-  //   , []
-  // )
 
   return (
     <div className='flex h-full w-fit relative justify-between p-[2rem]'>
@@ -351,7 +317,6 @@ export default function HostTheater(Props : Props) {
                         <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
                           {dialogValue.img}
                         </div>
-                       
                           {
                             
                           }
@@ -439,7 +404,7 @@ export default function HostTheater(Props : Props) {
                   </button>
             <button onClick={() => {
                     reload()
-                    }}> 
+                    }}>
                     <StopCircleIcon className='size-20' />
                   </button>
               </div>

@@ -10,6 +10,7 @@ type Props = {
   roomId: string;
   streamManager: any;
   client: any;
+  scriptIdx : number
 };
 
 type UserStatus = {
@@ -23,10 +24,11 @@ export default function HostMainSection(props: Props) {
     <>
       <div className='flex justify-center items-center bg-white/80 w-[116rem] h-[54rem]'>
         <div>
-          <HostSectionScript />
+          <HostSectionScript client={props.client} roomId={props.roomId}/>
           <MemberRole
             ENTRY={props.ENTRY}
             client={props.client}
+            scriptIdx={props.scriptIdx}
             roomId={props.roomId}
           />
         </div>
