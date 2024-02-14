@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import AccordionSection from './AccordionSection';
 import { ScriptType } from '../types/ScriptType';
@@ -11,6 +12,12 @@ type Props = {
 };
 
 export default function ScenarioDialog({ scriptInfo }: Props) {
+  const router = useRouter();
+
+  const onClickClose = () => {
+    router.back();
+  };
+
   const [openSection, setOpenSection] = useState<number | null>(0);
 
   const handleAccordionClick = (sequenceNum: number) => {
@@ -68,15 +75,16 @@ export default function ScenarioDialog({ scriptInfo }: Props) {
       </div>
 
       <div className='absolute bottom-6 right-12 flex'>
-        <button
+        {/* <button
           className={`${bottomButtonClass} bg-gray-200 hover:bg-gray-300`}
         >
           취소
-        </button>
+        </button> */}
         <button
+          onClick={onClickClose}
           className={`${bottomButtonClass} bg-main text-white font-semibold hover:bg-maindark`}
         >
-          연극 선택
+          확인
         </button>
       </div>
     </div>

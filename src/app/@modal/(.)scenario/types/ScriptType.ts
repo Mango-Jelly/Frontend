@@ -15,8 +15,8 @@ export type Scene = {
 
 export type Dialog = {
   roles: {
-    roleName: String;
-    roleImg: String;
+    roleName: string;
+    roleImg: string;
   }[];
   dialog: string;
 };
