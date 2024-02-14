@@ -8,7 +8,9 @@ import { auth } from '@/auth';
 interface MyVideo {
   videoId: number;
   title: string;
-  thumbnail: string;
+  urlThumbnail: string;
+  department: string;
+  isPublic: true;
 }
 
 export default async function MyVideos({ isLogin }: { isLogin: boolean }) {
@@ -34,30 +36,35 @@ export default async function MyVideos({ isLogin }: { isLogin: boolean }) {
           alt='내가 나온 연극 목록'
           className='-scale-x-100 -rotate-12 mr-4'
         />
-        <p className='text-3xl text-highlight font-semibold'>
+        <p className='text-3xl text-highlight font-bold'>
           {isLogin ? '내가 나온 연극' : '이렇게 이용해보세요'}
         </p>
       </div>
       {isLogin && (
         <div className='flex justify-around my-2'>
-          {myVideos.map((value: MyVideo) => {
-            return (
-              <div
-                key={value.videoId}
-                className='rounded-3xl p-2 hover:bg-gray-100'
-              >
-                <Link href={`/video/${value.videoId}`}>
-                  <Image
-                    src={value.thumbnail}
-                    width={300}
-                    height={300}
-                    alt={value.title}
-                    className='rounded-full size-52 mb-2'
-                  ></Image>
-                  <div className='text-lg text-center'>{value.title}</div>
-                </Link>
-              </div>
-            );
+          {myVideos.map((value: MyVideo, index: number) => {
+            if (index < 5)
+              return (
+                <div
+                  key={value.videoId}
+                  title={`${value.title} | ${value.department}`}
+                  className='rounded-3xl p-2 hover:bg-gray-100'
+                >
+                  <Link
+                    href={`/video/${value.videoId}`}
+                    className='flex flex-col items-center'
+                  >
+                    <Image
+                      src={value.urlThumbnail}
+                      width={300}
+                      height={300}
+                      alt={value.title}
+                      className='rounded-full size-52 mb-2'
+                    ></Image>
+                    <div className='truncate w-[18rem] text-lg text-center'>{`${value.title} | ${value.department}`}</div>
+                  </Link>
+                </div>
+              );
           })}
         </div>
       )}

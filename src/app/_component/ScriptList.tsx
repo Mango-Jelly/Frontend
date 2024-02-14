@@ -30,7 +30,7 @@ export default async function ScriptList() {
           alt='동화 대본 구경하기'
           className='-scale-x-100 -rotate-12 mr-4'
         />
-        <p className='text-3xl text-highlight font-semibold'>
+        <p className='text-3xl text-highlight font-bold'>
           동화 대본 구경하기
         </p>
       </div>

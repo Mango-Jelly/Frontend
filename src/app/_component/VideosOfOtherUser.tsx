@@ -36,7 +36,7 @@ export default async function VideosOfOtherUser({
           alt='다른 사람들의 연극 구경하기'
           className='-scale-x-100 -rotate-12 mr-4'
         />
-        <p className='text-3xl text-highlight font-semibold'>
+        <p className='text-3xl text-highlight font-bold'>
           다른 사람들의 연극 구경하기
         </p>
       </div>
