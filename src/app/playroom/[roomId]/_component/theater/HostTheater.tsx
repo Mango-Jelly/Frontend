@@ -15,7 +15,6 @@ import { OpenVidu, Stream, Subscriber } from 'openvidu-browser';
 import GuestStateSection from '../host/rightbox/GuestStateSection'
 import { scriptInfo } from './data/Dummy'
 import axios from 'axios'
-import { FFmpeg } from "@ffmpeg/ffmpeg";
 import VideoIcon from '@/../public/VideoIcon.svg';
 import VideoOffIcon from '@/../public/VideoOffIcon.svg';
 import MicIcon from '@/../public/MicIcon.svg';
