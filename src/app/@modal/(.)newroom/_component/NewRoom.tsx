@@ -2,28 +2,27 @@
 
 import style from './newRoom.module.css'
 import Image from 'next/image'
-import { ChangeEventHandler, FormEventHandler, useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 import Button from '@/app/_component/TriggerButton'
 import pigTailLeft from '@/../public/pigtailLeft.svg'
 import pigTailRight from '@/../public/pigtailRight.svg'
 import BackButton from '@/app/_component/BackButton';
+import makePlayRoom from '@/app/_lib/makePlayRoom';
+import { useFormState, useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
-    const [roomName, setRoomName] = useState('');
-    const [department, setDepartment] = useState('');
-    const [isPublic, setIsPublic] = useState(false);
+    const [state, formAction] = useFormState(makePlayRoom, { message: null });
+    const { pending } = useFormStatus();
+    const router = useRouter();
 
-    const onChangeRoomName: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setRoomName(e.target.value);
-    };
-
-    const onChangeDepartment: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setDepartment(e.target.value);
-    };
-
-    const onChangeIsPublic: ChangeEventHandler<HTMLInputElement> = (e) => {
-        setIsPublic(e.target.checked);
-    };
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const form = new FormData(e.currentTarget);
+        await makePlayRoom(form);
+        router.back();
+        router.refresh();
+    }
 
     return (
         <div className={style.modalBackground}>
@@ -35,37 +34,42 @@ export default function Login() {
                 <h1 className="text-4xl font-bold mt-8">
                     방 생성
                 </h1>
-                <form>
+                <form action={formAction} onSubmit={onSubmit}>
                     <div className={style.modalBody}>
                         <div className={style.inputDiv}>
-                            <label className={style.inputLabel} htmlFor="roomName">방제목</label>
+                            <label className={style.inputLabel} 
+                                htmlFor="roomName">
+                                방제목
+                            </label>
                             <input
                                 id="roomName"
+                                name="roomName"
                                 className={style.input}
-                                value={roomName}
-                                onChange={onChangeRoomName}
                                 type="text"
-                                placeholder="50자 이내로 방 제목을 입력해 주세요."
+                                placeholder="20자 이내로 방 제목을 입력해 주세요."
+                                required
                             />
                         </div>
                         <div className={style.inputDiv}>
                             <label className={style.inputLabel} htmlFor="department">소속</label>
-                            <input id="department"
+                            <input 
+                                id="department"
+                                name="department"
                                 className={style.input}
-                                value={department}
-                                onChange={onChangeDepartment}
                                 type="text"
                                 placeholder="연극을 진행할 팀의 소속을 입력해 주세요. (예시: 꿈나무 유치원, 망고 초등학교)"
+                                required
                             />
                         </div>
-                        {/*아래에 체크박스 인풋 만들어줘 */}
-                        <label htmlFor="isPublic">완성영상 공개 설정 </label>
+                        <label 
+                            htmlFor="isPublic"
+                        >
+                            완성영상 공개 설정
+                        </label>
                         <input
                             type="checkbox"
                             id='isPublic'
                             name="isPublic"
-                            checked={isPublic}
-                            onChange={(e) => onChangeIsPublic(e)}
                         />
 
                     </div>

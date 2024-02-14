@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import * as StompJs from '@stomp/stompjs';
+import UserVideoComponent from '@/app/playroom/[roomId]/_component/UserVIdeo';
 
 import Image from 'next/image';
 import VideoIcon from '@/../public/VideoIcon.svg';
@@ -9,9 +11,24 @@ import MicIcon from '@/../public/MicIcon.svg';
 import MicOffIcon from '@/../public/MicOffIcon.svg';
 import { ShareIcon } from '@heroicons/react/24/solid';
 
-export default function HostVideo() {
-  const controlButtonClass =
-    'rounded-[2rem] bg-main px-6 py-2 m-1 hover:bg-maindark';
+type Props = {
+  depart: string;
+  title: string;
+  streamManager: any;
+  roomId: string;
+  client: StompJs.Client;
+};
+
+export default function HostVideoToHost(props: Props) {
+  function onclickStart() {
+    const message = {
+      code: 400,
+    };
+    props.client.publish({
+      destination: `/sub/channel/${props.roomId}`,
+      body: JSON.stringify(message),
+    });
+  }
 
   const [isCameraOn, setCameraOn] = useState(true);
   const [isAudioOn, setAudioOn] = useState(true);
@@ -24,12 +41,22 @@ export default function HostVideo() {
     setAudioOn((prev) => !prev);
   };
 
+  const controlButtonClass =
+    'rounded-[2rem] bg-main px-6 py-2 m-1 hover:bg-maindark';
+
   return (
-    <div className='grid grid-cols-1 gap-2 justify-items-center content-center'>
-      <div className='bg-amber-200 mb-6'>
-        <p className='text-3xl font-semibold'>꿈나무 유치원 망고 연극반</p>
+    <div className='grid grid-cols-1 gap-8 justify-items-center content-center'>
+      <div className='bg-amber-200'>
+        <p className='text-4xl font-semibold'>{`${props.depart}의 ${props.title}`}</p>
       </div>
-      <div className='bg-gray-200 rounded-2xl w-[60rem] h-[36rem] mb-2'></div>
+      <div className='bg-gray-200 rounded-2xl w-[60rem] h-[36rem]'>
+        {props.streamManager ? (
+          <UserVideoComponent streamManager={props.streamManager} />
+        ) : (
+          <div className='bg-gray-200 rounded-2xl w-[60rem] h-[36rem]'></div>
+        )}
+      </div>
+
       <div className='flex justify-between items-center w-[58rem]'>
         <div>
           <button onClick={toggleCamera} className={controlButtonClass}>
@@ -58,7 +85,10 @@ export default function HostVideo() {
           </button>
         </div>
         <div className='flex items-center'>
-          <button className='rounded-[2rem] bg-highlight/90 h-[4rem] px-8 m-1 hover:bg-highlight'>
+          <button
+            onClick={onclickStart}
+            className='rounded-[2rem] bg-highlight/90 h-[4rem] px-8 m-1 hover:bg-highlight'
+          >
             <p className='text-white text-3xl'>시작하기</p>
           </button>
           <button className='rounded-[2rem] bg-highlight/90 h-[4rem] px-8 m-1 hover:bg-highlight'>

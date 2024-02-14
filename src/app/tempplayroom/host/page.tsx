@@ -1,5 +1,5 @@
 import MemberCarousel from "../_component/MemberCarousel";
-import HostMain from "./HostMain";
+import HostMain from "./HostMainSection";
 
 export default function Page() {
   return (

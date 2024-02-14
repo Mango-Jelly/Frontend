@@ -1,10 +1,24 @@
 import Image from 'next/image';
 import img_clovar from '@/../public/img_clovar.png';
+import status201 from '@/../public/status201.svg';
+import status202 from '@/../public/status202.svg';
+import status203 from '@/../public/status203.svg';
+import status204 from '@/../public/status204.svg';
 import style from '../_component/scrollbar.module.css';
 
-export default function MemberChecking() {
-  const members = ['김상범', '강용민', '김남준', '이승헌', '김한슬', '윤서안', '김싸피', '박싸피'];
+type Props = {
+  ENTRY: UserStatus[];
+};
 
+type UserStatus = {
+  name: string;
+  status: number;
+  role: string;
+};
+
+const status: any[] = [status201, status202, status203, status204];
+
+export default function MemberChecking(props: Props) {
   return (
     <div className='bg-white shadow w-[24rem] h-[50rem] ml-6 px-4'>
       <div className='flex items-center px-4 py-4'>
@@ -12,18 +26,28 @@ export default function MemberChecking() {
         <p className='text-3xl font-medium ml-3'>참가자 상태 확인</p>
       </div>
       <div className='overflow-auto h-[43.5rem]' id={style.scroll}>
-        {members.map((value, key) => {
-          return (
-            <div key={key} className='flex items-center m-4'>
-              <div className='bg-gray-400 rounded-full size-20'></div>
-              <div className='m-4'>
-                <p className='text-xl'>{value}</p>
-                <p>첫째 돼지</p>
-              </div>
-              <div className='bg-gray-400 rounded-full size-12 ml-12'></div>
+        {props.ENTRY.map((entry, id) => (
+          <div key={id} className='flex items-center m-4'>
+            <div className='bg-gray-400 rounded-full size-20'></div>
+
+            <div className='m-4'>
+              <p className='text-xl'>{entry.name}</p>
+              <p>{entry.role ? entry.role : '아직 역할이 없어요'}</p>
             </div>
-          );
-        })}
+
+            {entry.status ? (
+              <div>
+                <Image
+                  src={status[entry.status - 201]}
+                  alt='상태사진'
+                  className='h-[5rem] w-[5rem]'
+                />
+              </div>
+            ) : (
+              <span className='h-[5rem] w-[5rem]'></span>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
