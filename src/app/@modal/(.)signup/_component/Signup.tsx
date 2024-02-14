@@ -106,7 +106,7 @@ export default function SignUp() {
                                 비밀번호 확인
                             </label>
                             <input
-                                id="confrimPassword"
+                                id="confirmPassword"
                                 name='confirmPassword'
                                 className={style.input}
                                 type="password"

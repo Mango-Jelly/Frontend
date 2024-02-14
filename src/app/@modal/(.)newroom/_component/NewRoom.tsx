@@ -16,7 +16,7 @@ function showMessage(message: string | null) {
     if (message === 'invalid_department') {
         return '소속을 올바르게 입력해주세요. (20자 이내)';
     }
-    if (message === 'failure make room') {
+    if (message === 'failure_make_room') {
         return '서버 에러로 방 생성에 실패했습니다.';
     }
     return '';
@@ -31,8 +31,6 @@ export default function Login() {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
         await makePlayRoom(form);
-        router.back();
-        router.refresh();
     }
 
     return (
@@ -72,19 +70,22 @@ export default function Login() {
                                 required
                             />
                         </div>
-                        <label 
-                            htmlFor="isPublic"
-                            className="text-lg font-semibold mt-4"
-                        >
-                            완성된 영상을 사이트에 공개하시겠습니까? 
-                        </label>
-                        <input
-                            type="checkbox"
-                            id='isPublic'
-                            name="isPublic"
-                            className="ml-2"
-                        />
-                        {<p className={style.error}>{showMessage(state?.message)}</p>}
+                        <div>
+                            <label 
+                                htmlFor="isPublic"
+                                className="text-lg font-semibold mt-4"
+                            >
+                                완성된 영상을 사이트에 공개하시겠습니까? 
+                            </label>
+                            <input
+                                id='isPublic'
+                                name="isPublic"
+                                type="checkbox"
+
+                                className="ml-2"
+                            />
+                            {<p className={style.error}>{showMessage(state?.message)}</p>}
+                            </div>
                     </div>
                     <div className={style.modalFooter}>
                         <button
@@ -93,7 +94,7 @@ export default function Login() {
                             className={`text-white font-semibold text-3xl text-center bg-main hover:bg-maindark rounded-[2rem] px-12 py-4 `}
                             disabled={pending}
                         >
-                            회원가입
+                            방생성
                         </button >
                     </div>
                 </form>
