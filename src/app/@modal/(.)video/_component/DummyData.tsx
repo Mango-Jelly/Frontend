@@ -2,7 +2,7 @@
 
 export const myVideos = [
   {
-    id: '1',
+    id: 1,
     data: {
       title: '6반 5팀 맹고재리의 연극 1',
       scriptName: '신데렐라',
@@ -15,7 +15,7 @@ export const myVideos = [
     },
   },
   {
-    id: '2',
+    id: 2,
     data: {
       title: '6반 5팀 맹고재리의 연극 2',
       scriptName: '아기 돼지 삼형제',
@@ -28,7 +28,7 @@ export const myVideos = [
     },
   },
   {
-    id: '3',
+    id: 3,
     data: {
       title: '6반 5팀 맹고재리의 연극 3',
       scriptName: '백설공주',
@@ -41,7 +41,7 @@ export const myVideos = [
     },
   },
   {
-    id: '4',
+    id: 4,
     data: {
       title: '6반 5팀 맹고재리의 연극 4',
       scriptName: '대본 이름',
@@ -54,7 +54,7 @@ export const myVideos = [
     },
   },
   {
-    id: '5',
+    id: 5,
     data: {
       title: '6반 5팀 맹고재리의 연극 5',
       scriptName: '대본 이름',
@@ -66,4 +66,4 @@ export const myVideos = [
       createAt: '2024-01-16 11:30',
     },
   },
-]
+];

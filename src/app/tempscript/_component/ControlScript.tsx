@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import { scriptInfo } from '../../../data/DummyScript';
 
-const sceneNum = scriptInfo.scene.length;
-const dialogNums = scriptInfo.scene.map((value) => {
+const sceneNum = scriptInfo.scenes.length;
+const dialogNums = scriptInfo.scenes.map((value) => {
   return value.dialogs.length;
 });
 

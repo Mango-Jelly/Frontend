@@ -5,7 +5,7 @@ import Scenario from '../_component/Scenario';
 
 type Props = {
   params: {
-    id: string;
+    id: number;
   };
 };
 

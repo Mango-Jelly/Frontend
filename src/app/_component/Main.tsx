@@ -19,11 +19,12 @@ export default async function Main() {
           <BackgroundAnimation />
         </div>
         <div className='grow flex flex-col items-center max-w-screen-xl z-10'>
+
           <MakeRoomButton isLogin={session ? true : false} />
           <div className='w-full'>
             <MyVideos isLogin={session ? true : false} />
             <div className='flex justify-center mb-4'>
-              <VideosOfOtherUser />
+              <VideosOfOtherUser isLogin={session ? true : false} />
               <ScriptList />
             </div>
           </div>
