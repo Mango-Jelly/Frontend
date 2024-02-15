@@ -15,7 +15,10 @@ export default async function NavMenu() {
           <Link href='/'>
             <Image src={appLogo} width={196} height={32} alt='망고테일' />
           </Link>
-          <div className='lg:order-2'>
+          <div className='text-2xl font-semibold lg:order-2 flex flex-wrap justify-between items-center flex-row'>
+            <p className="mr-8">
+              {session && `${session.user?.name} 선생님, 오늘도 행복한 하루되세요!`}
+            </p>
             <LoginButton isLogin={session ? true : false} />
           </div>
         </div>
