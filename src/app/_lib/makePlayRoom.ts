@@ -27,7 +27,6 @@ type OpenviduSessionBody = {
   mediaNode: {
     id: string;
   }
-
 }
 
 const makePlayRoom = async (formData: any) => {
@@ -54,12 +53,17 @@ const makePlayRoom = async (formData: any) => {
   let sessionUUID = "";
 
   try {
-    const { roomName: title, department, isPublic: visible, AccessToken } = userInputData;
+    const existCode = await getMyPlayRoomInfo(userInputData.AccessToken);
+    sessionUUID = existCode.data?.address;
+  } catch (e) {
+    console.log(e)
+  }
 
-    const existCode = await getMyPlayRoomInfo(AccessToken);
-    sessionUUID = existCode.data.address;
 
-    if (!sessionUUID) {
+  if (!sessionUUID) {
+    try {
+      const { roomName: title, department, isPublic: visible, AccessToken } = userInputData;
+
       const code = await createPlayRoom({ title, department, visible, AccessToken });
 
       const openviduSessionBody: OpenviduSessionBody = {
@@ -94,17 +98,19 @@ const makePlayRoom = async (formData: any) => {
       }
       );
       sessionUUID = sessionId.data.sessionId;
-    }
 
-    console.log("오픈비두의 세션아이디는 다음과 같습니다.")
-    console.log(sessionUUID);
+    } catch (e) {
 
-    if (!sessionUUID) {
-      return { message: 'failure_make_room' };
     }
-  } catch (e) {
-    console.log(e)
   }
+
+  console.log("오픈비두의 세션아이디는 다음과 같습니다.")
+  console.log(sessionUUID);
+
+  if (!sessionUUID) {
+    return { message: 'failure_make_room' };
+  }
+
 
   sessionUUID && redirect(`${process.env.LOCAL_URL}/playroom/${sessionUUID}`);
 
