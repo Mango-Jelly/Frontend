@@ -1,6 +1,6 @@
 'use client';
 
-import ModalBackground from '../_component/ModalBackground';
+import ModalBackground from '../../../_component/ModalBackground';
 import Scenario from '../_component/Scenario';
 
 type Props = {

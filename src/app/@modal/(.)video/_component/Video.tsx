@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default async function Video({ id, isLogin }: Props) {
-  let videoData;
+  let videoData: any = null;
 
   try {
     let fetchedData;
@@ -37,10 +37,19 @@ export default async function Video({ id, isLogin }: Props) {
   const infoBoxClass =
     'flex justify-center items-center bg-gray-100 rounded-3xl border-mainsky border-4 border-dashed w-4/5 m-2';
 
+  function clickGo() {
+    if (videoData !== null) {
+      const b = document.createElement('a');
+      b.href = videoData.videoAddress;
+      b.download = 'tnmp';
+      b.click();
+    }
+  }
+
   return (
     <div className='flex justify-center items-center size-full'>
       <BackButton />
-      <div className='flex flex-col justify-center items-center bg-white/80 w-[30%] h-[88%] m-2'>
+      <div className='flex flex-col justify-center items-center bg-white/80 w-[30%] h-[88%] m-2 z-20'>
         <Image
           src={videoData.urlThumbnail}
           width={300}
@@ -63,17 +72,20 @@ export default async function Video({ id, isLogin }: Props) {
         </div>
       </div>
 
-      <div className='flex flex-col justify-center items-center bg-white/80 w-[62%] h-[88%] m-2 p-12'>
+      <div className='flex flex-col justify-center items-center bg-white/80 w-[62%] h-[88%] m-2 p-12 z-20'>
         <div className='text-5xl mb-12 font-bold underline decoration-wavy decoration-main decoration-4 underline-offset-4'>
           {videoData.title}
         </div>
         <div className='flex justify-end  w-full mb-8'>
-          <ArrowDownTrayIcon className='size-8 mx-2' />
           {videoData.isPublic ? (
-            <LockOpenIcon className='size-8 mx-2' />
+            <LockOpenIcon className='size-12 p-2' />
           ) : (
-            <LockClosedIcon className='size-8 mx-2' />
+            <LockClosedIcon className='size-12 p-2' />
           )}
+          <ArrowDownTrayIcon
+            className='size-12 rounded-full p-2 hover:bg-gray-200'
+            onClick={clickGo}
+          />
         </div>
         <div className='bg-gray-200 w-full h-[70%] rounded-3xl'>
           <Suspense fallback={<p>Loading video...</p>}>
