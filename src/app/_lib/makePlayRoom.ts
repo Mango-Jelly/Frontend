@@ -1,49 +1,117 @@
 "use server";
 
 import { auth } from '@/auth';
-import { createPlayRoom } from '../../api/room'
-import { Auth } from '@auth/core';
+import { createPlayRoom, deletePlayRoom, getMyPlayRoomInfo } from '../../api/room'
+import axios from 'axios';
+import { redirect } from 'next/navigation'
+
+type OpenviduSessionBody = {
+  mediaMode: string;
+  recordingMode: string;
+  customSessionId: string;
+  forcedVideoCodec: string;
+  allowTranscoding: boolean;
+  defaultRecordingProperties: {
+    name: string;
+    hasAudio: boolean;
+    hasVideo: boolean;
+    outputMode: string;
+    recordingLayout: string;
+    resolution: string;
+    frameRate: number;
+    shmSize: number;
+    mediaNode: {
+      id: string;
+    }
+  };
+  mediaNode: {
+    id: string;
+  }
+
+}
 
 const makePlayRoom = async (formData: any) => {
-    const session : any = await auth();
+  const session: any = await auth();
 
-    const roomName = formData.get('roomName');
-    const department = formData.get('department');
+  const roomName = formData.get('roomName');
+  const department = formData.get('department');
 
-    if (!roomName || !(roomName as string)?.trim() || (roomName as string)?.length < 5 || (roomName as string)?.length > 20) {        
-        return { message: 'invalid_roomName' };
-    }    
+  if (!roomName || !(roomName as string)?.trim() || (roomName as string)?.length < 5 || (roomName as string)?.length > 20) {
+    return { message: 'invalid_roomName' };
+  }
 
-    if ((!department || !(department as string)?.trim())){
-        return { message: 'invalid_departure' };
-    }
+  if ((!department || !(department as string)?.trim())) {
+    return { message: 'invalid_departure' };
+  }
 
 
-  const userInputData : any = {};
+  const userInputData: any = {};
   formData.forEach((value: any, key: string | number) => userInputData[key] = value);
 
   userInputData['AccessToken'] = session?.Authorization;
   userInputData.isPublic === "on" ? userInputData.isPublic = true : userInputData.isPublic = false;
 
+  let sessionUUID = "";
+
   try {
-    const { roomName:title , department , isPublic:visible, AccessToken } = userInputData;
+    const { roomName: title, department, isPublic: visible, AccessToken } = userInputData;
 
-    const code = await createPlayRoom({ title, department, visible, AccessToken});
-    
-    console.log('방생성 완료')
+    let serverUUID = "";
 
-    console.log(code.data.address || "이미 존재하는 방입니다");
-    // if (response.status === 400) {
-    //   return { message: 'failure_make_room' };
-    // }
-    // if (response.status === 200) {
-    //   console.log('방생성 완료')
-    //   console.log(response.data)
-    // }   
+    const existCode = await getMyPlayRoomInfo(AccessToken);
+    serverUUID = existCode.data.address;
+
+    if (!serverUUID) {
+      const code = await createPlayRoom({ title, department, visible, AccessToken });
+      serverUUID = code.data.address;
+    }
+
+    const openviduSessionBody: OpenviduSessionBody = {
+      mediaMode: "ROUTED",
+      recordingMode: "MANUAL",
+      customSessionId: serverUUID,
+      forcedVideoCodec: "VP8",
+      allowTranscoding: false,
+      defaultRecordingProperties: {
+        name: "MyRecording",
+        hasAudio: true,
+        hasVideo: true,
+        outputMode: "COMPOSED",
+        recordingLayout: "BEST_FIT",
+        resolution: "1280x720",
+        frameRate: 25,
+        shmSize: 536870912,
+        mediaNode: {
+          id: "media_i-0c58bcdd26l11d0sd"
+        }
+      },
+      mediaNode: {
+        id: "media_i-0c58bcdd26l11d0sd"
+      }
+    }
+
+    const sessionId = await axios.post(`${process.env.OPENVIDU_URL}/openvidu/api/sessions/`, openviduSessionBody, {
+      headers: {
+        'Authorization': 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
+        'Content-Type': 'application/json',
+      }
+    }
+    );
+
+    sessionUUID = sessionId.data.sessionId;
+
+    console.log(sessionUUID);
+
+    if (!sessionUUID) {
+      return { message: 'failure_make_room' };
+    }
+
 
   } catch (e) {
     console.log(e)
-  } 
+  }
+
+  sessionUUID && redirect(`${process.env.LOCAL_URL}/playroom/${sessionUUID}`);
 
   return { message: null };
 }
