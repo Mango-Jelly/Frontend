@@ -5,6 +5,7 @@ export const scriptInfo : ScriptType  = {
     {
     seq: 1,
     title: '가족집',
+    background : '',
     dialogs: [
           {
           roles: [{roleName : '신데렐라', roleImg : ''}],
