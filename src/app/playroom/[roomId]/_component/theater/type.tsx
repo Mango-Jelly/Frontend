@@ -10,6 +10,7 @@ export type ScriptType = {
   export type Scene = {
     seq: number;
     title: string;
+    background : string
     dialogs: Dialog[];
   };
   
