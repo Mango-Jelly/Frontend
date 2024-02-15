@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -7,13 +5,10 @@ import appLogo from '../../../public/AppMainLogo.png';
 import LoginButton from './LoginButton';
 import { auth } from '@/auth';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 
 
-export default function NavMenu() {
-  const session: any = useSession();
-
-  const pathName = usePathname().split('/');
+export default async function NavMenu() {
+  const session = await auth();
 
   return (
     <header>
@@ -24,7 +19,7 @@ export default function NavMenu() {
           </Link>
           <div className='text-2xl font-semibold lg:order-2 flex flex-wrap justify-between items-center flex-row'>
             <p className="mr-8">
-              {session && !pathName.includes(('playroom')) && `${session.user?.name} 선생님, 오늘도 행복한 하루되세요!`}
+              {session && `${session.user?.name} 선생님, 오늘도 행복한 하루되세요!`}
             </p>
             <LoginButton isLogin={session ? true : false} />
           </div>
