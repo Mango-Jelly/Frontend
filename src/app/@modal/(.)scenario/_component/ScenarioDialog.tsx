@@ -58,7 +58,7 @@ export default function ScenarioDialog({ scriptInfo }: Props) {
                                 width={100}
                                 height={100}
                                 alt={value.title}
-                                className='shrink-0 rounded-full size-12 m-2'
+                                className='shrink-0 rounded-full size-12 m-2 object-cover'
                               ></Image>
                             );
                           })}

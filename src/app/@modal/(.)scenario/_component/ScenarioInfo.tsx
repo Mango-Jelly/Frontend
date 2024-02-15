@@ -16,7 +16,7 @@ export default function ScenarioInfo({ scriptInfo }: Props) {
         width={300}
         height={300}
         alt={scriptInfo.title}
-        className='rounded-full size-72'
+        className='rounded-full size-72 object-cover'
       ></Image>
       <p className='text-3xl font-bold m-4'>{scriptInfo.title}</p>
       <div className={`${infoBoxClass} h-20`}>
@@ -36,7 +36,7 @@ export default function ScenarioInfo({ scriptInfo }: Props) {
                   width={100}
                   height={100}
                   alt={scriptInfo.title}
-                  className='rounded-full size-16'
+                  className='rounded-full size-16 object-cover'
                 ></Image>
                 <p className='truncate text-lg'>{`${value.roleName}\n`}</p>
               </div>
