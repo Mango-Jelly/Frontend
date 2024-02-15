@@ -99,7 +99,7 @@ export default function HostTheater(Props : Props) {
 
     isNewscene.current = true
     let roles = new Set();
-    // if (!script){return} 
+    // if (!script){return}
     script.scenes[curIdx.scene].dialogs.forEach( element => {
       // roles.add(element.roles)
       element.roles.forEach((roless) => {
@@ -359,6 +359,8 @@ export default function HostTheater(Props : Props) {
 
   return (
     <div className='flex h-full w-fit relative justify-between p-[2rem]'>
+
+
       <div className='bg-white m-4 h-full'>
         <div className='flex items-center m-4'>
           <Image

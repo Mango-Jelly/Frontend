@@ -67,7 +67,7 @@ export default function MemberCarousel(props: Props) {
                     <div className='shrink-0'>
                       <div className='animate-pulse bg-gray-300 rounded-2xl w-[20rem] h-[12rem] mx-4'></div>
                       <p className='text-xl text-center mt-1'>
-                        입장 대기중(본인 카메라)
+                        입장 대기중
                       </p>
                     </div>
                   </div>

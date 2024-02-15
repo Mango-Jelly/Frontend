@@ -14,7 +14,7 @@ type Props = {
 
 export default function StateButtonGrid(props: Props) {
   const stateButtonclass =
-    'relative bg-gray-100 hover:bg-main rounded-3xl w-[22rem] h-[14rem] shadow group';
+    'relative bg-gray-100 hover:bg-main rounded-3xl w-[22rem] h-[14rem] shadow group mb-4';
   const buttonTextClass =
     'text-left text-4xl font-bold leading-tight group-hover:text-white';
 

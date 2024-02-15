@@ -84,23 +84,23 @@ export default function Page({ params: { roomId } }: Props) {
   };
   async function GotoTheater() {
     changeProcess(0, true);
-    await delay(500);
+    await delay(1000);
     changeProcess(1, true);
-    await delay(500);
+    await delay(1000);
     changeProcess(2, true);
-    await delay(500);
+    await delay(1000);
     changeProcess(3, true);
-    await delay(500);
+    await delay(1000);
     changeProcess(3, false);
     changeProcess(4, true);
 
-    await delay(500);
+    await delay(1000);
     changeProcess(5, true);
-    await delay(500);
+    await delay(1000);
     setIsStart(true);
 
     changeProcess(5, false);
-    await delay(500);
+    await delay(1000);
 
     changeProcess(4, false);
     changeProcess(2, false);
@@ -422,7 +422,6 @@ export default function Page({ params: { roomId } }: Props) {
           ) : null}
           {startProcess[4] ? (
             <div>
-              {/* <Image src = {curtain}  alt = {'별거 아님'} className='fadeoutcomponent' style={{ top : startProcess[5] ? `0%` : `-100%` , transition: 'all 1.0s'}}/>  */}
               <Image
                 src={curtain}
                 alt={'별거 아님'}
@@ -454,7 +453,7 @@ export default function Page({ params: { roomId } }: Props) {
         <button
           type='button'
           onClick={changeHost}
-          className='text-white bg-blue-700 hover:bg-blue-800 active:bg-blue-800
+          className='text-white bg-background
             font-medium rounded-lg text-sm py-2 focus:outline-none
             absolute top-32 left-4 w-16'
         >
@@ -503,6 +502,7 @@ export default function Page({ params: { roomId } }: Props) {
               curRole={role}
               roleImg={roleImg}
               myHost={myHost}
+              streamManager={mainStreamManager}
               userId={myUserName ? myUserName : ''}
             />
           )

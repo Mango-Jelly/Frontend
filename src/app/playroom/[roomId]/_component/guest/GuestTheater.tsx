@@ -10,17 +10,31 @@ import { scriptInfo } from './data/Dummy'
 import OpenViduVideoComponent from '../OvVideo';
 import StateButtonGridCol from './StateButtonGridCol';
 
+
+
+import GuestStateSection from '../host/rightbox/GuestStateSection'
+import axios from 'axios'
+import VideoIcon from '@/../public/VideoIcon.svg';
+import VideoOffIcon from '@/../public/VideoOffIcon.svg';
+import MicIcon from '@/../public/MicIcon.svg';
+import MicOffIcon from '@/../public/MicOffIcon.svg';
+import { ScriptType , RoleInfo, Dialog, Scene } from './type'
+
+
 type UserStatus = {
   name: string
   status: number
   role: string
+  roleImg : string
   camera: Subscriber | null
 }
+
 
 type Props = {
   client: any
   goNext: number
   streamManager: any;
+  curRole: string;
   ENTRY: UserStatus[]
   roomId: string
   userId: string
@@ -30,7 +44,7 @@ type Props = {
 export default function GuestTheater(Props: Props) {
   let idx = 0
   const [actor, setActor] = useState<UserStatus[]>([])
-  const { script, curIdx, refs, moveScript } = ControllScript()
+  const { script, curIdx, refs, moveScript } = ControllScript({scriptIdx : Props.scriptIdx })
   const getDynamicClass = (sceneKey: number, dialogKey: number) => {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog) {
       return 'rounded-xl border-8 border-main font-semibold p-2'
@@ -40,17 +54,25 @@ export default function GuestTheater(Props: Props) {
   useEffect(
     () => {
       let roles = new Set<string>();
-
-      scriptInfo.scene[curIdx.scene].dialogs.forEach(element => {
-        roles.add(element.role)
+      script.scenes[curIdx.scene].dialogs.forEach(element => {
+        element.roles.forEach((roless) => {
+          roles.add(roless.roleName)
+        })
       });
       console.log(roles)
-
+      
       setActor(Props.ENTRY.filter(element => roles.has(element.role)));
+      setActor(prev => [{
+              name: Props.userId,
+              status: 0,
+              role: Props.curRole,
+              roleImg: '',
+              camera: Props.streamManager,
+            }].concat(prev))
       console.log(Props.ENTRY, actor)
     }
 
-    , [curIdx.scene])
+    , [curIdx.scene, script.title])
 
   useEffect(
     () => {
@@ -61,7 +83,9 @@ export default function GuestTheater(Props: Props) {
   )
   return (
     <div className='flex h-full w-full relative justify-between px-[5rem]'>
-      <div className='bg-white m-4 h-4/5'>
+
+
+      <div className='bg-white m-4 h-full'>
         <div className='flex items-center m-4'>
           <Image
             src={CookieHouse}
@@ -71,18 +95,20 @@ export default function GuestTheater(Props: Props) {
           />
           <p className='text-3xl'>현재 연극 대본</p>
         </div>
+
+
         <div
-          className='overflow-scroll w-[36rem] h-[52rem]  p-4'
+          className='overflow-auto w-[30rem] h-[50rem]  p-4'
           id={style.scroll}
         >
-          <div>
-            {script.scene.map((sceneValue, sceneKey) => {
+          
+            {script.scenes.map((sceneValue :Scene, sceneKey) => {
               return (
                 <div key={sceneKey}>
                   <p className='sticky top-0 text-lg bg-gray-100 p-2 my-2'>
-                    {`${sceneValue.sequence}번째 씬`}
+                    {`${sceneValue.seq}번째 씬`}
                   </p>
-                  {sceneValue.dialogs.map((dialogValue, dialogKey) => {
+                  {sceneValue.dialogs.map((dialogValue : Dialog, dialogKey) => {
                     return (
                       <div
                         key={dialogKey}
@@ -91,29 +117,41 @@ export default function GuestTheater(Props: Props) {
                         }}
                         className={`flex items-center py-2 ${getDynamicClass(sceneKey, dialogKey)}`}
                       >
-                        <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
-                          {dialogValue.img}
-                        </div>
-                        <p className='text-xl'>
-                          {`${dialogValue.role}: ${dialogValue.dialog}`}
-                        </p>
+                          <Image
+                            src={dialogValue.roles[0].roleImg}
+                            alt='배격사진'
+                            width={100}
+                            height={100}
+                            className="object-cover w-[3rem] h-[3rem] rounded-full shrink-0 mr-[1rem]"
+                          />
+                          {
+                            dialogValue.roles
+                            ?
+                            <p className='text-xl'> {`${dialogValue.roles[0].roleName}: ${dialogValue.dialog}`}</p>
+                            :
+                            <p className='text-xl'> {`${dialogValue.roles[0]}: ${dialogValue.dialog}`} </p>
+                          }
+                        
                       </div>
                     )
                   })}
                 </div>
               )
             })}
-          </div>
+
         </div>
+        
       </div>
 
       <div className='w-3/5 h-full'>
         <div className='w-full h-full justify-center p-3 relative '>
-          <Image
-            src={ForestJpeg}
-            alt='배경화면'
-            className='object-fill w-full h-[48rem]'
-          />
+            <Image
+              src = {script.scenes[curIdx.scene].background}
+              width={1280}
+              height={720}
+              alt='배경화면'
+              className='h-full w-full  z-0 rounded-2xl'
+            />
           {
             Props.streamManager ?
               <div className='absolute top-0 left-0 p-[3rem] w-full h-full grid grid-cols-4 gap-4 flex'>
@@ -137,9 +175,9 @@ export default function GuestTheater(Props: Props) {
           }
         </div>
 
-        <div className='flex justify-center items-center bg-white w-full h-1/5  p-3 default-component-color rounded-lg'>
+        <div className='flex justify-center items-center bg-white w-full h-[15rem]  p-3 default-component-color rounded-lg'>
           <p className='text-3xl'>
-            {script.scene[curIdx.scene].dialogs[curIdx.dialog].dialog}
+            {script.scenes[curIdx.scene].dialogs[curIdx.dialog].dialog}
           </p>
         </div>
       </div>

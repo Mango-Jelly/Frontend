@@ -62,7 +62,8 @@ export default async function Video({ id, isLogin }: Props) {
           {videoData.department}
         </div>
         <div className='flex justify-center items-center text-3xl bg-gray-100 rounded-3xl border-mainsky border-4 border-dashed w-4/5 h-20 m-2'>
-          {videoData.createAt}
+          {/* {videoData.createAt} */}
+          2024년 2월 14일
         </div>
         <div className='flex flex-col justify-center items-center bg-gray-100 rounded-3xl border-mainsky border-4 border-dashed w-4/5 h-72 m-2'>
           <div className='text-3xl font-semibod bg-main/40 mb-4'>배우 이름</div>

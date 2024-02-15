@@ -1,16 +1,63 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { scriptInfo } from './data/Dummy'
+import axios from 'axios'
+import { ScriptType } from './type'
 
-const sceneNum = scriptInfo.scene.length
+
+type curSelection = {
+  scene: number,
+  dialog: number,
+  idx: number,
+}
+const sceneNum = scriptInfo.scenes.length
 // 길이를 나타내는 코드
-const dialogNums = scriptInfo.scene.map((value) => {
-  return value.dialogs.length
-})
+// const dialogNums = scriptInfo.scenes.map((value) => {
+//   return value.dialogs.length
+// })
 // 한 씬의 길이
 
-export const ControllScript = () => {
-  const script = scriptInfo
-  const [curSelection, setCurSelection] = useState({
+type Props = {
+  scriptIdx: number
+}
+
+export const ControllScript = (Props : Props) => {
+  const [script, setScript] = useState<ScriptType> (scriptInfo)
+  const [dialogNums, setDialogNums] = useState<Number[]> ( scriptInfo.scenes.map((value) => {
+    return value.dialogs.length
+  }))
+  const [sceneNum, setSceneNum] = useState<number> (scriptInfo.scenes.length)
+  // let script = scriptInfo
+  useEffect(
+    () => {
+      axios.get(
+        'https://mangotail.shop/api/v1/script',
+        {params : {scriptId : Props.scriptIdx === 999 ? 2 : Props.scriptIdx}},
+      ).then((res) => {
+      console.log(res.data.data)
+        setScript(res.data.data)
+        setSceneNum(res.data.data.scenes.length)
+
+      }) .catch ((e) => {console.log(e)})
+      
+    }, []
+  )
+
+  useEffect(
+    () => {
+      setDialogNums (script.scenes.map((value) => {
+        return value.dialogs.length
+      }))
+      setCurSelection((prev) => ({
+          scene: 0,
+          dialog: 0,
+          idx: 0,
+      }))
+    }
+    ,[script]
+  )
+
+
+  const [curSelection, setCurSelection] = useState<curSelection>({
     scene: 0,
     dialog: 0,
     idx: 0,
@@ -25,19 +72,20 @@ export const ControllScript = () => {
   }
 
   function changeIdx() {
-    if (curSelection.dialog < dialogNums[curSelection.scene] - 1) {
+    if (curSelection.dialog < (dialogNums[curSelection.scene] as number) - 1) {
       setCurSelection((prev) => ({
         ...prev,
         dialog: prev.dialog + 1,
         idx: prev.idx + 1,
       }))
     } else if (curSelection.scene < sceneNum - 1) {
-      setCurSelection({
+      setCurSelection((prev) => ({
         scene: curSelection.scene + 1,
         dialog: 0,
         idx: curSelection.idx + 1,
-      })
+      }))
     }
+    console.log(curSelection)
   }
 
   function moveScroll() {
@@ -48,6 +96,7 @@ export const ControllScript = () => {
       })
     }
   }
+
 
   return { script, curIdx: curSelection, refs, moveScript }
 }

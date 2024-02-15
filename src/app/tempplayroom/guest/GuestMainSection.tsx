@@ -13,6 +13,7 @@ type Props = {
   curRole: string;
   roleImg: string;
   myHost: [string, Subscriber | null];
+  streamManager : any
 };
 
 export default function GuestMainSection(Props: Props) {
@@ -22,9 +23,9 @@ export default function GuestMainSection(Props: Props) {
         <p className='text-4xl font-semibold'>{`${Props.depart}의 ${Props.title}`}</p>
       </div>
       <div className='flex justify-center bg-white/80 w-[112rem] h-[48rem]'>
-        <HostVideoToGuest myHost={Props.myHost} />
+        <HostVideoToGuest myHost={Props.myHost} streamManager={Props.streamManager} />
         <div className='self-start flex flex-col justify-center items-center ml-4'>
-          <GuestState curRole={Props.curRole} roleImg={Props.roleImg} />
+          <GuestState curRole={Props.curRole} roleImg={Props.roleImg}/>
           <StateButtonGrid
             client={Props.client}
             userId={Props.userId}
