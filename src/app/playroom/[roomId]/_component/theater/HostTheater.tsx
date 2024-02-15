@@ -67,6 +67,10 @@ export default function HostTheater(Props : Props) {
   const mapping = useRef<Map<string, any | null>> (new Map())
   const [isCameraOn, setCameraOn] = useState(true);
   const [isAudioOn, setAudioOn] = useState(true);
+  const fileMovie = useRef<File>()
+  const fileAudio = useRef<File>()
+
+  const curIdxD = useRef<number>(0)
 
   const toggleCamera = () => {
     setCameraOn((prev) => !prev);
@@ -85,6 +89,7 @@ export default function HostTheater(Props : Props) {
         body: JSON.stringify(message),
     })
     moveScript()
+    curIdxD.current++
   }
 
   useEffect(
@@ -242,7 +247,6 @@ export default function HostTheater(Props : Props) {
         mediaRecorder.current.ondataavailable = (event) =>
         {
           // 스트림 데이터(Blob)가 들어올 때마다 배열에 담아둔다.
-          console.log(event.data)
           arrVideoData.current.push(event.data);
         }
         mediaRecorder2.current.ondataavailable = (event) => {
@@ -254,14 +258,14 @@ export default function HostTheater(Props : Props) {
             // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
             const blob = new Blob(arrVideoData.current);
             // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
-            const blobURL = window.URL.createObjectURL(blob);
+            // const blobURL = window.URL.createObjectURL(blob);
             // 다운로드 구현
-            const $anchor = document.createElement("a"); // 앵커 태그 생성
-            document.body.appendChild($anchor);
-            $anchor.style.display = "none";
-            $anchor.href = blobURL; // 다운로드 경로 설정
-            $anchor.download = "test.webm"; // 파일명 설정
-            $anchor.click(); // 앵커 클릭
+            // const $anchor = document.createElement("a"); // 앵커 태그 생성
+            // document.body.appendChild($anchor);
+            // $anchor.style.display = "none";
+            // $anchor.href = blobURL; // 다운로드 경로 설정
+            // $anchor.download = "test.webm"; // 파일명 설정
+            // $anchor.click(); // 앵커 클릭
             
             
             // const blob2 = new Blob(arrAudioData.current, { 'type' : 'audio/mp3' });
@@ -272,15 +276,78 @@ export default function HostTheater(Props : Props) {
             // b.click();
             // arrAudioData.current.splice(0)
             // 배열 초기화
+            const newFile = new File([blob], `00${curIdxD.current}.webm`)
+            // fileMovie.current = new File([blob], `00${curIdxD.current}.webm`)
+            const blobURL = window.URL.createObjectURL(newFile);
+            const a = document.createElement("a")
+            a.href = blobURL
+            a.download = newFile.name
+            a.click()
+            const fd = new FormData()
+            fd.append('movie' , newFile)
+            // fd.append('audio' , '')
+
+            try {
+              axios.post( 'https://mangotail.shop/api/v1/movie/scene', fd,  {
+              headers: {
+                'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNzA4MzkwODAzfQ.bP0l34PxJNTlUxFvURAxdZkvYfGpmI4U_VJuXHxMnv0mmc9tleUbZKjtg8iZ_5wetlkzTw1CmO7KVVVzkNKHrg=',
+                'Content-Type': 'application/json',
+              },
+              params : {
+                sceneId : curIdx.scene
+              }
+            }
+            ).then((gogo) => {
+              console.log(gogo)
+            }).catch((error) => {
+              console.log(error)
+            })} catch(e) {
+            console.log('시발')
+          }
+
+
             arrVideoData.current.splice(0);
         }
         mediaRecorder2.current.onstop = (event) => {
           const blob = new Blob(arrAudioData.current, { 'type' : 'audio/mp3' });
-          const audioURL = window.URL.createObjectURL(blob);
-          const b = document.createElement('a');
-          b.href = audioURL;
-          b.download = 'audio.mp3';
-          b.click();
+          // const audioURL = window.URL.createObjectURL(blob);
+          // const b = document.createElement('a');
+          // b.href = audioURL;
+          // b.download = 'audio.mp3';
+          // b.click();
+
+
+          const newFile = new File([blob], `00${curIdxD.current}.mp3`)
+          // fileMovie.current = new File([blob], `00${curIdxD.current}.webm`)
+          const blobURL = window.URL.createObjectURL(newFile);
+          const b = document.createElement("a")
+          b.href = blobURL
+          b.download = newFile.name
+          b.click()
+
+          const fd = new FormData()
+          fd.append('audio' , newFile)
+          try {
+              axios.post( 'https://mangotail.shop/api/v1/movie/scene', fd,  {
+              headers: {
+                'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNzA4MzkwODAzfQ.bP0l34PxJNTlUxFvURAxdZkvYfGpmI4U_VJuXHxMnv0mmc9tleUbZKjtg8iZ_5wetlkzTw1CmO7KVVVzkNKHrg=',
+                'Content-Type': 'application/json',
+              },
+              params : {
+                sceneId : curIdx.scene
+              }
+            }
+            ).then((gogo) => {
+              console.log(gogo)
+            }).catch((error) => {
+              console.log(error)
+            })
+        
+        } catch(e) {
+            console.log('시발')
+          }
+
+
           arrAudioData.current.splice(0)
         }
           mediaRecorder.current.start();
@@ -430,8 +497,28 @@ export default function HostTheater(Props : Props) {
                 <button type="button" onClick=
                   {() => {
                     setIsRecording(false)
-                    mediaRecorder.current?.stop()
                     mediaRecorder2.current?.stop()
+                    mediaRecorder.current?.stop()
+
+                    // const body = {
+
+                    // }
+                    // try {
+                    //     axios.post( 'https://mangotail.shop/api/v1/movie/scene', body,  {
+                    //     headers: {
+                    //       'Authorization' : 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIyIiwiYXV0aCI6IlJPTEVfTUVNQkVSIiwiZXhwIjoxNzA4MzkwODAzfQ.bP0l34PxJNTlUxFvURAxdZkvYfGpmI4U_VJuXHxMnv0mmc9tleUbZKjtg8iZ_5wetlkzTw1CmO7KVVVzkNKHrg=',
+                    //       'Content-Type': 'application/json',
+                    //     },
+                    //     params : {
+                    //       sceneId : 
+                    //     }
+                    //   })
+                    // }catch(e){
+                    //   console.log(e)
+                    // }
+        
+                    
+        
                   }} className="text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800">녹화 멈추기</button>
                 :
                 <button type="button" onClick={() => { startRecording() }} className="text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800">녹화 하기</button>

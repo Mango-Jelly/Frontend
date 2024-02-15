@@ -8,7 +8,13 @@ import VideoOffIcon from '@/../public/VideoOffIcon.svg';
 import MicIcon from '@/../public/MicIcon.svg';
 import MicOffIcon from '@/../public/MicOffIcon.svg';
 
-export default function GuestState({ curRole }: { curRole: string }) {
+export default function GuestState({
+  curRole,
+  roleImg,
+}: {
+  curRole: string;
+  roleImg: string;
+}) {
   const controlButtonClass =
     'rounded-[2rem] bg-main px-6 py-2 m-1 hover:bg-maindark';
 
@@ -26,7 +32,17 @@ export default function GuestState({ curRole }: { curRole: string }) {
   return (
     <div className='flex justify-between items-center w-[44rem] my-8'>
       <div className='flex items-center'>
-        <div className='bg-gray-200 rounded-full size-32 mx-4'></div>
+        {curRole ? (
+          <Image
+            src={roleImg}
+            width={200}
+            height={200}
+            alt={curRole}
+            className='rounded-full size-32 mx-4 object-cover'
+          />
+        ) : (
+          <div className='bg-gray-400 animate-pulse rounded-full size-32 mx-4'></div>
+        )}
         <div className=''>
           <div className='text-3xl'>
             나의 역할은

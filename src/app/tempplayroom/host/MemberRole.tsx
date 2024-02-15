@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useEffect } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 
 // import Actors from '@/app/playroom/[roomId]/_component/host/leftbox/Actor';
 
@@ -19,7 +19,7 @@ type Props = {
   ENTRY: UserStatus[];
   client: any;
   roomId: string;
-  scriptIdx : number
+  scriptIdx: number;
 };
 
 type UserRoleState = {
@@ -39,14 +39,13 @@ type UserRoleState = {
 export default function MemberRole(props: Props) {
   const [rolestates, setRolsestates] = useState<UserRoleState[]>([]);
   const [given_roles, setGiven_roles] = useState<any[]>([
-  { roleName: '신데렐라' },
-  { roleName: '엄마' },
-  { roleName: '마법사' },
-  { roleName: '왕' },
-  { roleName: '왕자' },
-]
-)
-  function sendRoles(role: string, index: number) {
+    { roleName: '신데렐라' },
+    { roleName: '엄마' },
+    { roleName: '마법사' },
+    { roleName: '왕' },
+    { roleName: '왕자' },
+  ]);
+  function sendRoles(role: string, roleImg: string, index: number) {
     if (rolestates[index].isSelected) {
       alert('이미 선택된 친구에요');
       return;
@@ -64,7 +63,8 @@ export default function MemberRole(props: Props) {
     const message = {
       code: 300,
       name: rolestates[index].name,
-      role: role,
+      role: role, 
+      roleImg : roleImg
     };
     props.client.publish({
       destination: `/sub/channel/${props.roomId}`,
@@ -72,18 +72,19 @@ export default function MemberRole(props: Props) {
     });
   }
 
-  useEffect(
-    () => {
-      axios.get(
-        'https://mangotail.shop/api/v1/script',
-        {params : {scriptId : props.scriptIdx === 999 ? 2 : props.scriptIdx}},
-      ).then((res) => {
-        console.log(res.data.data)
-        setGiven_roles(res.data.data.roles)
-      }) .catch ((e) => {console.log(e)})
-    },
-    [props.scriptIdx]
-  )
+  useEffect(() => {
+    axios
+      .get('https://mangotail.shop/api/v1/script', {
+        params: { scriptId: props.scriptIdx === 999 ? 2 : props.scriptIdx },
+      })
+      .then((res) => {
+        console.log(res.data.data);
+        setGiven_roles(res.data.data.roles);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [props.scriptIdx]);
 
   useEffect(() => {
     setRolsestates(
@@ -116,7 +117,13 @@ export default function MemberRole(props: Props) {
                 key={key}
                 className='flex items-center bg-gray-100 border-mainsky border-2 border-dashed rounded-xl w-[20rem] p-4 mb-2'
               >
-                <div className='bg-gray-400 rounded-full size-20'></div>
+                <Image
+                  src={role.roleImg}
+                  width={100}
+                  height={100}
+                  alt={role.rolename}
+                  className='rounded-full size-20 object-cover'
+                />
                 <div className='ml-3'>
                   <label className='block ml-2 mb-1 text-xl font-medium'>
                     {role.roleName}
@@ -124,7 +131,7 @@ export default function MemberRole(props: Props) {
                   <select
                     id={`roleSelect_${key}`}
                     onChange={(e) => {
-                      sendRoles(role.roleName, Number(e.target.value));
+                      sendRoles(role.roleName, role.roleImg, Number(e.target.value));
                     }}
                     className='border border-gray-300 text-xl rounded-lg block w-full p-2
                     focus:outline-0 focus:ring-2 focus:ring-main'
