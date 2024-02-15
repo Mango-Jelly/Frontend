@@ -24,8 +24,6 @@ type Props = {
 };
 
 export default function MemberCarousel(props: Props) {
-  const tempMember = [1, 2, 3, 4, 5];
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const maxItemsPerSlide: number = 5;
 
@@ -41,6 +39,8 @@ export default function MemberCarousel(props: Props) {
         : prevIndex
     );
   };
+
+  const tempMembers = [1, 2, 3, 4, 5];
 
   return (
     <div className='w-[121.5rem] mt-10 mb-6'>
@@ -64,18 +64,29 @@ export default function MemberCarousel(props: Props) {
                   </div>
                 ) : (
                   <div className='flex'>
-                    {tempMember.map((value, key) => {
-                      return (
-                        <div key={key} className='shrink-0'>
-                          <div className='animate-pulse bg-gray-300 rounded-2xl w-[20rem] h-[12rem] mx-4'></div>
-                          <p className='text-xl text-center mt-1'>입장 대기중</p>
-                        </div>
-                      );
-                    })}
+                    <div className='shrink-0'>
+                      <div className='animate-pulse bg-gray-300 rounded-2xl w-[20rem] h-[12rem] mx-4'></div>
+                      <p className='text-xl text-center mt-1'>
+                        입장 대기중(본인 카메라)
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
             ))}
+            {props.ENTRY.length < 5 && (
+              <div className='flex'>
+                {tempMembers.map((tempScreen, index) => {
+                  if (index < 5 - props.ENTRY.length)
+                    return (
+                      <div key={index} className='shrink-0'>
+                        <div className='animate-pulse bg-gray-300 rounded-2xl w-[20rem] h-[12rem] mx-4'></div>
+                        <p className='text-xl text-center mt-1'>입장 대기중</p>
+                      </div>
+                    );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
