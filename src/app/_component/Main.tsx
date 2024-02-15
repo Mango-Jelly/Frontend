@@ -18,7 +18,7 @@ export default async function Main() {
         <div className='absolute inset-0 z-0'>
           <BackgroundAnimation />
         </div>
-        <div className='grow flex flex-col items-center max-w-screen-xl z-10'>
+        <div className='grow flex flex-col items-center max-w-screen-xl z-[1]'>
 
           <MakeRoomButton isLogin={session ? true : false} />
           <div className='w-full'>
