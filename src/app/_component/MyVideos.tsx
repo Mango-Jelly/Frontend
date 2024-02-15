@@ -43,28 +43,27 @@ export default async function MyVideos({ isLogin }: { isLogin: boolean }) {
       {isLogin && (
         <div className='flex justify-around my-2'>
           {myVideos.map((value: MyVideo, index: number) => {
-            if (index < 5)
-              return (
-                <div
-                  key={value.videoId}
-                  title={`${value.title} | ${value.department}`}
-                  className='rounded-3xl p-2 hover:bg-gray-100'
+            return (
+              <div
+                key={value.videoId}
+                title={`${value.title} | ${value.department}`}
+                className='rounded-3xl p-2 hover:bg-gray-100'
+              >
+                <Link
+                  href={`/video/${value.videoId}`}
+                  className='flex flex-col items-center'
                 >
-                  <Link
-                    href={`/video/${value.videoId}`}
-                    className='flex flex-col items-center'
-                  >
-                    <Image
-                      src={value.urlThumbnail}
-                      width={300}
-                      height={300}
-                      alt={value.title}
-                      className='rounded-full size-52 mb-2 object-cover'
-                    ></Image>
-                    <div className='truncate w-[18rem] text-xl font-medium text-center'>{`${value.title} | ${value.department}`}</div>
-                  </Link>
-                </div>
-              );
+                  <Image
+                    src={value.urlThumbnail}
+                    width={300}
+                    height={300}
+                    alt={value.title}
+                    className='rounded-full size-52 mb-2 object-cover'
+                  ></Image>
+                  <div className='truncate w-[18rem] text-xl font-medium text-center'>{`${value.title} | ${value.department}`}</div>
+                </Link>
+              </div>
+            );
           })}
         </div>
       )}

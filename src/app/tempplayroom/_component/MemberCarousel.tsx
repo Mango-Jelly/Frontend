@@ -43,7 +43,7 @@ export default function MemberCarousel(props: Props) {
   };
 
   return (
-    <div className='w-[121.5rem] mt-12 mb-8'>
+    <div className='w-[121.5rem] mt-10 mb-6'>
       <div className='flex justify-center items-center'>
         <ChevronLeftIcon
           onClick={handlePrev}

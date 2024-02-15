@@ -114,7 +114,7 @@ export default function MemberRole(props: Props) {
             return (
               <div
                 key={key}
-                className='flex items-center bg-gray-200 rounded-xl w-[20rem] p-4 mb-2'
+                className='flex items-center bg-gray-100 border-mainsky border-2 border-dashed rounded-xl w-[20rem] p-4 mb-2'
               >
                 <div className='bg-gray-400 rounded-full size-20'></div>
                 <div className='ml-3'>

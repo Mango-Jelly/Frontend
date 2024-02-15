@@ -22,7 +22,7 @@ type UserStatus = {
 export default function HostMainSection(props: Props) {
   return (
     <>
-      <div className='flex justify-center items-center bg-white/80 w-[116rem] h-[54rem]'>
+      <div className='flex justify-center items-center bg-white/80 w-[116rem] h-[53rem]'>
         <div>
           <HostSectionScript client={props.client} roomId={props.roomId}/>
           <MemberRole
