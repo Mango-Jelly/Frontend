@@ -6,7 +6,7 @@ import moonImg from '@/../public/moonImg.svg';
 
 export default function BackgroundAnimation() {
   const cloudClasses = [
-    'top-[6.5rem] right-[8rem] size-40 hover:animate-changeOpacity',
+    'top-[6.5rem] right-[8rem] size-40',
     'top-[28rem] left-[6rem] size-20',
     'top-[30rem] right-[4rem] size-16',
   ];

@@ -36,9 +36,9 @@ const config: Config = {
           '50%': { transform: 'rotate(180deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
-        changeOpacity: {
-          '0%': { opacity: '0.4' },
-          '100%': { opacity: '1' },
+        fastYMovement: {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(-122px)' },
         },
       },
       animation: {
@@ -47,7 +47,7 @@ const config: Config = {
         'slowXMovement-10s': 'slowXMovement 10s linear infinite',
         'slowYMovement-4s': 'slowYMovement 4s linear infinite',
         'wiggle-8s': 'wiggle 8s linear infinite',
-        changeOpacity: 'changeOpacity 3s linear',
+        'fastYMovement-1s': 'fastYMovement 0.8s forwards',
       },
     },
   },
