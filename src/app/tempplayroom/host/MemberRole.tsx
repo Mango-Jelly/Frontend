@@ -2,6 +2,8 @@
 
 import { useState, useRef } from 'react';
 import { useEffect } from 'react';
+import axios from 'axios'
+
 // import Actors from '@/app/playroom/[roomId]/_component/host/leftbox/Actor';
 
 import Image from 'next/image';
@@ -17,6 +19,7 @@ type Props = {
   ENTRY: UserStatus[];
   client: any;
   roomId: string;
+  scriptIdx : number
 };
 
 type UserRoleState = {
@@ -24,17 +27,25 @@ type UserRoleState = {
   isSelected: boolean;
 };
 
-const given_roles = [
-  { name: '신데렐라' },
-  { name: '엄마' },
-  { name: '마법사' },
-  { name: '왕' },
-  { name: '왕자' },
-];
+// const given_roles =
+// [
+//   { roleName: '신데렐라' },
+//   { roleName: '엄마' },
+//   { roleName: '마법사' },
+//   { roleName: '왕' },
+//   { roleName: '왕자' },
+// ];
 
 export default function MemberRole(props: Props) {
   const [rolestates, setRolsestates] = useState<UserRoleState[]>([]);
-
+  const [given_roles, setGiven_roles] = useState<any[]>([
+  { roleName: '신데렐라' },
+  { roleName: '엄마' },
+  { roleName: '마법사' },
+  { roleName: '왕' },
+  { roleName: '왕자' },
+]
+)
   function sendRoles(role: string, index: number) {
     if (rolestates[index].isSelected) {
       alert('이미 선택된 친구에요');
@@ -49,6 +60,7 @@ export default function MemberRole(props: Props) {
       });
       return narray;
     });
+
     const message = {
       code: 300,
       name: rolestates[index].name,
@@ -59,6 +71,19 @@ export default function MemberRole(props: Props) {
       body: JSON.stringify(message),
     });
   }
+
+  useEffect(
+    () => {
+      axios.get(
+        'https://mangotail.shop/api/v1/script',
+        {params : {scriptId : props.scriptIdx === 999 ? 2 : props.scriptIdx}},
+      ).then((res) => {
+        console.log(res.data.data)
+        setGiven_roles(res.data.data.roles)
+      }) .catch ((e) => {console.log(e)})
+    },
+    [props.scriptIdx]
+  )
 
   useEffect(() => {
     setRolsestates(
@@ -94,12 +119,12 @@ export default function MemberRole(props: Props) {
                 <div className='bg-gray-400 rounded-full size-20'></div>
                 <div className='ml-3'>
                   <label className='block ml-2 mb-1 text-xl font-medium'>
-                    {role.name}
+                    {role.roleName}
                   </label>
                   <select
                     id={`roleSelect_${key}`}
                     onChange={(e) => {
-                      sendRoles(role.name, Number(e.target.value));
+                      sendRoles(role.roleName, Number(e.target.value));
                     }}
                     className='border border-gray-300 text-xl rounded-lg block w-full p-2
                     focus:outline-0 focus:ring-2 focus:ring-main'

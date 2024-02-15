@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 .topcontainer{
-    @apply w-full mx-auto p-[2rem];
+    @apply w-full mx-auto p-[2rem] h-1/5;
 }
 
 .carousel-image{
@@ -13,7 +13,7 @@
 }
 
 .bottomcontainer{
-    @apply w-full h-[60rem];
+    @apply w-full h-full my-[4rem];
     /* @apply mx-[2rem] h-[60rem]; */
 }
 
@@ -26,14 +26,14 @@
     display: flex;
     transition: all 0.5s;
     position: relative;
-    @apply w-full;
+    @apply w-full h-full;
 }
 
 
 .fadeoutcomponent{
     transition : 0.5s;
     z-index: 2;
-    @apply w-full h-full absolute bg-slate-950;
+    @apply w-full h-full absolute bg-slate-950 z-20;
 }
 
 

@@ -1,25 +1,28 @@
-export type Dialog = {
-  img: string;
-  role: string;
-  dialog: string;
+export type ScriptType = {
+  scenes: Scene[];
+  title: string;
+  duration: string;
+  thumbnail: string;
+  reqPerson: number;
+  roles: RoleInfo[];
 };
 
 export type Scene = {
-  sequence: number;
+  seq: number;
   title: string;
   dialogs: Dialog[];
 };
 
-export type RoleInfo = {
-  img: string;
-  role: string;
+export type Dialog = {
+  roles: {
+    roleName: string;
+    roleImg: string;
+  }[];
+  dialog: string;
 };
 
-export type ScriptType = {
-  scene: Scene[];
-  title: string;
-  duration: string;
-  thumbnail: string;
-  person: number;
-  roles: RoleInfo[];
+export type RoleInfo = {
+  roleId: number;
+  roleImg: string;
+  roleName: string;
 };

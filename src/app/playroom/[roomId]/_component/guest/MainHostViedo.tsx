@@ -5,12 +5,12 @@ import Image
 
 export default function MainHostViedo() {
   return (
-    <div className='ml-[7rem] mt-[2rem] w-[68rem]'>
-        <h1 className='text-6xl text-center my-[1rem]'> 우리 선생님 화면 </h1>
+    <div className='pl-[7rem] pt-[2rem] w-full'>
+        <h1 className='text-6xl text-center py-[1rem]'> 우리 선생님 화면 </h1>
         <Image 
         alt = '메인화면'
         src={VideoImage}
-        className='h-[42rem]'/>
+        className='h-5/6 object-cover'/>
 
     </div>
   )

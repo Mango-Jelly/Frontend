@@ -20,7 +20,7 @@ type UserStatus = {
 type Props = {
   call: string;
   ENTRY: UserStatus[];
-  subscribers: CameraUnit[];
+  // subscribers: CameraUnit[];
 };
 
 export default function MemberCarousel(props: Props) {
@@ -36,7 +36,7 @@ export default function MemberCarousel(props: Props) {
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex < props.subscribers.length - maxItemsPerSlide
+      prevIndex < props.ENTRY.length - maxItemsPerSlide
         ? prevIndex + 1
         : prevIndex
     );
