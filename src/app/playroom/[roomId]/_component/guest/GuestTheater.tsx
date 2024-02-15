@@ -10,7 +10,7 @@ import {
   StopCircleIcon,
 } from '@heroicons/react/24/solid'
 import ForestJpeg from '@/../public/ForestJpeg.jpg'
-import { OpenVidu, Stream, Subscriber } from 'openvidu-browser';
+import { Subscriber } from 'openvidu-browser';
 import UserVideoComponent from '../UserVIdeo'
 import GuestStateSection from '../host/rightbox/GuestStateSection'
 import { scriptInfo } from './data/Dummy'
@@ -34,11 +34,11 @@ type UserStatus = {
 type Props = {
   client : any
   goNext : number
-  subscribers : CameraUnit[];
   streamManager : any;
   ENTRY: UserStatus[]
   roomId : string
-  userId : string
+  userId: string
+  scriptIdx : number
 }
 
 interface Dialog {
@@ -68,7 +68,7 @@ export default function GuestTheater(Props : Props) {
     })
 }
 
-  useEffect( 
+  useEffect(
   () => {
     let roles = new Set<string>();
 
@@ -141,13 +141,13 @@ export default function GuestTheater(Props : Props) {
 
       <div className='w-3/5 h-full'>
             <div className='w-full h-4/5 justify-center p-3 relative '>
-                <Image 
+                <Image
                 src={ForestJpeg}
-                alt='배경화면' 
+                alt='배경화면'
                 className='object-fill w-full h-full'
                 />
-            { 
-              Props.streamManager ? 
+            {
+              Props.streamManager ?
               <div className='absolute top-0 left-0 p-[3rem]  w-full h-full grid grid-cols-4 gap-4 flex'>
                 {
                   actor.map((actor, id) => {

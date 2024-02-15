@@ -49,7 +49,7 @@ export default function TmpRouter() {
       <button onClick={() => {
         // createSession()
         createSession().then((sessionId) => 
-        {router.push(`http://localhost:3000/playroom/${sessionId}`)}
+        {router.push(`https://localhost:3001/playroom/${sessionId}`)}
         )
       }} className='h-[150rem] w-[150rem] text-white bg-blue-700 hover:bg-blue-800 focus:bg-blue-800 font-medium rounded-full text-xl px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:bg-blue-800'>가즈아</button>
     </div>

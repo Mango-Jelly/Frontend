@@ -1,9 +1,7 @@
 'use client';
-
-import { useState } from 'react';
-import * as StompJs from '@stomp/stompjs';
+import { useState } from 'react'
+import * as StompJs from '@stomp/stompjs'
 import UserVideoComponent from '@/app/playroom/[roomId]/_component/UserVIdeo';
-
 import Image from 'next/image';
 import VideoIcon from '@/../public/VideoIcon.svg';
 import VideoOffIcon from '@/../public/VideoOffIcon.svg';
