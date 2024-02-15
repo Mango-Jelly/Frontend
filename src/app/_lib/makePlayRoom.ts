@@ -55,6 +55,14 @@ const makePlayRoom = async (formData: any) => {
   try {
     const existCode = await getMyPlayRoomInfo(userInputData.AccessToken);
     sessionUUID = existCode.data?.address;
+
+    await axios.delete(`${process.env.OPENVIDU_URL}/openvidu/api/sessions/${sessionUUID}`, {
+      headers: {
+        'Authorization': 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
+        'Content-Type': 'application/json',
+      }
+    });
+
   } catch (e) {
     console.log(e)
   }
