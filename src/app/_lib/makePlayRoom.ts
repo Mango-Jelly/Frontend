@@ -56,57 +56,52 @@ const makePlayRoom = async (formData: any) => {
   try {
     const { roomName: title, department, isPublic: visible, AccessToken } = userInputData;
 
-    let serverUUID = "";
-
     const existCode = await getMyPlayRoomInfo(AccessToken);
-    serverUUID = existCode.data.address;
+    sessionUUID = existCode.data.address;
 
-    if (!serverUUID) {
+    if (!sessionUUID) {
       const code = await createPlayRoom({ title, department, visible, AccessToken });
-      serverUUID = code.data.address;
-    }
 
-    const openviduSessionBody: OpenviduSessionBody = {
-      mediaMode: "ROUTED",
-      recordingMode: "MANUAL",
-      customSessionId: serverUUID,
-      forcedVideoCodec: "VP8",
-      allowTranscoding: false,
-      defaultRecordingProperties: {
-        name: "MyRecording",
-        hasAudio: true,
-        hasVideo: true,
-        outputMode: "COMPOSED",
-        recordingLayout: "BEST_FIT",
-        resolution: "1280x720",
-        frameRate: 25,
-        shmSize: 536870912,
+      const openviduSessionBody: OpenviduSessionBody = {
+        mediaMode: "ROUTED",
+        recordingMode: "MANUAL",
+        customSessionId: code.data.address,
+        forcedVideoCodec: "VP8",
+        allowTranscoding: false,
+        defaultRecordingProperties: {
+          name: "MyRecording",
+          hasAudio: true,
+          hasVideo: true,
+          outputMode: "COMPOSED",
+          recordingLayout: "BEST_FIT",
+          resolution: "1280x720",
+          frameRate: 25,
+          shmSize: 536870912,
+          mediaNode: {
+            id: "media_i-0c58bcdd26l11d0sd"
+          }
+        },
         mediaNode: {
           id: "media_i-0c58bcdd26l11d0sd"
         }
-      },
-      mediaNode: {
-        id: "media_i-0c58bcdd26l11d0sd"
       }
+
+      const sessionId = await axios.post(`${process.env.OPENVIDU_URL}/openvidu/api/sessions`, openviduSessionBody, {
+        headers: {
+          'Authorization': 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
+          'Content-Type': 'application/json',
+        }
+      }
+      );
+      sessionUUID = sessionId.data.sessionId;
     }
 
-    const sessionId = await axios.post(`${process.env.OPENVIDU_URL}/openvidu/api/sessions/`, openviduSessionBody, {
-      headers: {
-        'Authorization': 'Basic T1BFTlZJRFVBUFA6bWFuZ28=',
-        'Content-Type': 'application/json',
-      }
-    }
-    );
-
-    sessionUUID = sessionId.data.sessionId;
-
+    console.log("오픈비두의 세션아이디는 다음과 같습니다.")
     console.log(sessionUUID);
 
     if (!sessionUUID) {
       return { message: 'failure_make_room' };
     }
-
-
   } catch (e) {
     console.log(e)
   }
