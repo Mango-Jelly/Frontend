@@ -1,7 +1,14 @@
 import { useState, useRef, useEffect } from 'react'
 import { scriptInfo } from './data/Dummy'
 import axios from 'axios'
+import { ScriptType } from './type'
 
+
+type curSelection = {
+  scene: number,
+  dialog: number,
+  idx: number,
+}
 const sceneNum = scriptInfo.scenes.length
 // 길이를 나타내는 코드
 // const dialogNums = scriptInfo.scenes.map((value) => {
@@ -14,7 +21,7 @@ type Props = {
 }
 
 export const ControllScript = (Props : Props) => {
-  const [script, setScript] = useState<any> (scriptInfo)
+  const [script, setScript] = useState<ScriptType> (scriptInfo)
   const [dialogNums, setDialogNums] = useState<Number[]> ( scriptInfo.scenes.map((value) => {
     return value.dialogs.length
   }))
@@ -50,7 +57,7 @@ export const ControllScript = (Props : Props) => {
   )
 
 
-  const [curSelection, setCurSelection] = useState({
+  const [curSelection, setCurSelection] = useState<curSelection>({
     scene: 0,
     dialog: 0,
     idx: 0,
@@ -65,8 +72,7 @@ export const ControllScript = (Props : Props) => {
   }
 
   function changeIdx() {
-    console.log(dialogNums)
-    if (curSelection.dialog < dialogNums[curSelection.scene] - 1) {
+    if (curSelection.dialog < (dialogNums[curSelection.scene] as number) - 1) {
       setCurSelection((prev) => ({
         ...prev,
         dialog: prev.dialog + 1,

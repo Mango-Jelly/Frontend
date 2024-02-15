@@ -1,28 +1,25 @@
-export const scriptInfo = {
+import { ScriptType , RoleInfo, Dialog, Scene } from '../type'
+export const scriptInfo : ScriptType  = {
   scenes: [
 
     {
-    sequence: 1,
+    seq: 1,
     title: '가족집',
     dialogs: [
           {
-          img: '',
-          roles: [{roleName: '신데렐라'}],
+          roles: [{roleName : '신데렐라', roleImg : ''}],
           dialog: '안녕하세요, 제 이름은 신데렐라에요!',
           },
           {
-          img: '',
-          roles: [{roleName: '엄마'}],
+          roles: [{roleName : '엄마' , roleImg : ''}],
           dialog: '신데렐라, 일 좀 해봐. 청소 좀 해!',
           },
           {
-          img: '',
-          roles: [{roleName: '신데렐라'}],
+          roles: [{roleName: '신데렐라' , roleImg : ''}],
           dialog: '네, 엄마. 하지만 저 오늘은 왕궁에서 열리는 무도회에 가고 싶어요.',
           },
           {
-          img: '',
-          roles: [{roleName: '엄마'}],
+          roles: [{roleName: '엄마' , roleImg : ''}],
           dialog: '무도회? 니가 그런 곳에 가면 안 돼. 청소 좀 해봐!',
           },
         ],
@@ -121,27 +118,32 @@ export const scriptInfo = {
   title: '신데렐라 연극',
   duration: '약 10분',
   thumbnail: '',
-  person: 5,
+  reqPerson: 5,
   roles: [
     {
-      img: '',
-      role: '신데렐라',
+      roleId: 1,
+      roleImg: '',
+      roleName: '신데렐라',
     },
     {
-      img: '',
-      role: '엄마',
+      roleId: 1,
+      roleImg: '',
+      roleName: '엄마',
     },
     {
-      img: '',
-      role: '마법사',
+      roleId: 1,
+      roleImg: '',
+      roleName: '마법사',
     },
     {
-      img: '',
-      role: '왕',
+      roleId: 1,
+      roleImg: '',
+      roleName: '왕',
     },
     {
-      img: '',
-      role: '왕자',
+      roleId: 1,
+      roleImg: '',
+      roleName: '왕자',
     },
   ],
 }

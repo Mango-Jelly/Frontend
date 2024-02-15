@@ -32,7 +32,7 @@ export default function HostSectionScript(props: Props) {
         'https://mangotail.shop/api/v1/script/list',
       ).then((res) => {
         console.log(res.data.data)
-        setScripts(res.data.data.scripts.map((element) => {return element.title}))
+        setScripts(res.data.data.scripts.map((element : any) => {return element.title}))
       }) .catch ((e) => {console.log(e)})
     },
     []

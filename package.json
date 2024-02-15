@@ -22,6 +22,7 @@
     "next-videos": "^1.4.1",
     "openvidu-browser": "^2.29.1",
     "react": "^18",
+    "react-cookie": "^7.0.2",
     "react-dom": "^18",
     "sharp": "^0.33.2",
     "sockjs-client": "^1.6.1"

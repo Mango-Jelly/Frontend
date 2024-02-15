@@ -17,7 +17,7 @@ import VideoIcon from '@/../public/VideoIcon.svg';
 import VideoOffIcon from '@/../public/VideoOffIcon.svg';
 import MicIcon from '@/../public/MicIcon.svg';
 import MicOffIcon from '@/../public/MicOffIcon.svg';
-
+import { ScriptType , RoleInfo, Dialog, Scene } from './type'
 
 
 type UserStatus = {
@@ -43,7 +43,7 @@ interface HTMLMediaElementWithCaptureStream extends HTMLMediaElement{
 export default function HostTheater(Props : Props) {
   let idx = 0
   const [actor, setActor] = useState<UserStatus[]>([])
-  const { script, curIdx, refs, moveScript } = ControllScript( {scriptIdx : Props.scriptIdx })
+  const { script , curIdx, refs, moveScript } = ControllScript( {scriptIdx : Props.scriptIdx })
   const getDynamicClass = (sceneKey: number, dialogKey: number) =>
   {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog)
@@ -64,8 +64,6 @@ export default function HostTheater(Props : Props) {
   const arrAudioData = useRef<BlobPart[]>([])
   const mediaRecorder = useRef<MediaRecorder>()
   const mediaRecorder2 = useRef<MediaRecorder>()
-
-
   const mapping = useRef<Map<string, any | null>> (new Map())
   const [isCameraOn, setCameraOn] = useState(true);
   const [isAudioOn, setAudioOn] = useState(true);
@@ -181,7 +179,7 @@ export default function HostTheater(Props : Props) {
           }, 300);
           }
         }
-      }, 200)
+      }, 1000)
 
     }
     , [actor])
@@ -227,7 +225,7 @@ export default function HostTheater(Props : Props) {
       const mediaStream2 = new MediaStream()
       mediaStream2.addTrack(audioTrack[0])
       
-      console.log(script.scenes[curIdx.scene].dialogs[curIdx.dialog].role)
+      console.log(script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles)
 
       if (mediaStream) {
         mediaRecorder.current = new MediaRecorder(mediaStream, options)
@@ -271,8 +269,6 @@ export default function HostTheater(Props : Props) {
           b.click();
           arrAudioData.current.splice(0)
         }
-        // 녹화 시작
-        console.log('찐시작')
             mediaRecorder.current.start();
             mediaRecorder2.current.start();
     }
@@ -299,13 +295,13 @@ export default function HostTheater(Props : Props) {
           id={style.scroll}
         >
           
-            {script.scenes.map((sceneValue, sceneKey) => {
+            {script.scenes.map((sceneValue :Scene, sceneKey) => {
               return (
                 <div key={sceneKey}>
                   <p className='sticky top-0 text-lg bg-gray-100 p-2 my-2'>
                     {`${sceneValue.seq}번째 씬`}
                   </p>
-                  {sceneValue.dialogs.map((dialogValue, dialogKey) => {
+                  {sceneValue.dialogs.map((dialogValue : Dialog, dialogKey) => {
                     return (
                       <div
                         key={dialogKey}
@@ -315,7 +311,7 @@ export default function HostTheater(Props : Props) {
                         className={`flex items-center py-2 ${getDynamicClass(sceneKey, dialogKey)}`}
                       >
                         <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
-                          {dialogValue.img}
+                          {dialogValue.roles[0].roleImg}
                         </div>
                           {
                             
@@ -325,7 +321,7 @@ export default function HostTheater(Props : Props) {
                             ?
                             <p className='text-xl'> {`${dialogValue.roles[0].roleName}: ${dialogValue.dialog}`}</p>
                             :
-                            <p className='text-xl'> {`${dialogValue.role}: ${dialogValue.dialog}`} </p>
+                            <p className='text-xl'> {`${dialogValue.roles[0]}: ${dialogValue.dialog}`} </p>
                           }
                         
                       </div>
@@ -349,7 +345,6 @@ export default function HostTheater(Props : Props) {
             />
           <canvas ref={canvasRef}  style={{ width : '100%', height : '100%'}} className="z-10 absolute top-0 left-0 rounded-2xl"></canvas>
 
-          
           {
             Props.streamManager ?
               <div className='absolute top-0 left-0 p-[3rem]  w-full h-full grid grid-cols-4 gap-4 flex z-0'>

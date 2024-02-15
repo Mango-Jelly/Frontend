@@ -15,6 +15,8 @@ import { useState } from 'react';
 import { useRef, useEffect } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
+import { useCookies } from 'react-cookie';
+
 
 import { OpenVidu, Subscriber } from 'openvidu-browser';
 import GuestTheater from './_component/guest/GuestTheater';
@@ -57,6 +59,7 @@ export default function Page({ params: { roomId } }: Props) {
   };
   const [myHost, setMyHost] = useState<[string, Subscriber | null]>(['', null])
   const client = useRef<any>({});
+  const [cookies, setCookie, removeCookie] = useCookies(['OVJSESSIONID']);
 
 
   const OV = useRef(new OpenVidu());
@@ -151,19 +154,19 @@ export default function Page({ params: { roomId } }: Props) {
           ENTRY.filter((item) => item.name != messageBody.id)
         );
       }
-      else if (messageBody.code == 102 && !amIhost.current)
-      {
-        if (myHost[0]) { return; }
-        console.log('게스트가 호스트의 이름을 감지', messageBody.id)
-        setMyHost((prev) => [messageBody.id, prev[1]])
-        setTimeout(() => {}, 500)
-        let newEntity: UserStatus | undefined = ENTRY.find((element) => (element.name === messageBody.id))
-        console.log('새로운 객체는 ', newEntity, myHost)
-        if (newEntity !== undefined) {
-          setMyHost((prev) => [messageBody.id, newEntity.camera])
-        }
+      // else if (messageBody.code == 102 && !amIhost.current)
+      // {
+      //   console.log('게스트가 호스트의 이름을 감지', messageBody.id)
+      //   if (myHost[0]) { return; }
+      //   setMyHost((prev) => [messageBody.id, prev[1]])
+      //   let newEntity: UserStatus | undefined = ENTRY.find((element) => (element.name === messageBody.id))
+      //   setTimeout(() => {console.log('새로운 객체는 ', newEntity, myHost)}, 500)
+        
+      //   if (newEntity !== undefined) {
+      //     setMyHost((prev) => [messageBody.id, newEntity.camera])
+      //   }
 
-      }
+      // }
       // 참가자 중에 문제가 생겼다면
       else if (200 <= messageBody.code && messageBody.code < 300)
       {
@@ -304,7 +307,7 @@ export default function Page({ params: { roomId } }: Props) {
     // window.addEventListener('beforeunload', handleBeforeUnload);
 
     // 웹사이트나갈때 subscribers에서 사라지게하는 코드
-
+    setCookie('OVJSESSIONID', '8F5615B350DF6030635BC62572595A20')
     window.addEventListener('beforeunload', Disconnect);
     window.addEventListener('beforeunload', () => {
       mySession.disconnect();

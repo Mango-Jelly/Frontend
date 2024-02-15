@@ -2,6 +2,7 @@
 
 import style from './_component/scrollbar.module.css'
 import { ControllScript } from './ControllScript'
+import { ScriptType , RoleInfo, Dialog, Scene } from './type'
 
 import Image from 'next/image'
 import CookieHouse from '../../../public/CookieHouse.png'
@@ -11,9 +12,13 @@ import {
   StopCircleIcon,
 } from '@heroicons/react/24/solid'
 
-export default function Page() {
+type Props = {
+  scriptIdx: number
+}
+
+export default function Page(Props : Props) {
   let idx = 0
-  const { script, curIdx, refs, moveScript } = ControllScript()
+  const { script, curIdx, refs, moveScript } = ControllScript({scriptIdx : Props.scriptIdx })
 
   const getDynamicClass = (sceneKey: number, dialogKey: number) => {
     if (sceneKey === curIdx.scene && dialogKey === curIdx.dialog) {
@@ -39,11 +44,11 @@ export default function Page() {
           id={style.scroll}
         >
           <div>
-            {script.scene.map((sceneValue, sceneKey) => {
+            {script.scenes.map((sceneValue , sceneKey) => {
               return (
                 <div key={sceneKey}>
                   <p className='sticky top-0 text-lg bg-gray-100 p-2 my-2'>
-                    {`${sceneValue.sequence}번째 씬`}
+                    {`${sceneValue.seq}번째 씬`}
                   </p>
                   {sceneValue.dialogs.map((dialogValue, dialogKey) => {
                     return (
@@ -55,10 +60,10 @@ export default function Page() {
                         className={`flex items-center py-2 ${getDynamicClass(sceneKey, dialogKey)}`}
                       >
                         <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
-                          {dialogValue.img}
+                          {dialogValue.roles[0].roleImg}
                         </div>
                         <p className='text-xl'>
-                          {`${dialogValue.role}: ${dialogValue.dialog}`}
+                          {`${dialogValue.roles[0].roleName}: ${dialogValue.dialog}`}
                         </p>
                       </div>
                     )
@@ -85,7 +90,7 @@ export default function Page() {
       
       <div className='flex justify-center items-center bg-white w-[52rem] h-[16rem] m-4'>
         <p className='text-3xl'>
-          {script.scene[curIdx.scene].dialogs[curIdx.dialog].dialog}
+          {script.scenes[curIdx.scene].dialogs[curIdx.dialog].dialog}
         </p>
       </div>
     </div>
