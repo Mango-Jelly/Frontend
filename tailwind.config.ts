@@ -36,6 +36,10 @@ const config: Config = {
           '50%': { transform: 'rotate(180deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
+        fastYMovement: {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(-122px)' },
+        },
       },
       animation: {
         'slowXMovement-6s': 'slowXMovement 6s linear infinite',
@@ -43,6 +47,7 @@ const config: Config = {
         'slowXMovement-10s': 'slowXMovement 10s linear infinite',
         'slowYMovement-4s': 'slowYMovement 4s linear infinite',
         'wiggle-8s': 'wiggle 8s linear infinite',
+        'fastYMovement-1s': 'fastYMovement 0.8s forwards',
       },
     },
   },
