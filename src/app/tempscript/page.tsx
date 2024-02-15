@@ -49,7 +49,7 @@ export default function Page() {
           id={style.scroll}
         >
           <div>
-            {script.scene.map((sceneValue, sceneKey) => {
+            {script.scenes.map((sceneValue, sceneKey) => {
               return (
                 <div key={sceneKey}>
                   <p className='sticky top-0 text-lg bg-gray-100 p-2 my-2'>
@@ -81,7 +81,7 @@ export default function Page() {
       </div>
       <div className='flex justify-center items-center bg-white w-[52rem] h-[16rem] m-4'>
         <p className='text-3xl'>
-          {script.scene[curIdx.scene].dialogs[curIdx.dialog].dialog}
+          {script.scenes[curIdx.scene].dialogs[curIdx.dialog].dialog}
         </p>
       </div>
     </div>
