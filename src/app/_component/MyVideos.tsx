@@ -59,9 +59,9 @@ export default async function MyVideos({ isLogin }: { isLogin: boolean }) {
                       width={300}
                       height={300}
                       alt={value.title}
-                      className='rounded-full size-52 mb-2'
+                      className='rounded-full size-52 mb-2 object-cover'
                     ></Image>
-                    <div className='truncate w-[18rem] text-lg text-center'>{`${value.title} | ${value.department}`}</div>
+                    <div className='truncate w-[18rem] text-xl font-medium text-center'>{`${value.title} | ${value.department}`}</div>
                   </Link>
                 </div>
               );

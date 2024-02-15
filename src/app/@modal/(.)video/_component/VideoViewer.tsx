@@ -1,6 +1,10 @@
 import style from './video.module.css';
 
-const VideoViewer = async (address: { address: string }) => {
+type Props = {
+  address: string;
+};
+
+const VideoViewer = async ({ address }: Props) => {
   return (
     <video className={style.video} controls autoPlay>
       <source src={address} type='video/mp4' />

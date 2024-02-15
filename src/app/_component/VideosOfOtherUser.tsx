@@ -63,7 +63,7 @@ export default async function VideosOfOtherUser({
                   alt={value.title}
                   className='rounded-2xl h-40 mb-2'
                 ></Image>
-                <div className='truncate text-lg text-center'>{`${value.title} | ${value.department}`}</div>
+                <div className='truncate text-xl font-medium text-center'>{`${value.title} | ${value.department}`}</div>
               </div>
             </Link>
           );
