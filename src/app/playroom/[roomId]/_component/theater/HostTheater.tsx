@@ -90,7 +90,7 @@ export default function HostTheater(Props : Props) {
   useEffect(
     () =>
     {
-      console.log('link1')
+      // console.log('link1')
 
     isNewscene.current = true
     let roles = new Set();
@@ -128,7 +128,7 @@ export default function HostTheater(Props : Props) {
   
   useEffect(
     () => {
-      console.log('link2', actor)
+      // console.log('link2', actor)
       const canvas = canvasRef.current
       isNewscene.current = true
 
@@ -167,7 +167,7 @@ export default function HostTheater(Props : Props) {
                           ctx.drawImage(
                               element,
                               cameraGap * (id + 1) + cameraSize * id,
-                              50,
+                              canvas.height - (cameraSize * 9) / 16 - 50,
                               cameraSize,
                               (cameraSize * 9) / 16
                           );
@@ -213,18 +213,25 @@ export default function HostTheater(Props : Props) {
         videoBitsPerSecond: 2500000,
         // mimeType: "video/webm",
       };
-    // const audioStream =
     const speechVideo = mapping.current.get(script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles[0].roleName)
     // console.log(mapping.current, '과연 여기에 있을까요? ' , speechVideo, script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles[0].roleName)
     if (speechVideo)
     {
       // const mediaStream2 = speechVideo.captureStream()
       // console.log(speechVideo.stream.getMediaStream().getAudioTracks())
-      const audioTrack = speechVideo.stream.getMediaStream().getAudioTracks()
+      // const audioTrack = speechVideo.stream.getMediaStream().getAudioTracks()
 
       const mediaStream2 = new MediaStream()
-      mediaStream2.addTrack(audioTrack[0])
+      // mediaStream2.addTrack(audioTrack[0])
       
+      for (let role  of script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles)
+      {
+        if (mapping.current.get(role.roleName) !== undefined )
+        {
+          console.log(mapping.current.get(role.roleName).stream.getMediaStream().getAudioTracks()[0])
+          mediaStream2.addTrack(mapping.current.get(role.roleName).stream.getMediaStream().getAudioTracks()[0])
+        }
+      }
       console.log(script.scenes[curIdx.scene].dialogs[curIdx.dialog].roles)
 
       if (mediaStream) {
@@ -243,7 +250,7 @@ export default function HostTheater(Props : Props) {
         }
         
         mediaRecorder.current.onstop = (event) => {
-          console.log('멈추겠습니닷')
+
             // 들어온 스트림 데이터들(Blob)을 통합한 Blob객체를 생성
             const blob = new Blob(arrVideoData.current);
             // BlobURL 생성: 통합한 스트림 데이터를 가르키는 임시 주소를 생성
@@ -256,11 +263,18 @@ export default function HostTheater(Props : Props) {
             $anchor.download = "test.webm"; // 파일명 설정
             $anchor.click(); // 앵커 클릭
             
+            
+            // const blob2 = new Blob(arrAudioData.current, { 'type' : 'audio/mp3' });
+            // const audioURL = window.URL.createObjectURL(blob2);
+            // const b = document.createElement('a');
+            // b.href = audioURL;
+            // b.download = 'audio.mp3';
+            // b.click();
+            // arrAudioData.current.splice(0)
             // 배열 초기화
             arrVideoData.current.splice(0);
         }
         mediaRecorder2.current.onstop = (event) => {
-          console.log('멈추겠습니닷')
           const blob = new Blob(arrAudioData.current, { 'type' : 'audio/mp3' });
           const audioURL = window.URL.createObjectURL(blob);
           const b = document.createElement('a');
@@ -269,8 +283,8 @@ export default function HostTheater(Props : Props) {
           b.click();
           arrAudioData.current.splice(0)
         }
-            mediaRecorder.current.start();
-            mediaRecorder2.current.start();
+          mediaRecorder.current.start();
+          mediaRecorder2.current.start();
     }
     }
   }
@@ -310,12 +324,13 @@ export default function HostTheater(Props : Props) {
                         }}
                         className={`flex items-center py-2 ${getDynamicClass(sceneKey, dialogKey)}`}
                       >
-                        <div className='shrink-0 bg-gray-200 rounded-full size-12 m-2'>
-                          {dialogValue.roles[0].roleImg}
-                        </div>
-                          {
-                            
-                          }
+                          <Image
+                            src={dialogValue.roles[0].roleImg}
+                            alt='배격사진'
+                            width={100}
+                            height={100}
+                            className="object-cover w-[3rem] h-[3rem] rounded-full shrink-0 mr-[1rem]"
+                          />
                           {
                             dialogValue.roles
                             ?
@@ -338,7 +353,9 @@ export default function HostTheater(Props : Props) {
       <div className='w-[96rem] h-[54rem] relative'>
         <div className='w-full justify-center relative h-full'>
             <Image
-              src = {ForestJpeg}
+              src = {script.scenes[curIdx.scene].background}
+              width={1280}
+              height={720}
               alt='배경화면'
               className='h-full w-full  z-0 rounded-2xl'
               ref={backgroundImage}
