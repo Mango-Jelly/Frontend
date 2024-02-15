@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface Props {
   isLogin: boolean;
@@ -10,6 +10,9 @@ interface Props {
 
 export default function LoginButton({ isLogin }: Props) {
   const router = useRouter();
+  const pathName = usePathname().split('/');
+
+  if(pathName.includes(('playroom')) || pathName.includes(('guestroom'))) return null;
 
   const loginButtonClass =
     'text-white font-semibold text-2xl text-center bg-main hover:bg-maindark rounded-[2rem] px-6 py-3';

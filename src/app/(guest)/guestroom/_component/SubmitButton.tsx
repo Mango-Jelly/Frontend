@@ -1,15 +1,25 @@
 import { useRouter } from 'next/navigation';
+
+import { registerGuest } from '@/api/guest';
+import { saveToSessionStorage } from './SaveSettings';
+
 import Image from 'next/image';
 import planetIcon from '@/../public/YellowPlanetIcon.png';
 import { PlayIcon } from '@heroicons/react/24/solid';
-import { registerGuest } from '@/api/guest';
 
 type Props = {
   nickname: string;
   isValid: boolean;
+  isCameraOn: boolean;
+  isAudioOn: boolean;
 };
 
-export default function SubmitButton({ nickname, isValid }: Props) {
+export default function SubmitButton({
+  nickname,
+  isValid,
+  isCameraOn,
+  isAudioOn,
+}: Props) {
   const router = useRouter();
 
   const onSubmit = () => {
@@ -23,8 +33,8 @@ export default function SubmitButton({ nickname, isValid }: Props) {
       if (address === null) throw new Error('유효하지 않은 주소');
 
       const registrationResult = await registerGuest(nickname, address);
-      console.log('게스트 등록 성공', registrationResult);
 
+      saveToSessionStorage(isCameraOn, isAudioOn);
       router.push(
         `/playroom/${address}?guestid=${registrationResult.data.guestId}`
       );

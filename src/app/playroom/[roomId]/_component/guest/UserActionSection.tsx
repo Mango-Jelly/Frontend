@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import Image
  from 'next/image'
@@ -25,6 +26,8 @@ type Props = {
 //   });
 
 export default function UserActionSection(Props : Props) {
+    console.log('UserActionSection', Props.role)
+
     function Alert(alarm : number) {
         const message = {
                 code: alarm,

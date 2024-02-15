@@ -31,8 +31,10 @@ export const {
             console.log('authResponse not ok');
             return null
           }
-  
+
+          
           const user = await authResponse.json();
+          console.log(user);
           return user;
 
         } catch (e) {
@@ -44,16 +46,20 @@ export const {
   callbacks: {
     async jwt({user, token} : any){
       if(user) {
-        console.log('token' + token)
-
         token.Authorization = user?.data.accessToken
-        token.refreshToken = user.data.refreshToken
+        token.refreshToken = user?.data.refreshToken
+        token.nickname = user?.data.nickName
+
+        console.log(token)
       }
       return token;
     },
     async session({token, session} : any){
-        session.Authorization = token.Authorization
-        session.RefreshToken = token.refreshToken
+        session.Authorization = token.Authorization;
+        session.refreshToken = token.refreshToken;
+        session.user.name = token.nickname;
+
+        console.log(session);
 
         return session;
     },
