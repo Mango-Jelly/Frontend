@@ -16,7 +16,7 @@ export const {
 
       async authorize(credentials) {
         try{
-          const authResponse = await fetch(`${process.env.AUTH_URL}`, {
+          const authResponse = await fetch(`${process.env.AUTH_URL}/api/v1/member/login`, {
             method: 'POST',
             headers: {
               "Content-Type": "application/json",
@@ -34,7 +34,6 @@ export const {
 
           
           const user = await authResponse.json();
-          console.log(user);
           return user;
 
         } catch (e) {
@@ -50,7 +49,6 @@ export const {
         token.refreshToken = user?.data.refreshToken
         token.nickname = user?.data.nickName
 
-        console.log(token)
       }
       return token;
     },
@@ -58,8 +56,6 @@ export const {
         session.Authorization = token.Authorization;
         session.refreshToken = token.refreshToken;
         session.user.name = token.nickname;
-
-        console.log(session);
 
         return session;
     },
