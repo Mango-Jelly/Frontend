@@ -11,10 +11,11 @@ type Props = {
   userId: string;
   roomId: string;
   curRole: string;
-  myHost : [string, Subscriber | null]
+  roleImg: string;
+  myHost: [string, Subscriber | null];
 };
 
-export default function   GuestMainSection(Props: Props) {
+export default function GuestMainSection(Props: Props) {
   return (
     <>
       <div className='bg-amber-200 mb-8'>
@@ -23,7 +24,7 @@ export default function   GuestMainSection(Props: Props) {
       <div className='flex justify-center bg-white/80 w-[112rem] h-[48rem]'>
         <HostVideoToGuest myHost={Props.myHost} />
         <div className='self-start flex flex-col justify-center items-center ml-4'>
-          <GuestState curRole={Props.curRole} />
+          <GuestState curRole={Props.curRole} roleImg={Props.roleImg} />
           <StateButtonGrid
             client={Props.client}
             userId={Props.userId}

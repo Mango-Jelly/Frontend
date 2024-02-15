@@ -14,6 +14,7 @@ type UserStatus = {
   name: string;
   status: number;
   role: string;
+  roleImg: string;
 };
 
 const status: any[] = [status201, status202, status203, status204];
@@ -28,8 +29,17 @@ export default function MemberChecking(props: Props) {
       <div className='overflow-auto h-[43.5rem]' id={style.scroll}>
         {props.ENTRY.map((entry, id) => (
           <div key={id} className='flex items-center m-4'>
-            <div className='bg-gray-400 rounded-full size-20'></div>
-
+            {entry.role ? (
+              <Image
+                src={entry.roleImg}
+                width={100}
+                height={100}
+                alt={entry.role}
+                className='rounded-full size-20 object-cover'
+              />
+            ) : (
+              <div className='bg-gray-400 rounded-full size-20 animate-pulse'></div>
+            )}
             <div className='m-4'>
               <p className='text-xl'>{entry.name}</p>
               <p>{entry.role ? entry.role : '아직 역할이 없어요'}</p>
