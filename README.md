@@ -77,4 +77,9 @@
 ![scriptmodal](https://github.com/Mango-Jelly/Frontend/assets/69416561/1e8c3615-19b5-428a-ba9a-0b04092075a7)
 ![videomodal](https://github.com/Mango-Jelly/Frontend/assets/69416561/c0bcf68d-aa07-49f3-9347-1b69e182bc16)
 
+### 연극페이지
 
+#### 소켓 통신을 통한 게스트, 호스트간 화면 동기화
+- 호스트의 통제에 따라 게스트의 역할이 정해지고 게스트들이 그것을 동기적으로 확인할 수 있는 기능
+- 연극의 진행상황이 동기화되고, 장면에 따라 배역의 카메라들이 소켓으로 동기화되어 연극의 상태가 유지되는 기능
+![오픈비두멀티스gif](https://github.com/Mango-Jelly/Frontend/assets/98077576/99c514f5-838b-48df-87e7-38bd19a60706)
