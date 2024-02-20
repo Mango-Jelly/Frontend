@@ -49,8 +49,32 @@
     </tr>
 </table>
 
-## 📄 Application Structure / user Sequence Diagram
+## ⚙ Tech Stack
+
+
+
+## 📄 Application Structure
 
 ![메뉴구조도](https://github.com/Mango-Jelly/Frontend/assets/69416561/40953a76-0b0a-456f-b953-0ecc4307bcfe)
+
+## User Flow
+
+
+
+## 📄 Page Detail
+
+### 메인페이지
+
+- 로그인 / 회원가입 / 내가 나온 비디오 조회 / 제공하는 대본 스크립트 조회 / 연극방 생성 모달 인터페이스 제공
+
+![mainpage](https://github.com/Mango-Jelly/Frontend/assets/69416561/a49c14b8-881a-4b38-a05a-53814a9b991f)
+
+#### 내가 나온 비디오 / 대본 정보 모달 
+- 내가 등장한 영상과 사이트에서 제공하는 연극의 대본을 조회 가능
+- 비디오 조회 모달 : 연극 세션 등록시 공개여부가 true로 체크된 영상들을 조회, 재생
+- 대본 정보 모달 : 모달창에서 각 연극의 상세 세션을 아코디언 UI 메뉴를 통해 조회
+
+![scriptmodal](https://github.com/Mango-Jelly/Frontend/assets/69416561/1e8c3615-19b5-428a-ba9a-0b04092075a7)
+![videomodal](https://github.com/Mango-Jelly/Frontend/assets/69416561/c0bcf68d-aa07-49f3-9347-1b69e182bc16)
 
 
