@@ -95,6 +95,14 @@
 </tr>
 </table>
 
+### 🎙도입 이유
+
+- Next.Js v14 : app router, server action 등 안정화된 기능과 react v18의 기능들을 활용할 수 있음. 
+- TypeScript : 타입 안정성을 고려한 개발이 가능하여 도입
+- Tailwind css : 다른 css 라이브러리들이 app router 에서 사용이 불가능한 이슈가 있어 도입
+- Openvidu : Kurento 미디어 서버를 한 번 더 래핑하여 클라이언트 코드를 커스터마이징하여 간단하게 구현할 수 있다는 장점이 있음.
+- 기타 : NextAuth / sockjs / axios 등  
+
 ## 🖥 Application Structure / User Flow
 
 ![메뉴구조도](https://github.com/Mango-Jelly/Frontend/assets/69416561/40953a76-0b0a-456f-b953-0ecc4307bcfe)
